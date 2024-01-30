@@ -26,6 +26,13 @@ function evil(fn) {
   return new Function('return ' + fn)();
 }
 
+Number.prototype.pad = function (n) {
+  if (n === undefined)
+    n = 2;
+
+  return (new Array(n).join('0') + this).slice(-n);
+}
+
 
 router.post('/FINISHtoDB', async (req, res) => {
   //-------------------------------------
@@ -53,7 +60,7 @@ router.post('/FINISHtoDB', async (req, res) => {
 
     output[nameFOR] = Tool;
     output['dateG'] = new Date();
-    output['dateGSTR'] =day;
+    output['dateGSTR'] = day;
 
     delete output['MeasurmentFOR'];
     delete output['tool'];
@@ -96,7 +103,7 @@ router.post('/FINISHtoDB', async (req, res) => {
     outputs = 'OK';
   } else {
 
-   
+
     let input_S2_1 = findpo[0]; //input1
     let input_S2_2 = output;     //input2
     let objectR = Object.getOwnPropertyNames(input_S2_1)
@@ -196,7 +203,7 @@ router.post('/FINISHtoDB', async (req, res) => {
           let upd = await mongodb.update(MAIN_DATA, MAIN, out_S4_1, out_S4_2);
 
         } else {
-        console.log("---->2");
+          console.log("---->2");
 
           let nameFOR = input_S4_2.MeasurmentFOR;
           let nameTool = input_S4_2.tool;
@@ -224,7 +231,7 @@ router.post('/FINISHtoDB', async (req, res) => {
 
   }
   //-------------------------------------
-  return  res.json(outputs);
+  return res.json(outputs);
 });
 
 router.post('/FINISHtoDB-apr', async (req, res) => {
@@ -233,7 +240,7 @@ router.post('/FINISHtoDB-apr', async (req, res) => {
   console.log(req.body);
   let input = req.body;
   const d = new Date().toLocaleString('en-US', { timeZone: 'Asia/Jakarta' });;
-let day = d;
+  let day = d;
   //-------------------------------------
   let output = input;
   //-------------------------------------
@@ -247,12 +254,12 @@ let day = d;
     let Item = {};
     let Tool = {};
 
-    Item[nameItem] = { "PSC1": value,"PSC2": value,"PSC3": value,"PSC4": value,"PSC5": value ,"PSC6": value,"PSC7": value,"PSC8": value,"PSC9": value,"PSC10": value};
+    Item[nameItem] = { "PSC1": value, "PSC2": value, "PSC3": value, "PSC4": value, "PSC5": value, "PSC6": value, "PSC7": value, "PSC8": value, "PSC9": value, "PSC10": value };
     Tool[nameTool] = Item;
 
     output[nameFOR] = Tool;
     output['dateG'] = new Date();
-    output['dateGSTR'] =day;
+    output['dateGSTR'] = day;
 
     delete output['MeasurmentFOR'];
     delete output['tool'];
@@ -318,7 +325,7 @@ let day = d;
       FOR[nameFOR] = Tool;
       let out_S2_1 = { "PO": input_S2_2.PO };
       let out_S2_2 = { $set: FOR }
-      Item[nameItem] = {  "PSC1": value,"PSC2": value,"PSC3": value,"PSC4": value,"PSC5": value ,"PSC6": value,"PSC7": value,"PSC8": value,"PSC9": value,"PSC10": value};
+      Item[nameItem] = { "PSC1": value, "PSC2": value, "PSC3": value, "PSC4": value, "PSC5": value, "PSC6": value, "PSC7": value, "PSC8": value, "PSC9": value, "PSC10": value };
       // outputs=[out_S2_1,out_S2_2]
       outputs = 'OK'
       let upd = await mongodb.update(MAIN_DATA, MAIN, out_S2_1, out_S2_2);
@@ -348,7 +355,7 @@ let day = d;
         let Tool = {};
         let FOR = input_S3_1[nameFOR];
 
-        Item[nameItem] = {  "PSC1": value,"PSC2": value,"PSC3": value,"PSC4": value,"PSC5": value ,"PSC6": value,"PSC7": value,"PSC8": value,"PSC9": value,"PSC10": value };
+        Item[nameItem] = { "PSC1": value, "PSC2": value, "PSC3": value, "PSC4": value, "PSC5": value, "PSC6": value, "PSC7": value, "PSC8": value, "PSC9": value, "PSC10": value };
         input_S3_1[nameFOR][nameTool] = Item;
         let out_S3_1 = { PO: input_S3_2.PO };
         let out_S3_2 = { $set: input_S3_1 }
@@ -387,7 +394,7 @@ let day = d;
           let FOR = input_S4_1[nameFOR];
           let Tool = FOR[nameTool];
           let Item = Tool
-          Item[nameItem] = {  "PSC1": value,"PSC2": value,"PSC3": value,"PSC4": value,"PSC5": value ,"PSC6": value,"PSC7": value,"PSC8": value,"PSC9": value,"PSC10": value };
+          Item[nameItem] = { "PSC1": value, "PSC2": value, "PSC3": value, "PSC4": value, "PSC5": value, "PSC6": value, "PSC7": value, "PSC8": value, "PSC9": value, "PSC10": value };
           let out_S4_1 = { PO: input_S4_2.PO };
           let out_S4_2 = { $set: input_S4_1 }
 
@@ -422,7 +429,7 @@ let day = d;
 
   }
   //-------------------------------------
-  return  res.json(outputs);
+  return res.json(outputs);
 });
 
 router.post('/GRAPH-recal', async (req, res) => {
@@ -449,7 +456,7 @@ router.post('/GRAPH-recal', async (req, res) => {
         LISTbuffer.push(...ob[oblist[i]])
       }
 
-      
+
       if (input["MODE"] == 'CDE') {
 
         //
@@ -465,7 +472,7 @@ router.post('/GRAPH-recal', async (req, res) => {
         if (input['INTERSEC'] !== '') {
           core = parseFloat(input['INTERSEC'])
         } else {
-          core = parseFloat(axis_data[axis_data.length - 1]['y'])+50
+          core = parseFloat(axis_data[axis_data.length - 1]['y']) + 50
         }
         console.log(axis_data[axis_data.length - 1]['y']);
         //-----------------core
@@ -484,7 +491,7 @@ router.post('/GRAPH-recal', async (req, res) => {
 
           let RawData = RawPoint[0].Point1.x + (data2 / data3 * pointvalue);
           let graph_ans_X = parseFloat(RawData.toFixed(2));
-console.log("-----------")
+          console.log("-----------")
           feedback[0]['FINAL_ANS'][input["ITEMs"]] = graph_ans_X;
           feedback[0]['FINAL_ANS'][`${input["ITEMs"]}_point`] = { "x": graph_ans_X, "y": core };
 
@@ -495,7 +502,7 @@ console.log("-----------")
         }
         output = 'OK1';
         //
-      // } else if (input["MODE"] == 'CDE') {
+        // } else if (input["MODE"] == 'CDE') {
       } else {
         let axis_data = [];
         for (i = 0; i < LISTbuffer.length; i++) {
@@ -580,7 +587,7 @@ router.post('/CAL1-recal', async (req, res) => {
   if (input["PO"] !== undefined && input["ITEMs"] !== undefined) {
     let feedback = await mongodb.find("BUFFERCAL", "SURBAL013", { "PO": input["PO"] });
     if (feedback.length > 0) {
-      if (feedback[0]['VAL1'] !== '' && feedback[0]['VAL2'] !== '' && feedback[0]['Area'] !== ''&& feedback[0]['FORMULA'] !== '') {
+      if (feedback[0]['VAL1'] !== '' && feedback[0]['VAL2'] !== '' && feedback[0]['Area'] !== '' && feedback[0]['FORMULA'] !== '') {
 
         // console.log( feedback[0]['VAL1'])
         // console.log( feedback[0]['VAL2'])
@@ -594,29 +601,64 @@ router.post('/CAL1-recal', async (req, res) => {
         let VAL2data = feedback[0]['VAL2'];
         let Areadata = feedback[0]['Area'];
 
-        let FORMULAresult = FORMULAdata.replace("X",`${VAL1data}`).replace("Y",`${VAL2data}`).replace("K1",`${Areadata}`)
+        let FORMULAresult = FORMULAdata.replace("X", `${VAL1data}`).replace("Y", `${VAL2data}`).replace("K1", `${Areadata}`)
         let result = evil(FORMULAresult)
         let finalresult = result;
-    
-        if(result<0){
+
+        if (result < 0) {
           finalresult = - finalresult;
         }
-        console.log( finalresult)
+        console.log(finalresult)
 
-        
+
 
         let feedbackres = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
         feedbackres[0]['FINAL_ANS'][input["ITEMs"]] = finalresult;
-        console.log( feedbackres)
+        console.log(feedbackres)
         let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedbackres[0]['FINAL_ANS'] } });
-        
-        output= 'OK'
+
+        output = 'OK'
       }
     }
 
   }
 
-    
+
+  //-------------------------------------
+  return res.json(output);
+});
+
+
+router.post('/PHBP12report', async (req, res) => {
+  //-------------------------------------
+  console.log('--PHBP12report--');
+  console.log(req.body);
+  let input = req.body;
+  //-------------------------------------
+  let output = [];
+  //-------------------------------------
+  var d = new Date();
+  d.setFullYear(d.getFullYear(), d.getMonth(), d.getDate() - 10);
+
+  var dc = new Date();
+  dc.setFullYear(dc.getFullYear(), dc.getMonth(), dc.getDate());
+
+  // let day = `${d.getFullYear()}-${(d.getMonth() + 1).pad(2)}-${(d.getDate()).pad(2)}`
+  // let dayC = `${dc.getFullYear()}-${(dc.getMonth() + 1).pad(2)}-${(dc.getDate()).pad(2)}`
+  // let tim = `${(d.getHours()).pad(2)}:${(d.getMinutes()).pad(2)}:${(d.getSeconds()).pad(2)}`
+
+  let out = {
+    "ALL_DONE": 'DONE',
+    "dateG":
+    {
+      "$gte": d,
+      "$lt": dc
+    }
+  }
+
+  output = await mongodb.find(MAIN_DATA, MAIN, out);
+
+
   //-------------------------------------
   return res.json(output);
 });
