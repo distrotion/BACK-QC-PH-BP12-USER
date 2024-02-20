@@ -76,6 +76,9 @@ let SURMCS001db = {
   "tool": NAME_INS,
   "value": [],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
   "dateupdatevalue": day,
+   //----------------------
+   "USER": '',
+   "USERID": '',
 }
 
 router.get('/CHECK-SURMCS001', async (req, res) => {
@@ -110,7 +113,7 @@ router.post('/GETINtoSURMCS001', async (req, res) => {
   //-------------------------------------
   let output = 'NOK';
   check = SURMCS001db;
-  if (input['PO'] !== undefined && input['CP'] !== undefined && check['PO'] === '') {
+  if (input['PO'] !== undefined && input['CP'] !== undefined && check['PO'] === ''&& input['USER'] !== undefined && input['USERID'] !== undefined) {
     // let dbsap = await mssql.qurey(`select * FROM [SAPData_GW_GAS].[dbo].[tblSAPDetail] where [PO] = ${input['PO']}`);
 
     let findPO = await mongodb.findSAP('mongodb://172.23.10.39:12010', "ORDER", "ORDER", {});
@@ -210,6 +213,9 @@ router.post('/GETINtoSURMCS001', async (req, res) => {
           "tool": NAME_INS,
           "value": [],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
           "dateupdatevalue": day,
+           //----------------------
+           "USER":input['USER'],
+           "USERID":input['USERID'],
         }
 
         output = 'OK';

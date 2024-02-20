@@ -434,7 +434,7 @@ router.post('/FINISHtoDB-apr', async (req, res) => {
 
 router.post('/GRAPH-recal', async (req, res) => {
   //-------------------------------------
-  console.log('--TPGHMV002-recal--');
+  console.log('--GRAPH-recal--');
   console.log(req.body);
   let input = req.body;
   //-------------------------------------
@@ -638,7 +638,7 @@ router.post('/PHBP12report', async (req, res) => {
   let output = [];
   //-------------------------------------
   var d = new Date();
-  d.setFullYear(d.getFullYear(), d.getMonth(), d.getDate() - 10);
+  d.setFullYear(d.getFullYear(), d.getMonth(), d.getDate() - 30);
 
   var dc = new Date();
   dc.setFullYear(dc.getFullYear(), dc.getMonth(), dc.getDate());

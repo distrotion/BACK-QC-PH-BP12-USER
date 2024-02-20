@@ -79,6 +79,9 @@ let APPPHBP12db = {
   "dateupdatevalue": day,
   //
   "PIC": "",
+  //----------------------
+  "USER": '',
+  "USERID": '',
 }
 
 router.get('/CHECK-APPPHBP12', async (req, res) => {
@@ -113,8 +116,10 @@ router.post('/GETINtoAPPPHBP12', async (req, res) => {
   //-------------------------------------
   let output = 'NOK';
   check = APPPHBP12db;
-  if (input['PO'] !== undefined && input['CP'] !== undefined && check['PO'] === '') {
+  console.log("-------->>>>");
+  if (input['PO'] !== undefined && input['CP'] !== undefined && check['PO'] === '' && input['USER'] !== undefined && input['USERID'] !== undefined) {
     // let dbsap = await mssql.qurey(`select * FROM [SAPData_HES_ISN].[dbo].[tblSAPDetail] where [PO] = ${input['PO']}`);
+    console.log("-------->>>>");
     let findPO = await mongodb.findSAP('mongodb://172.23.10.39:12010', "ORDER", "ORDER", {});
 
     let cuslot = '';
@@ -125,7 +130,7 @@ router.post('/GETINtoAPPPHBP12', async (req, res) => {
         if (findPO[0][`DATA`][i][`PO`] === input['PO']) {
           dbsap = findPO[0][`DATA`][i];
           // break;
-          cuslot = cuslot+ findPO[0][`DATA`][i][`CUSLOTNO`]+ ','
+          cuslot = cuslot + findPO[0][`DATA`][i][`CUSLOTNO`] + ','
         }
       }
 
@@ -162,11 +167,11 @@ router.post('/GETINtoAPPPHBP12', async (req, res) => {
         }
         var picS = "";
         // console.log(findcp[0]['Pimg'])
-        if(findcp.length >0){
-          if(findcp[0]['Pimg'] !== undefined ){
+        if (findcp.length > 0) {
+          if (findcp[0]['Pimg'] !== undefined) {
             picS = `${findcp[0]['Pimg'][`P1`]}`
           }
-          
+
         }
 
         APPPHBP12db = {
@@ -188,7 +193,7 @@ router.post('/GETINtoAPPPHBP12', async (req, res) => {
           "QUANTITY": dbsap['QUANTITY'] || '',
           // "PROCESS":dbsap ['PROCESS'] || '',
           // "CUSLOTNO": dbsap['CUSLOTNO'] || '',
-          "CUSLOTNO":  cuslot,
+          "CUSLOTNO": cuslot,
           "FG_CHARG": dbsap['FG_CHARG'] || '',
           "PARTNAME_PO": dbsap['PARTNAME_PO'] || '',
           "PART_PO": dbsap['PART_PO'] || '',
@@ -219,6 +224,9 @@ router.post('/GETINtoAPPPHBP12', async (req, res) => {
           "dateupdatevalue": day,
           //
           "PIC": picS,
+          //----------------------
+          "USER": input['USER'],
+          "USERID": input['USERID'],
         }
 
         output = 'OK';
@@ -592,6 +600,9 @@ router.post('/APPPHBP12-SETZERO', async (req, res) => {
       "dateupdatevalue": day,
       //
       "PIC": "",
+       //----------------------
+  "USER": '',
+  "USERID": '',
     }
     output = 'OK';
   }
