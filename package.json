@@ -13,6 +13,7 @@
     "b64-to-blob": "^1.2.19",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "evil": "^1.0.1",
     "express": "^4.17.1",
     "log-to-file": "^3.0.0",
     "mongodb": "^4.1.1",

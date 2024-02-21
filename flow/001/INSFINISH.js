@@ -602,9 +602,10 @@ router.post('/CAL1-recal', async (req, res) => {
         let Areadata = feedback[0]['Area'];
 
         let FORMULAresult = FORMULAdata.replace("X", `${VAL1data}`).replace("Y", `${VAL2data}`).replace("K1", `${Areadata}`)
+        console.log(FORMULAresult)
         let result = evil(FORMULAresult)
         let finalresult = result;
-
+        console.log(finalresult)
         if (result < 0) {
           finalresult = - finalresult;
         }
@@ -613,9 +614,18 @@ router.post('/CAL1-recal', async (req, res) => {
 
 
         let feedbackres = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
+        console.log(feedbackres)
+        if(feedbackres[0]['FINAL_ANS'] === undefined){
+        feedbackres[0]['FINAL_ANS']={}
         feedbackres[0]['FINAL_ANS'][input["ITEMs"]] = finalresult;
         console.log(feedbackres)
         let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedbackres[0]['FINAL_ANS'] } });
+        }else{
+        feedbackres[0]['FINAL_ANS'][input["ITEMs"]] = finalresult;
+        console.log(feedbackres)
+        let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedbackres[0]['FINAL_ANS'] } });
+        }
+
 
         output = 'OK'
       }

@@ -91,9 +91,9 @@ let SURBAL013db = {
     "Aear": "",
     "FORMULA": "",
   },
-   //----------------------
-   "USER": '',
-   "USERID": '',
+  //----------------------
+  "USER": '',
+  "USERID": '',
 }
 
 
@@ -149,7 +149,7 @@ router.post('/GETINtoSURBAL013', async (req, res) => {
   //-------------------------------------
   let output = 'NOK';
   check = SURBAL013db;
-  if (input['PO'] !== undefined && input['CP'] !== undefined && check['PO'] === ''&& input['USER'] !== undefined && input['USERID'] !== undefined) {
+  if (input['PO'] !== undefined && input['CP'] !== undefined && check['PO'] === '' && input['USER'] !== undefined && input['USERID'] !== undefined) {
     // let dbsap = await mssql.qurey(`select * FROM [SAPData_GW_GAS].[dbo].[tblSAPDetail] where [PO] = ${input['PO']}`);
 
     let findPO = await mongodb.findSAP('mongodb://172.23.10.39:12010', "ORDER", "ORDER", {});
@@ -260,9 +260,9 @@ router.post('/GETINtoSURBAL013', async (req, res) => {
             "Aear": "",
             "FORMULA": "",
           },
-           //----------------------
-           "USER":input['USER'],
-           "USERID":input['USERID'],
+          //----------------------
+          "USER": input['USER'],
+          "USERID": input['USERID'],
         }
 
         output = 'OK';
@@ -874,17 +874,40 @@ router.post('/SURBAL013-feedback', async (req, res) => {
 
                 // console.log(evil(`12/5*9+9.4*2`));
 
+                // let FORMULAdata = feedback[0]['FORMULA'];
+                // let VAL1data = feedback[0]['VAL1'];
+                // let VAL2data = feedback[0]['VAL2'];
+                // let Areadata = feedback[0]['Area'];
+
+                // //X1+Y1+K1
+
+                // let FORMULAresult = FORMULAdata.replace("X", `${VAL1data}`).replace("Y", `${VAL2data}`).replace("K1", `${Areadata}`)
+                // console.log(FORMULAresult)
+                // let result = evil(FORMULAresult)
+                // let finalresult = result;
+
+                // if (result < 0) {
+                //   finalresult = - finalresult;
+                // }
+                // console.log(finalresult)
+
+
+
+                // let feedbackres = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
+                // feedbackres[0]['FINAL_ANS'][input["ITEMs"]] = finalresult;
+                // console.log(feedbackres)
+                // let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedbackres[0]['FINAL_ANS'] } });
+
                 let FORMULAdata = feedback[0]['FORMULA'];
                 let VAL1data = feedback[0]['VAL1'];
                 let VAL2data = feedback[0]['VAL2'];
                 let Areadata = feedback[0]['Area'];
 
-                //X1+Y1+K1
-
                 let FORMULAresult = FORMULAdata.replace("X", `${VAL1data}`).replace("Y", `${VAL2data}`).replace("K1", `${Areadata}`)
+                console.log(FORMULAresult)
                 let result = evil(FORMULAresult)
                 let finalresult = result;
-
+                console.log(finalresult)
                 if (result < 0) {
                   finalresult = - finalresult;
                 }
@@ -893,9 +916,17 @@ router.post('/SURBAL013-feedback', async (req, res) => {
 
 
                 let feedbackres = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
-                feedbackres[0]['FINAL_ANS'][input["ITEMs"]] = finalresult;
                 console.log(feedbackres)
-                let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedbackres[0]['FINAL_ANS'] } });
+                if (feedbackres[0]['FINAL_ANS'] === undefined) {
+                  feedbackres[0]['FINAL_ANS'] = {}
+                  feedbackres[0]['FINAL_ANS'][input["ITEMs"]] = finalresult;
+                  console.log(feedbackres)
+                  let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedbackres[0]['FINAL_ANS'] } });
+                } else {
+                  feedbackres[0]['FINAL_ANS'][input["ITEMs"]] = finalresult;
+                  console.log(feedbackres)
+                  let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedbackres[0]['FINAL_ANS'] } });
+                }
 
                 output = 'OK'
               }
