@@ -10,13 +10,9 @@ var request = require('request');
 const d = new Date().toLocaleString('en-US', { timeZone: 'Asia/Jakarta' });;
 let day = d;
 
-function evil(fn) {
-  return new Function('return ' + fn)();
-}
-
 //----------------- SETUP
 
-let NAME_INS = 'SUR-BAL-013'
+let NAME_INS = 'CTC-SEM-001'
 
 //----------------- DATABASE
 
@@ -31,13 +27,12 @@ let ITEMs = 'ITEMs';
 let METHOD = 'METHOD';
 let MACHINE = 'MACHINE';
 let UNIT = 'UNIT';
-let CAL1 = 'CALCULATE';
 
 //----------------- dynamic
 
 let finddbbuffer = [{}];
 
-let SURBAL013db = {
+let CTCSEM001db = {
   "INS": NAME_INS,
   "PO": "",
   "CP": "",
@@ -86,56 +81,28 @@ let SURBAL013db = {
   "value": [],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
   "dateupdatevalue": day,
   "INTERSEC_ERR": 0,
-  "K1b": '',
-  "K1v": '',
-  "FORMULA": '',
-  "confirmdataCW": {
-    "VAL1": "",
-    "VAL2": "",
-    "Aear": "",
-    "FORMULA": "",
-  },
-  //----------------------
-  "USER": '',
-  "USERID": '',
+   //----------------------
+   "USER": '',
+   "USERID": '',
 }
 
 
 
-router.get('/CHECK-SURBAL013', async (req, res) => {
+router.get('/CHECK-CTCSEM001', async (req, res) => {
 
-  return res.json(SURBAL013db['PO']);
+  return res.json(CTCSEM001db['PO']);
 });
 
 
-router.post('/SURBAL013db', async (req, res) => {
+router.post('/CTCSEM001db', async (req, res) => {
   //-------------------------------------
-  // console.log('--SURBAL013db--');
+  // console.log('--CTCSEM001db--');
   // console.log(req.body);
   //-------------------------------------
   let finddb = [{}];
   try {
 
-
-    // console.log(SURBAL013db['inspectionItem'])
-    if (SURBAL013db['RESULTFORMAT'] === 'CAL1') {
-      let feedbackLast = await mongodb.find("BUFFERCAL", "SURBAL013", { "PO": SURBAL013db['PO'] });
-      if (feedbackLast.length > 0) {
-        SURBAL013db['confirmdataCW']['VAL1'] = feedbackLast[0]['VAL1'];
-        SURBAL013db['confirmdataCW']['VAL2'] = feedbackLast[0]['VAL2'];
-        SURBAL013db['confirmdataCW']['Area'] = feedbackLast[0]['Area'];
-        SURBAL013db['confirmdataCW']['FORMULA'] = feedbackLast[0]['FORMULA'];
-
-      }
-    } else {
-      SURBAL013db['confirmdataCW']['VAL1'] = "";
-      SURBAL013db['confirmdataCW']['VAL2'] = "";
-      SURBAL013db['confirmdataCW']['Area'] = "";
-      SURBAL013db['confirmdataCW']['FORMULA'] = "";
-    }
-
-
-    finddb = SURBAL013db;
+    finddb = CTCSEM001db;
     finddbbuffer = finddb;
   }
   catch (err) {
@@ -145,15 +112,15 @@ router.post('/SURBAL013db', async (req, res) => {
   return res.json(finddb);
 });
 
-router.post('/GETINtoSURBAL013', async (req, res) => {
+router.post('/GETINtoCTCSEM001', async (req, res) => {
   //-------------------------------------
-  console.log('--GETINtoSURBAL013--');
+  console.log('--GETINtoCTCSEM001--');
   console.log(req.body);
   let input = req.body;
   //-------------------------------------
   let output = 'NOK';
-  check = SURBAL013db;
-  if (input['PO'] !== undefined && input['CP'] !== undefined && check['PO'] === '' && input['USER'] !== undefined && input['USERID'] !== undefined) {
+  check = CTCSEM001db;
+  if (input['PO'] !== undefined && input['CP'] !== undefined && check['PO'] === ''&& input['USER'] !== undefined && input['USERID'] !== undefined) {
     // let dbsap = await mssql.qurey(`select * FROM [SAPData_GW_GAS].[dbo].[tblSAPDetail] where [PO] = ${input['PO']}`);
 
     let findPO = await mongodb.findSAP('mongodb://172.23.10.39:12010', "ORDER", "ORDER", {});
@@ -166,7 +133,7 @@ router.post('/GETINtoSURBAL013', async (req, res) => {
         if (findPO[0][`DATA`][i][`PO`] === input['PO']) {
           dbsap = findPO[0][`DATA`][i];
           // break;
-          cuslot = cuslot + findPO[0][`DATA`][i][`CUSLOTNO`] + ','
+          cuslot = cuslot+ findPO[0][`DATA`][i][`CUSLOTNO`]+ ','
         }
       }
 
@@ -204,7 +171,7 @@ router.post('/GETINtoSURBAL013', async (req, res) => {
 
 
 
-        SURBAL013db = {
+        CTCSEM001db = {
           "INS": NAME_INS,
           "PO": input['PO'] || '',
           "CP": input['CP'] || '',
@@ -223,7 +190,7 @@ router.post('/GETINtoSURBAL013', async (req, res) => {
           "QUANTITY": dbsap['QUANTITY'] || '',
           // "PROCESS":dbsap ['PROCESS'] || '',
           // "CUSLOTNO": dbsap['CUSLOTNO'] || '',
-          "CUSLOTNO": cuslot,
+          "CUSLOTNO":  cuslot,
           "FG_CHARG": dbsap['FG_CHARG'] || '',
           "PARTNAME_PO": dbsap['PARTNAME_PO'] || '',
           "PART_PO": dbsap['PART_PO'] || '',
@@ -255,18 +222,9 @@ router.post('/GETINtoSURBAL013', async (req, res) => {
           "value": [],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
           "dateupdatevalue": day,
           "INTERSEC_ERR": 0,
-          "K1b": '',
-          "K1v": '',
-          "FORMULA": '',
-          "confirmdataCW": {
-            "VAL1": "",
-            "VAL2": "",
-            "Aear": "",
-            "FORMULA": "",
-          },
-          //----------------------
-          "USER": input['USER'],
-          "USERID": input['USERID'],
+           //----------------------
+           "USER":input['USER'],
+           "USERID":input['USERID'],
         }
 
         output = 'OK';
@@ -289,18 +247,18 @@ router.post('/GETINtoSURBAL013', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/SURBAL013-geteachITEM', async (req, res) => {
+router.post('/CTCSEM001-geteachITEM', async (req, res) => {
   //-------------------------------------
-  console.log('--SURBAL013-geteachITEM--');
+  console.log('--CTCSEM001-geteachITEM--');
   console.log(req.body);
   let inputB = req.body;
 
   let ITEMSS = '';
   let output = 'NOK';
 
-  for (i = 0; i < SURBAL013db['ItemPickcode'].length; i++) {
-    if (SURBAL013db['ItemPickcode'][i]['value'] === inputB['ITEMs']) {
-      ITEMSS = SURBAL013db['ItemPickcode'][i]['key'];
+  for (i = 0; i < CTCSEM001db['ItemPickcode'].length; i++) {
+    if (CTCSEM001db['ItemPickcode'][i]['value'] === inputB['ITEMs']) {
+      ITEMSS = CTCSEM001db['ItemPickcode'][i]['key'];
     }
   }
 
@@ -308,14 +266,14 @@ router.post('/SURBAL013-geteachITEM', async (req, res) => {
   if (ITEMSS !== '') {
 
     //-------------------------------------
-    SURBAL013db['inspectionItem'] = ITEMSS;
-    SURBAL013db['inspectionItemNAME'] = inputB['ITEMs'];
-    let input = { 'PO': SURBAL013db["PO"], 'CP': SURBAL013db["CP"], 'ITEMs': SURBAL013db['inspectionItem'] };
+    CTCSEM001db['inspectionItem'] = ITEMSS;
+    CTCSEM001db['inspectionItemNAME'] = inputB['ITEMs'];
+    let input = { 'PO': CTCSEM001db["PO"], 'CP': CTCSEM001db["CP"], 'ITEMs': CTCSEM001db['inspectionItem'] };
     //-------------------------------------
     if (input['PO'] !== undefined && input['CP'] !== undefined && input['ITEMs'] !== undefined) {
       let findcp = await mongodb.find(PATTERN, PATTERN_01, { "CP": input['CP'] });
       let UNITdata = await mongodb.find(master_FN, UNIT, {});
-      let masterITEMs = await mongodb.find(master_FN, ITEMs, { "masterID": SURBAL013db['inspectionItem'] });
+      let masterITEMs = await mongodb.find(master_FN, ITEMs, { "masterID": CTCSEM001db['inspectionItem'] });
 
       for (i = 0; i < findcp[0]['FINAL'].length; i++) {
         if (findcp[0]['FINAL'][i]['ITEMs'] === input['ITEMs']) {
@@ -344,58 +302,36 @@ router.post('/SURBAL013-geteachITEM', async (req, res) => {
 
           if (masterITEMs.length > 0) {
             //
-
-            SURBAL013db["RESULTFORMAT"] = masterITEMs[0]['RESULTFORMAT']
-            SURBAL013db["GRAPHTYPE"] = masterITEMs[0]['GRAPHTYPE']
+            CTCSEM001db["RESULTFORMAT"] = masterITEMs[0]['RESULTFORMAT']
+            CTCSEM001db["GRAPHTYPE"] = masterITEMs[0]['GRAPHTYPE']
             //------------------------------------
 
             let graph = await mongodb.find(PATTERN, GRAPH_TABLE, {});
-            SURBAL013db['GAPnameList'] = [];
+            CTCSEM001db['GAPnameList'] = [];
             for (k = 0; k < graph.length; k++) {
-              SURBAL013db['GAPnameList'].push(graph[k]['NO']);
+              CTCSEM001db['GAPnameList'].push(graph[k]['NO']);
             }
           }
 
           for (j = 0; j < UNITdata.length; j++) {
             if (findcp[0]['FINAL'][i]['UNIT'] == UNITdata[j]['masterID']) {
-              SURBAL013db["UNIT"] = UNITdata[j]['UNIT'];
+              CTCSEM001db["UNIT"] = UNITdata[j]['UNIT'];
             }
           }
 
           console.log(findcp[0]['FINAL'][i]['POINT']);
-          console.log(findcp[0]['FINAL'][i])
 
+          CTCSEM001db["POINTs"] = findcp[0]['FINAL'][i]['POINT'];
+          CTCSEM001db["PCS"] = findcp[0]['FINAL'][i]['PCS'];
+          CTCSEM001db["PCSleft"] = findcp[0]['FINAL'][i]['PCS'];
 
-          SURBAL013db["POINTs"] = findcp[0]['FINAL'][i]['POINT'];
-          SURBAL013db["PCS"] = findcp[0]['FINAL'][i]['PCS'];
-          SURBAL013db["PCSleft"] = findcp[0]['FINAL'][i]['PCS'];
-
-          SURBAL013db["K1b"] = findcp[0]['FINAL'][i]['K1b'];
-          SURBAL013db["K1v"] = findcp[0]['FINAL'][i]['K1v'];
-
-          SURBAL013db["INTERSEC"] = masterITEMs[0]['INTERSECTION'];
-
-          let masterITEMsC = await mongodb.find(master_FN, ITEMs, { "masterID": SURBAL013db['inspectionItem'] });
-          // console.log(masterITEMsC);
-          if (masterITEMsC.length > 0) {
-
-            if (masterITEMsC[0]['CALCULATE'] !== '') {
-
-              let masterCALCULATE = await mongodb.find(master_FN, CAL1, { "masterID": masterITEMsC[0]['CALCULATE'] });
-              if (masterCALCULATE.length > 0) {
-                console.log(masterCALCULATE[0]["FORMULA"]);
-                SURBAL013db["FORMULA"] = masterCALCULATE[0]["FORMULA"]
-              }
-            }
-          }
-
-
+          CTCSEM001db["INTERSEC"] = masterITEMs[0]['INTERSECTION'];
           output = 'OK';
           let findpo = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
           if (findpo.length > 0) {
             request.post(
-              'http://127.0.0.1:16070/SURBAL013-feedback',
-              { json: { "PO": SURBAL013db['PO'], "ITEMs": SURBAL013db['inspectionItem'] } },
+              'http://127.0.0.1:16070/CTCSEM001-feedback',
+              { json: { "PO": CTCSEM001db['PO'], "ITEMs": CTCSEM001db['inspectionItem'] } },
               function (error, response, body2) {
                 if (!error && response.statusCode == 200) {
                   // console.log(body2);
@@ -412,33 +348,29 @@ router.post('/SURBAL013-geteachITEM', async (req, res) => {
     }
 
   } else {
-    SURBAL013db["POINTs"] = '';
-    SURBAL013db["PCS"] = '';
-    SURBAL013db["PCSleft"] = '';
-    SURBAL013db["UNIT"] = "";
-    SURBAL013db["INTERSEC"] = "";
-    SURBAL013db["RESULTFORMAT"] = "";
-    SURBAL013db["K1b"] = "";
-    SURBAL013db["K1v"] = "";
-    SURBAL013db["FORMULA"] = "";
-    output = 'NOK';
+    CTCSEM001db["POINTs"] = '',
+      CTCSEM001db["PCS"] = '',
+      CTCSEM001db["PCSleft"] = '',
+      CTCSEM001db["UNIT"] = "",
+      CTCSEM001db["INTERSEC"] = "",
+      output = 'NOK';
   }
 
   //-------------------------------------
   return res.json(output);
 });
 
-router.post('/SURBAL013-geteachGRAPH', async (req, res) => {
+router.post('/CTCSEM001-geteachGRAPH', async (req, res) => {
   //-------------------------------------
-  console.log('--SURBAL013-geteachGRAPH--');
+  console.log('--CTCSEM001-geteachGRAPH--');
   console.log(req.body);
   let input = req.body;
   //-------------------------------------
   try {
     let graph = await mongodb.find(PATTERN, GRAPH_TABLE, { "NO": input['GAPname'] });
     console.log(graph);
-    SURBAL013db['GAPnameListdata'] = graph[0];//confirmdata
-    SURBAL013db['GAP'] = SURBAL013db['GAPnameListdata'][`GT${SURBAL013db['confirmdata'].length + 1}`]
+    CTCSEM001db['GAPnameListdata'] = graph[0];//confirmdata
+    CTCSEM001db['GAP'] = CTCSEM001db['GAPnameListdata'][`GT${CTCSEM001db['confirmdata'].length + 1}`]
   }
   catch (err) {
 
@@ -447,9 +379,9 @@ router.post('/SURBAL013-geteachGRAPH', async (req, res) => {
   return res.json('ok');
 });
 
-router.post('/SURBAL013-preview', async (req, res) => {
+router.post('/CTCSEM001-preview', async (req, res) => {
   //-------------------------------------
-  console.log('--SURBAL013-preview--');
+  console.log('--CTCSEM001-preview--');
   console.log(req.body);
   let input = req.body;
   //-------------------------------------
@@ -458,7 +390,7 @@ router.post('/SURBAL013-preview', async (req, res) => {
     if (input[0]['V1'] !== undefined) {
       //-------------------------------------
       try {
-        SURBAL013db['preview'] = input;
+        CTCSEM001db['preview'] = input;
         output = 'OK';
       }
       catch (err) {
@@ -469,91 +401,50 @@ router.post('/SURBAL013-preview', async (req, res) => {
       output = 'NOK';
     }
   } else {
-    SURBAL013db['preview'] = [];
+    CTCSEM001db['preview'] = [];
     output = 'clear';
   }
   //-------------------------------------
   return res.json(output);
 });
 
-router.post('/SURBAL013-confirmdata', async (req, res) => {
+router.post('/CTCSEM001-confirmdata', async (req, res) => {
   //-------------------------------------
-  console.log('--SURBAL013-confirmdata--');
+  console.log('--CTCSEM001-confirmdata--');
   console.log(req.body);
   // let input = req.body;
   //-------------------------------------
   let output = 'NOK';
   //-------------------------------------
   try {
-    let datapush = SURBAL013db['preview'][0]
+    let datapush = CTCSEM001db['preview'][0]
 
-    // if (SURBAL013db['RESULTFORMAT'] === 'Graph') {
-    //   let pushdata = SURBAL013db['preview'][0]
+    if (CTCSEM001db['RESULTFORMAT'] === 'Graph') {
+      let pushdata = CTCSEM001db['preview'][0]
 
-    //   pushdata['V5'] = SURBAL013db['GAP'];
-    //   pushdata['V1'] = `${SURBAL013db['confirmdata'].length + 1}:${pushdata['V1']}`;
+      pushdata['V5'] = CTCSEM001db['GAP'];
+      pushdata['V1'] = `${CTCSEM001db['confirmdata'].length + 1}:${pushdata['V1']}`;
 
-    //   if(SURBAL013db['GAP'] !=''){
+      if(CTCSEM001db['GAP'] !=''){
 
-    //     SURBAL013db['confirmdata'].push(pushdata);
-    //     SURBAL013db['preview'] = [];
-    //     output = 'OK';
-    //     SURBAL013db['GAP'] = SURBAL013db['GAPnameListdata'][`GT${SURBAL013db['confirmdata'].length + 1}`]
-    //   }else{
-    //     output = 'NOK';
-    //   }
-
-
-    // } else if (SURBAL013db['RESULTFORMAT'] === 'Number') {
-
-    //   let pushdata = SURBAL013db['preview'][0]
-
-    //   pushdata['V5'] = SURBAL013db['confirmdata'].length + 1
-    //   pushdata['V1'] = `${SURBAL013db['confirmdata'].length + 1}:${pushdata['V1']}`
-
-    //   SURBAL013db['confirmdata'].push(pushdata);
-    //   SURBAL013db['preview'] = [];
-    //   output = 'OK';
-    // }
-
-    if (SURBAL013db['RESULTFORMAT'] === 'CAL1') {
-
-      let pushdata = SURBAL013db['preview'][0]
-      // pushdata['V5'] = SURBAL013db['confirmdata'].length + 1
-      // pushdata['V1'] = `${SURBAL013db['confirmdata'].length + 1}:${pushdata['V1']}`
-
-      // SURBAL013db['confirmdata'].push(pushdata);
-      // SURBAL013db['preview'] = [];
-      console.log(pushdata);
-
-
-      let feedback = await mongodb.find("BUFFERCAL", "SURBAL013", { "PO": SURBAL013db['PO'] });
-
-      console.log(feedback);
-      if (feedback.length > 0) {
-        if (feedback[0]['VAL1'] != '' && feedback[0]['VAL2'] == '') {
-          let feedbackupdate = await mongodb.update("BUFFERCAL", "SURBAL013", { "PO": SURBAL013db['PO'] }, { "$set": { 'VAL2': pushdata['V2'] } });
-        }
-
-      } else {
-        let areadata = ''
-        if (SURBAL013db['K1b'] === '1') {
-          areadata = SURBAL013db['K1v']
-        }
-        var ins = await mongodb.insertMany("BUFFERCAL", "SURBAL013", [{ "PO": SURBAL013db['PO'], 'VAL1': pushdata['V2'], 'VAL2': "", 'VAL3': "", 'VAL4': "", 'Area': areadata, 'FORMULA': SURBAL013db["FORMULA"] }]);
-      }
-
-      SURBAL013db['preview'] = [];
-      let feedbackLast = await mongodb.find("BUFFERCAL", "SURBAL013", { "PO": SURBAL013db['PO'] });
-      if (feedbackLast.length > 0) {
-        SURBAL013db['confirmdataCW']['VAL1'] = feedbackLast[0]['VAL1'];
-        SURBAL013db['confirmdataCW']['VAL2'] = feedbackLast[0]['VAL2'];
-        SURBAL013db['confirmdataCW']['Area'] = feedbackLast[0]['Area'];
-
+        CTCSEM001db['confirmdata'].push(pushdata);
+        CTCSEM001db['preview'] = [];
+        output = 'OK';
+        CTCSEM001db['GAP'] = CTCSEM001db['GAPnameListdata'][`GT${CTCSEM001db['confirmdata'].length + 1}`]
+      }else{
+        output = 'NOK';
       }
 
 
+    } else if (CTCSEM001db['RESULTFORMAT'] === 'Number') {
 
+      let pushdata = CTCSEM001db['preview'][0]
+
+      pushdata['V5'] = CTCSEM001db['confirmdata'].length + 1
+      pushdata['V1'] = `${CTCSEM001db['confirmdata'].length + 1}:${pushdata['V1']}`
+
+      CTCSEM001db['confirmdata'].push(pushdata);
+      CTCSEM001db['preview'] = [];
       output = 'OK';
     }
   }
@@ -566,9 +457,9 @@ router.post('/SURBAL013-confirmdata', async (req, res) => {
 
 
 
-router.post('/SURBAL013-feedback', async (req, res) => {
+router.post('/CTCSEM001-feedback', async (req, res) => {
   //-------------------------------------
-  console.log('--SURBAL013-feedback--');
+  console.log('--CTCSEM001-feedback--');
   console.log(req.body);
   let input = req.body;
   //-------------------------------------
@@ -590,8 +481,8 @@ router.post('/SURBAL013-feedback', async (req, res) => {
       for (i = 0; i < oblist.length; i++) {
         LISTbuffer.push(...ob[oblist[i]])
       }
-      SURBAL013db["PCSleft"] = `${parseInt(SURBAL013db["PCS"]) - oblist.length}`;
-      if (SURBAL013db['RESULTFORMAT'] === 'Number' || SURBAL013db['RESULTFORMAT'] === 'Text' || SURBAL013db['RESULTFORMAT'] === 'Graph') {
+      CTCSEM001db["PCSleft"] = `${parseInt(CTCSEM001db["PCS"]) - oblist.length}`;
+      if (CTCSEM001db['RESULTFORMAT'] === 'Number' || CTCSEM001db['RESULTFORMAT'] === 'Text' || CTCSEM001db['RESULTFORMAT'] === 'Graph') {
         for (i = 0; i < LISTbuffer.length; i++) {
           if (LISTbuffer[i]['PO1'] === 'Mean') {
             ITEMleftVALUEout.push({ "V1": 'Mean', "V2": `${LISTbuffer[i]['PO3']}` })
@@ -603,14 +494,14 @@ router.post('/SURBAL013-feedback', async (req, res) => {
 
 
 
-        SURBAL013db["ITEMleftUNIT"] = [{ "V1": "FINAL", "V2": `${oblist.length}` }];
-        SURBAL013db["ITEMleftVALUE"] = ITEMleftVALUEout;
+        CTCSEM001db["ITEMleftUNIT"] = [{ "V1": "FINAL", "V2": `${oblist.length}` }];
+        CTCSEM001db["ITEMleftVALUE"] = ITEMleftVALUEout;
 
       } else {
 
       }
       // output = 'OK';
-      if ((parseInt(SURBAL013db["PCS"]) - oblist.length) == 0) {
+      if ((parseInt(CTCSEM001db["PCS"]) - oblist.length) == 0) {
         //CHECKlist
         for (i = 0; i < feedback[0]['CHECKlist'].length; i++) {
           if (input["ITEMs"] === feedback[0]['CHECKlist'][i]['key']) {
@@ -655,7 +546,7 @@ router.post('/SURBAL013-feedback', async (req, res) => {
 
           } else if (masterITEMs[0]['RESULTFORMAT'] === 'Graph') {
 
-            if (SURBAL013db['GRAPHTYPE'] == 'CDE') {
+            if (CTCSEM001db['GRAPHTYPE'] == 'CDE' ) {
 
               //
               let axis_data = [];
@@ -667,10 +558,10 @@ router.post('/SURBAL013-feedback', async (req, res) => {
               //-----------------core
 
               let core = 0;
-              if (SURBAL013db['INTERSEC'] !== '') {
-                core = parseFloat(SURBAL013db['INTERSEC'])
+              if (CTCSEM001db['INTERSEC'] !== '') {
+                core = parseFloat(CTCSEM001db['INTERSEC'])
               } else {
-                core = parseFloat(axis_data[axis_data.length - 1]['y'])
+                core = parseFloat(axis_data[axis_data.length - 1]['y']) 
               }
 
               //-----------------core
@@ -696,11 +587,11 @@ router.post('/SURBAL013-feedback', async (req, res) => {
                 let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedback[0]['FINAL_ANS'] } });
               }
               catch (err) {
-                SURBAL013db[`INTERSEC_ERR`] = 1;
+                CTCSEM001db[`INTERSEC_ERR`] = 1;
               }
 
               //
-            } else if (SURBAL013db['GRAPHTYPE'] == 'CDT') {
+            } else if (CTCSEM001db['GRAPHTYPE'] == 'CDT' ) {
 
               //
               let axis_data = [];
@@ -712,11 +603,11 @@ router.post('/SURBAL013-feedback', async (req, res) => {
               //-----------------core
 
               let core = 0;
-              if (SURBAL013db['INTERSEC'] !== '') {
-                core = parseFloat(SURBAL013db['INTERSEC'])
+              if (CTCSEM001db['INTERSEC'] !== '') {
+                core = parseFloat(CTCSEM001db['INTERSEC'])
               } else {
                 // core = parseFloat(axis_data[axis_data.length - 1]['y']) 
-                core = parseFloat(axis_data[axis_data.length - 1]['y']) + 50
+                core = parseFloat(axis_data[axis_data.length - 1]['y']) +50
               }
 
               //-----------------core
@@ -742,11 +633,11 @@ router.post('/SURBAL013-feedback', async (req, res) => {
                 let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedback[0]['FINAL_ANS'] } });
               }
               catch (err) {
-                SURBAL013db[`INTERSEC_ERR`] = 1;
+                CTCSEM001db[`INTERSEC_ERR`] = 1;
               }
 
               //
-            } else if (SURBAL013db['GRAPHTYPE'] == 'CDT(S)') {
+            } else if (CTCSEM001db['GRAPHTYPE'] == 'CDT(S)' ) {
 
               //
               let axis_data = [];
@@ -758,10 +649,10 @@ router.post('/SURBAL013-feedback', async (req, res) => {
               //-----------------core
 
               let core = 0;
-              if (SURBAL013db['INTERSEC'] !== '') {
-                core = parseFloat(SURBAL013db['INTERSEC'])
+              if (CTCSEM001db['INTERSEC'] !== '') {
+                core = parseFloat(CTCSEM001db['INTERSEC'])
               } else {
-                core = parseFloat(axis_data[axis_data.length - 1]['y']) + 50
+                core = parseFloat(axis_data[axis_data.length - 1]['y']) +50
               }
 
               //-----------------core
@@ -787,11 +678,11 @@ router.post('/SURBAL013-feedback', async (req, res) => {
                 let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedback[0]['FINAL_ANS'] } });
               }
               catch (err) {
-                SURBAL013db[`INTERSEC_ERR`] = 1;
+                CTCSEM001db[`INTERSEC_ERR`] = 1;
               }
 
               //
-            } else {
+            } else  {
               try {
                 let axis_data = [];
                 for (i = 0; i < LISTbuffer.length; i++) {
@@ -854,87 +745,16 @@ router.post('/SURBAL013-feedback', async (req, res) => {
 
               }
               catch (err) {
-                SURBAL013db[`INTERSEC_ERR`] = 1;
+                CTCSEM001db[`INTERSEC_ERR`] = 1;
               }
-            }
+            } 
 
           } else if (masterITEMs[0]['RESULTFORMAT'] === 'Picture') {
             //
           } else if (masterITEMs[0]['RESULTFORMAT'] === 'OCR') {
             //
 
-          }
-          else if (masterITEMs[0]['RESULTFORMAT'] === 'CAL1') {
-
-            console.log("---CALCULATEDATA---")
-            let feedback = await mongodb.find("BUFFERCAL", "SURBAL013", { "PO": input["PO"] });
-            if (feedback.length > 0) {
-              if (feedback[0]['VAL1'] !== '' && feedback[0]['VAL2'] !== '' && feedback[0]['Area'] !== '' && feedback[0]['FORMULA'] !== '') {
-
-                // console.log( feedback[0]['VAL1'])
-                // console.log( feedback[0]['VAL2'])
-                // console.log( feedback[0]['Area'])
-                // console.log( feedback[0]['FORMULA'])
-
-                // console.log(evil(`12/5*9+9.4*2`));
-
-                // let FORMULAdata = feedback[0]['FORMULA'];
-                // let VAL1data = feedback[0]['VAL1'];
-                // let VAL2data = feedback[0]['VAL2'];
-                // let Areadata = feedback[0]['Area'];
-
-                // //X1+Y1+K1
-
-                // let FORMULAresult = FORMULAdata.replace("X", `${VAL1data}`).replace("Y", `${VAL2data}`).replace("K1", `${Areadata}`)
-                // console.log(FORMULAresult)
-                // let result = evil(FORMULAresult)
-                // let finalresult = result;
-
-                // if (result < 0) {
-                //   finalresult = - finalresult;
-                // }
-                // console.log(finalresult)
-
-
-
-                // let feedbackres = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
-                // feedbackres[0]['FINAL_ANS'][input["ITEMs"]] = finalresult;
-                // console.log(feedbackres)
-                // let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedbackres[0]['FINAL_ANS'] } });
-
-                let FORMULAdata = feedback[0]['FORMULA'];
-                let VAL1data = feedback[0]['VAL1'];
-                let VAL2data = feedback[0]['VAL2'];
-                let Areadata = feedback[0]['Area'];
-
-                let FORMULAresult = FORMULAdata.replace("X", `${VAL1data}`).replace("Y", `${VAL2data}`).replace("K1", `${Areadata}`)
-                console.log(FORMULAresult)
-                let result = evil(FORMULAresult)
-                let finalresult = result;
-                console.log(finalresult)
-                if (result < 0) {
-                  finalresult = - finalresult;
-                }
-                console.log(finalresult)
-
-
-
-                let feedbackres = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
-                console.log(feedbackres)
-                if (feedbackres[0]['FINAL_ANS'] === undefined) {
-                  feedbackres[0]['FINAL_ANS'] = {}
-                  feedbackres[0]['FINAL_ANS'][input["ITEMs"]] = finalresult;
-                  console.log(feedbackres)
-                  let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedbackres[0]['FINAL_ANS'] } });
-                } else {
-                  feedbackres[0]['FINAL_ANS'][input["ITEMs"]] = finalresult;
-                  console.log(feedbackres)
-                  let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedbackres[0]['FINAL_ANS'] } });
-                }
-
-                output = 'OK'
-              }
-            }
+          } else {
 
           }
         }
@@ -958,8 +778,8 @@ router.post('/SURBAL013-feedback', async (req, res) => {
 
       }
     } else {
-      SURBAL013db["ITEMleftUNIT"] = '';
-      SURBAL013db["ITEMleftVALUE"] = '';
+      CTCSEM001db["ITEMleftUNIT"] = '';
+      CTCSEM001db["ITEMleftVALUE"] = '';
     }
 
   }
@@ -968,9 +788,9 @@ router.post('/SURBAL013-feedback', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/SURBAL013-SETZERO', async (req, res) => {
+router.post('/CTCSEM001-SETZERO', async (req, res) => {
   //-------------------------------------
-  console.log('--SURBAL013fromINS--');
+  console.log('--CTCSEM001fromINS--');
   console.log(req.body);
   let input = req.body;
   //-------------------------------------
@@ -978,7 +798,7 @@ router.post('/SURBAL013-SETZERO', async (req, res) => {
   //-------------------------------------
   try {
 
-    SURBAL013db = {
+    CTCSEM001db = {
       "INS": NAME_INS,
       "PO": "",
       "CP": "",
@@ -1027,15 +847,6 @@ router.post('/SURBAL013-SETZERO', async (req, res) => {
       "value": [],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
       "dateupdatevalue": day,
       "INTERSEC_ERR": 0,
-      "K1b": '',
-      "K1v": '',
-      "FORMULA": '',
-      "confirmdataCW": {
-        "VAL1": "",
-        "VAL2": "",
-        "Aear": "",
-        "FORMULA": "",
-      },
     }
     output = 'OK';
   }
@@ -1046,9 +857,9 @@ router.post('/SURBAL013-SETZERO', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/SURBAL013-CLEAR', async (req, res) => {
+router.post('/CTCSEM001-CLEAR', async (req, res) => {
   //-------------------------------------
-  console.log('--SURBAL013fromINS--');
+  console.log('--CTCSEM001fromINS--');
   console.log(req.body);
   let input = req.body;
   //-------------------------------------
@@ -1056,8 +867,8 @@ router.post('/SURBAL013-CLEAR', async (req, res) => {
   //-------------------------------------
   try {
 
-    SURBAL013db['preview'] = [];
-    SURBAL013db['confirmdata'] = [];
+    CTCSEM001db['preview'] = [];
+    CTCSEM001db['confirmdata'] = [];
 
     output = 'OK';
   }
@@ -1068,9 +879,9 @@ router.post('/SURBAL013-CLEAR', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/SURBAL013-RESETVALUE', async (req, res) => {
+router.post('/CTCSEM001-RESETVALUE', async (req, res) => {
   //-------------------------------------
-  console.log('--SURBAL013fromINS--');
+  console.log('--CTCSEM001fromINS--');
   console.log(req.body);
   let input = req.body;
   //-------------------------------------
@@ -1078,9 +889,9 @@ router.post('/SURBAL013-RESETVALUE', async (req, res) => {
   //-------------------------------------
   try {
 
-    let all = SURBAL013db['confirmdata'].length
+    let all = CTCSEM001db['confirmdata'].length
     if (all > 0) {
-      SURBAL013db['confirmdata'].pop();
+      CTCSEM001db['confirmdata'].pop();
     }
 
     output = 'OK';
@@ -1095,24 +906,24 @@ router.post('/SURBAL013-RESETVALUE', async (req, res) => {
 //"value":[],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
 
 
-router.post('/SURBAL013-FINISH', async (req, res) => {
+router.post('/CTCSEM001-FINISH', async (req, res) => {
   //-------------------------------------
-  console.log('--SURBAL013-FINISH--');
+  console.log('--CTCSEM001-FINISH--');
   console.log(req.body);
   let input = req.body;
   //-------------------------------------
   let output = 'OK';
 
-  if (SURBAL013db['RESULTFORMAT'] === 'Number' || SURBAL013db['RESULTFORMAT'] === 'Text') {
+  if (CTCSEM001db['RESULTFORMAT'] === 'Number' || CTCSEM001db['RESULTFORMAT'] === 'Text') {
 
-    SURBAL013db["value"] = [];
-    for (i = 0; i < SURBAL013db['confirmdata'].length; i++) {
-      SURBAL013db["value"].push({
-        "PO1": SURBAL013db["inspectionItemNAME"],
-        "PO2": SURBAL013db['confirmdata'][i]['V1'],
-        "PO3": SURBAL013db['confirmdata'][i]['V2'],
-        "PO4": SURBAL013db['confirmdata'][i]['V3'],
-        "PO5": SURBAL013db['confirmdata'][i]['V4'],
+    CTCSEM001db["value"] = [];
+    for (i = 0; i < CTCSEM001db['confirmdata'].length; i++) {
+      CTCSEM001db["value"].push({
+        "PO1": CTCSEM001db["inspectionItemNAME"],
+        "PO2": CTCSEM001db['confirmdata'][i]['V1'],
+        "PO3": CTCSEM001db['confirmdata'][i]['V2'],
+        "PO4": CTCSEM001db['confirmdata'][i]['V3'],
+        "PO5": CTCSEM001db['confirmdata'][i]['V4'],
         "PO6": "-",
         "PO7": "-",
         "PO8": '-',
@@ -1120,85 +931,85 @@ router.post('/SURBAL013-FINISH', async (req, res) => {
         "PO10": "AUTO",
       });
     }
-    if (SURBAL013db["value"].length > 0) {
+    if (CTCSEM001db["value"].length > 0) {
       let mean01 = [];
       let mean02 = [];
-      for (i = 0; i < SURBAL013db["value"].length; i++) {
-        mean01.push(parseFloat(SURBAL013db["value"][i]["PO3"]));
-        mean02.push(parseFloat(SURBAL013db["value"][i]["PO5"]));
+      for (i = 0; i < CTCSEM001db["value"].length; i++) {
+        mean01.push(parseFloat(CTCSEM001db["value"][i]["PO3"]));
+        mean02.push(parseFloat(CTCSEM001db["value"][i]["PO5"]));
       }
       let sum1 = mean01.reduce((a, b) => a + b, 0);
       let avg1 = (sum1 / mean01.length) || 0;
       let sum2 = mean02.reduce((a, b) => a + b, 0);
       let avg2 = (sum2 / mean02.length) || 0;
-      SURBAL013db["value"].push({
+      CTCSEM001db["value"].push({
         "PO1": 'Mean',
-        "PO2": SURBAL013db['confirmdata'][0]['V1'],
+        "PO2": CTCSEM001db['confirmdata'][0]['V1'],
         "PO3": avg1,
-        "PO4": SURBAL013db['confirmdata'][0]['V3'],
+        "PO4": CTCSEM001db['confirmdata'][0]['V3'],
         "PO5": avg2,
       });
     }
 
-  } else if (SURBAL013db['RESULTFORMAT'] === 'OCR' || SURBAL013db['RESULTFORMAT'] === 'Picture') {
+  } else if (CTCSEM001db['RESULTFORMAT'] === 'OCR' || CTCSEM001db['RESULTFORMAT'] === 'Picture') {
 
-  } else if (SURBAL013db['RESULTFORMAT'] === 'Graph') {
+  } else if (CTCSEM001db['RESULTFORMAT'] === 'Graph') {
 
-    SURBAL013db["value"] = [];
-    for (i = 0; i < SURBAL013db['confirmdata'].length; i++) {
-      SURBAL013db["value"].push({
-        "PO1": SURBAL013db["inspectionItemNAME"],
-        "PO2": SURBAL013db['confirmdata'][i]['V1'],
-        "PO3": SURBAL013db['confirmdata'][i]['V2'],
-        "PO4": SURBAL013db['confirmdata'][i]['V3'],
-        "PO5": SURBAL013db['confirmdata'][i]['V4'],
+    CTCSEM001db["value"] = [];
+    for (i = 0; i < CTCSEM001db['confirmdata'].length; i++) {
+      CTCSEM001db["value"].push({
+        "PO1": CTCSEM001db["inspectionItemNAME"],
+        "PO2": CTCSEM001db['confirmdata'][i]['V1'],
+        "PO3": CTCSEM001db['confirmdata'][i]['V2'],
+        "PO4": CTCSEM001db['confirmdata'][i]['V3'],
+        "PO5": CTCSEM001db['confirmdata'][i]['V4'],
         "PO6": "-",
         "PO7": "-",
-        "PO8": SURBAL013db['confirmdata'][i]['V5'],
+        "PO8": CTCSEM001db['confirmdata'][i]['V5'],
         "PO9": i + 1,
         "PO10": "AUTO",
       });
     }
-    if (SURBAL013db["value"].length > 0) {
+    if (CTCSEM001db["value"].length > 0) {
       let mean01 = [];
       let mean02 = [];
-      for (i = 0; i < SURBAL013db["value"].length; i++) {
-        mean01.push(parseFloat(SURBAL013db["value"][i]["PO3"]));
-        mean02.push(parseFloat(SURBAL013db["value"][i]["PO5"]));
+      for (i = 0; i < CTCSEM001db["value"].length; i++) {
+        mean01.push(parseFloat(CTCSEM001db["value"][i]["PO3"]));
+        mean02.push(parseFloat(CTCSEM001db["value"][i]["PO5"]));
       }
       let sum1 = mean01.reduce((a, b) => a + b, 0);
       let avg1 = (sum1 / mean01.length) || 0;
       let sum2 = mean02.reduce((a, b) => a + b, 0);
       let avg2 = (sum2 / mean02.length) || 0;
-      SURBAL013db["value"].push({
+      CTCSEM001db["value"].push({
         "PO1": 'Mean',
-        "PO2": SURBAL013db['confirmdata'][0]['V1'],
+        "PO2": CTCSEM001db['confirmdata'][0]['V1'],
         "PO3": avg1,
-        "PO4": SURBAL013db['confirmdata'][0]['V3'],
+        "PO4": CTCSEM001db['confirmdata'][0]['V3'],
         "PO5": avg2,
       });
     }
 
   }
 
-  if (SURBAL013db['RESULTFORMAT'] === 'Number' ||
-    SURBAL013db['RESULTFORMAT'] === 'Text' ||
-    SURBAL013db['RESULTFORMAT'] === 'OCR' ||
-    SURBAL013db['RESULTFORMAT'] === 'Picture' || SURBAL013db['RESULTFORMAT'] === 'Graph') {
+  if (CTCSEM001db['RESULTFORMAT'] === 'Number' ||
+    CTCSEM001db['RESULTFORMAT'] === 'Text' ||
+    CTCSEM001db['RESULTFORMAT'] === 'OCR' ||
+    CTCSEM001db['RESULTFORMAT'] === 'Picture' || CTCSEM001db['RESULTFORMAT'] === 'Graph') {
     request.post(
       'http://127.0.0.1:16070/FINISHtoDB',
-      { json: SURBAL013db },
+      { json: CTCSEM001db },
       function (error, response, body) {
         if (!error && response.statusCode == 200) {
           // console.log(body);
           // if (body === 'OK') {
-          SURBAL013db['confirmdata'] = [];
-          SURBAL013db["value"] = [];
+          CTCSEM001db['confirmdata'] = [];
+          CTCSEM001db["value"] = [];
           //------------------------------------------------------------------------------------
 
           request.post(
-            'http://127.0.0.1:16070/SURBAL013-feedback',
-            { json: { "PO": SURBAL013db['PO'], "ITEMs": SURBAL013db['inspectionItem'] } },
+            'http://127.0.0.1:16070/CTCSEM001-feedback',
+            { json: { "PO": CTCSEM001db['PO'], "ITEMs": CTCSEM001db['inspectionItem'] } },
             function (error, response, body2) {
               if (!error && response.statusCode == 200) {
                 // console.log(body2);
@@ -1217,71 +1028,10 @@ router.post('/SURBAL013-FINISH', async (req, res) => {
     );
   }
   //-------------------------------------
-  return res.json(SURBAL013db);
+  return res.json(CTCSEM001db);
 });
 
-router.post('/SURBAL013-FINISH-CAL1', async (req, res) => {
-  //-------------------------------------
-  console.log('--SURBAL013-FINISH-CAL1--');
-  console.log(req.body);
-  let input = req.body;
-  //-------------------------------------
-  let output = 'OK';
-  if ((SURBAL013db['RESULTFORMAT'] === 'CAL1')) {
 
-
-
-    SURBAL013db["value"] = [];
-    let feedback = await mongodb.find("BUFFERCAL", "SURBAL013", { "PO": SURBAL013db['PO'] });
-    if (feedback.length > 0) {
-      if (feedback[0]['VAL1'] !== '' && feedback[0]['VAL2'] !== '' && feedback[0]['Area'] !== '') {
-        SURBAL013db["value"].push({
-          "VAL1": feedback[0]['VAL1'],
-          "VAL2": feedback[0]['VAL2'],
-          "Area": feedback[0]['Area'],
-          "FORMULA": feedback[0]['FORMULA'],
-        });
-
-        if (SURBAL013db['RESULTFORMAT'] === 'CAL1') {
-          request.post(
-            'http://127.0.0.1:16070/FINISHtoDB',
-            { json: SURBAL013db },
-            function (error, response, body) {
-              if (!error && response.statusCode == 200) {
-                // console.log(body);
-                // if (body === 'OK') {
-                SURBAL013db['confirmdata'] = [];
-                SURBAL013db["value"] = [];
-                //------------------------------------------------------------------------------------
-                request.post(
-                  'http://127.0.0.1:16070/SURBAL013-feedback',
-                  { json: { "PO": SURBAL013db['PO'], "ITEMs": SURBAL013db['inspectionItem'] } },
-                  function (error, response, body2) {
-                    if (!error && response.statusCode == 200) {
-                      // console.log(body2);
-                      // if (body2 === 'OK') {
-                      output = 'OK';
-                      // }
-                    }
-                  }
-                );
-                //------------------------------------------------------------------------------------
-                // }
-
-              }
-            }
-          );
-        }
-      }
-    }
-
-
-
-  }
-
-  //-------------------------------------
-  return res.json(SURBAL013db);
-});
 
 module.exports = router;
 
