@@ -96,7 +96,7 @@ router.get('/CHECK-CTCSEM001', async (req, res) => {
 
 router.post('/CTCSEM001db', async (req, res) => {
   //-------------------------------------
-  // console.log('--CTCSEM001db--');
+  console.log('--CTCSEM001db--');
   // console.log(req.body);
   //-------------------------------------
   let finddb = [{}];

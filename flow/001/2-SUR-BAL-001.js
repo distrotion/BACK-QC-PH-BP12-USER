@@ -89,12 +89,12 @@ let SURBAL013db = {
   "K1b": '',
   "K1v": '',
   "FORMULA": '',
-  "confirmdataCW": {
+  "confirmdataCW": [{
     "VAL1": "",
     "VAL2": "",
     "Aear": "",
     "FORMULA": "",
-  },
+  }],
   //----------------------
   "USER": '',
   "USERID": '',
@@ -121,17 +121,17 @@ router.post('/SURBAL013db', async (req, res) => {
     if (SURBAL013db['RESULTFORMAT'] === 'CAL1') {
       let feedbackLast = await mongodb.find("BUFFERCAL", "SURBAL013", { "PO": SURBAL013db['PO'] });
       if (feedbackLast.length > 0) {
-        SURBAL013db['confirmdataCW']['VAL1'] = feedbackLast[0]['VAL1'];
-        SURBAL013db['confirmdataCW']['VAL2'] = feedbackLast[0]['VAL2'];
-        SURBAL013db['confirmdataCW']['Area'] = feedbackLast[0]['Area'];
-        SURBAL013db['confirmdataCW']['FORMULA'] = feedbackLast[0]['FORMULA'];
+        SURBAL013db['confirmdataCW'][0]['VAL1'] = feedbackLast[0]['VAL1'];
+        SURBAL013db['confirmdataCW'][0]['VAL2'] = feedbackLast[0]['VAL2'];
+        SURBAL013db['confirmdataCW'][0]['Area'] = feedbackLast[0]['Area'];
+        SURBAL013db['confirmdataCW'][0]['FORMULA'] = feedbackLast[0]['FORMULA'];
 
       }
     } else {
-      SURBAL013db['confirmdataCW']['VAL1'] = "";
-      SURBAL013db['confirmdataCW']['VAL2'] = "";
-      SURBAL013db['confirmdataCW']['Area'] = "";
-      SURBAL013db['confirmdataCW']['FORMULA'] = "";
+      SURBAL013db['confirmdataCW'][0]['VAL1'] = "";
+      SURBAL013db['confirmdataCW'][0]['VAL2'] = "";
+      SURBAL013db['confirmdataCW'][0]['Area'] = "";
+      SURBAL013db['confirmdataCW'][0]['FORMULA'] = "";
     }
 
 
@@ -258,12 +258,12 @@ router.post('/GETINtoSURBAL013', async (req, res) => {
           "K1b": '',
           "K1v": '',
           "FORMULA": '',
-          "confirmdataCW": {
+          "confirmdataCW": [{
             "VAL1": "",
             "VAL2": "",
             "Aear": "",
             "FORMULA": "",
-          },
+          }],
           //----------------------
           "USER": input['USER'],
           "USERID": input['USERID'],
@@ -546,9 +546,9 @@ router.post('/SURBAL013-confirmdata', async (req, res) => {
       SURBAL013db['preview'] = [];
       let feedbackLast = await mongodb.find("BUFFERCAL", "SURBAL013", { "PO": SURBAL013db['PO'] });
       if (feedbackLast.length > 0) {
-        SURBAL013db['confirmdataCW']['VAL1'] = feedbackLast[0]['VAL1'];
-        SURBAL013db['confirmdataCW']['VAL2'] = feedbackLast[0]['VAL2'];
-        SURBAL013db['confirmdataCW']['Area'] = feedbackLast[0]['Area'];
+        SURBAL013db['confirmdataCW'][0]['VAL1'] = feedbackLast[0]['VAL1'];
+        SURBAL013db['confirmdataCW'][0]['VAL2'] = feedbackLast[0]['VAL2'];
+        SURBAL013db['confirmdataCW'][0]['Area'] = feedbackLast[0]['Area'];
 
       }
 
@@ -1030,12 +1030,12 @@ router.post('/SURBAL013-SETZERO', async (req, res) => {
       "K1b": '',
       "K1v": '',
       "FORMULA": '',
-      "confirmdataCW": {
+      "confirmdataCW": [{
         "VAL1": "",
         "VAL2": "",
         "Aear": "",
         "FORMULA": "",
-      },
+      }],
     }
     output = 'OK';
   }
