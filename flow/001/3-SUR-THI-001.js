@@ -60,6 +60,9 @@ let SURTHI002db = {
   "POINTs": "",
   "PCS": "",
   "PCSleft": "",
+
+  "SPEC": "",
+
   "UNIT": "",
   "INTERSEC": "",
   "RESULTFORMAT": "",
@@ -81,9 +84,9 @@ let SURTHI002db = {
   "value": [],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
   "dateupdatevalue": day,
   "INTERSEC_ERR": 0,
-   //----------------------
-   "USER": '',
-   "USERID": '',
+  //----------------------
+  "USER": '',
+  "USERID": '',
 }
 
 
@@ -120,7 +123,7 @@ router.post('/GETINtoSURTHI002', async (req, res) => {
   //-------------------------------------
   let output = 'NOK';
   check = SURTHI002db;
-  if (input['PO'] !== undefined && input['CP'] !== undefined && check['PO'] === ''&& input['USER'] !== undefined && input['USERID'] !== undefined) {
+  if (input['PO'] !== undefined && input['CP'] !== undefined && check['PO'] === '' && input['USER'] !== undefined && input['USERID'] !== undefined) {
     // let dbsap = await mssql.qurey(`select * FROM [SAPData_GW_GAS].[dbo].[tblSAPDetail] where [PO] = ${input['PO']}`);
 
     let findPO = await mongodb.findSAP('mongodb://172.23.10.39:12010', "ORDER", "ORDER", {});
@@ -133,7 +136,7 @@ router.post('/GETINtoSURTHI002', async (req, res) => {
         if (findPO[0][`DATA`][i][`PO`] === input['PO']) {
           dbsap = findPO[0][`DATA`][i];
           // break;
-          cuslot = cuslot+ findPO[0][`DATA`][i][`CUSLOTNO`]+ ','
+          cuslot = cuslot + findPO[0][`DATA`][i][`CUSLOTNO`] + ','
         }
       }
 
@@ -190,7 +193,7 @@ router.post('/GETINtoSURTHI002', async (req, res) => {
           "QUANTITY": dbsap['QUANTITY'] || '',
           // "PROCESS":dbsap ['PROCESS'] || '',
           // "CUSLOTNO": dbsap['CUSLOTNO'] || '',
-          "CUSLOTNO":  cuslot,
+          "CUSLOTNO": cuslot,
           "FG_CHARG": dbsap['FG_CHARG'] || '',
           "PARTNAME_PO": dbsap['PARTNAME_PO'] || '',
           "PART_PO": dbsap['PART_PO'] || '',
@@ -201,6 +204,9 @@ router.post('/GETINtoSURTHI002', async (req, res) => {
           "POINTs": "",
           "PCS": "",
           "PCSleft": "",
+
+          "SPEC": "",
+
           "UNIT": "",
           "INTERSEC": "",
           "RESULTFORMAT": "",
@@ -222,9 +228,9 @@ router.post('/GETINtoSURTHI002', async (req, res) => {
           "value": [],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
           "dateupdatevalue": day,
           "INTERSEC_ERR": 0,
-           //----------------------
-           "USER":input['USER'],
-           "USERID":input['USERID'],
+          //----------------------
+          "USER": input['USER'],
+          "USERID": input['USERID'],
         }
 
         output = 'OK';
@@ -325,6 +331,21 @@ router.post('/SURTHI002-geteachITEM', async (req, res) => {
           SURTHI002db["PCS"] = findcp[0]['FINAL'][i]['PCS'];
           SURTHI002db["PCSleft"] = findcp[0]['FINAL'][i]['PCS'];
 
+          SURTHI002db["SPEC"]='';
+          if (findcp[0]['FINAL'][i]['SPECIFICATIONve'] !== undefined) {
+            if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'BTW') {
+              SURTHI002db["SPEC"] =  `${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_LOW']}-${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_HI']}`;
+            } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'HIM(>)') {
+              SURTHI002db["SPEC"] =  `>${findcp[0]['FINAL'][i]['SPECIFICATIONve']['HIM_L']}`;
+            } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'LOL(<)') {
+              SURTHI002db["SPEC"] =  `<${findcp[0]['FINAL'][i]['SPECIFICATIONve']['LOL_H']}`;
+            }else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'Actual'){
+              SURTHI002db["SPEC"] =  'Actual';
+            }
+          }
+
+
+
           SURTHI002db["INTERSEC"] = masterITEMs[0]['INTERSECTION'];
           output = 'OK';
           let findpo = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
@@ -348,12 +369,13 @@ router.post('/SURTHI002-geteachITEM', async (req, res) => {
     }
 
   } else {
-    SURTHI002db["POINTs"] = '',
-      SURTHI002db["PCS"] = '',
-      SURTHI002db["PCSleft"] = '',
-      SURTHI002db["UNIT"] = "",
-      SURTHI002db["INTERSEC"] = "",
-      output = 'NOK';
+    SURTHI002db["POINTs"] = '';
+    SURTHI002db["PCS"] = '';
+    SURBAL013db["SPEC"] = '';
+    SURTHI002db["PCSleft"] = '';
+    SURTHI002db["UNIT"] = "";
+    SURTHI002db["INTERSEC"] = "";
+    output = 'NOK';
   }
 
   //-------------------------------------
@@ -425,13 +447,13 @@ router.post('/SURTHI002-confirmdata', async (req, res) => {
       pushdata['V5'] = SURTHI002db['GAP'];
       pushdata['V1'] = `${SURTHI002db['confirmdata'].length + 1}:${pushdata['V1']}`;
 
-      if(SURTHI002db['GAP'] !=''){
+      if (SURTHI002db['GAP'] != '') {
 
         SURTHI002db['confirmdata'].push(pushdata);
         SURTHI002db['preview'] = [];
         output = 'OK';
         SURTHI002db['GAP'] = SURTHI002db['GAPnameListdata'][`GT${SURTHI002db['confirmdata'].length + 1}`]
-      }else{
+      } else {
         output = 'NOK';
       }
 
@@ -546,7 +568,7 @@ router.post('/SURTHI002-feedback', async (req, res) => {
 
           } else if (masterITEMs[0]['RESULTFORMAT'] === 'Graph') {
 
-            if (SURTHI002db['GRAPHTYPE'] == 'CDE' ) {
+            if (SURTHI002db['GRAPHTYPE'] == 'CDE') {
 
               //
               let axis_data = [];
@@ -561,7 +583,7 @@ router.post('/SURTHI002-feedback', async (req, res) => {
               if (SURTHI002db['INTERSEC'] !== '') {
                 core = parseFloat(SURTHI002db['INTERSEC'])
               } else {
-                core = parseFloat(axis_data[axis_data.length - 1]['y']) 
+                core = parseFloat(axis_data[axis_data.length - 1]['y'])
               }
 
               //-----------------core
@@ -591,7 +613,7 @@ router.post('/SURTHI002-feedback', async (req, res) => {
               }
 
               //
-            } else if (SURTHI002db['GRAPHTYPE'] == 'CDT' ) {
+            } else if (SURTHI002db['GRAPHTYPE'] == 'CDT') {
 
               //
               let axis_data = [];
@@ -607,7 +629,7 @@ router.post('/SURTHI002-feedback', async (req, res) => {
                 core = parseFloat(SURTHI002db['INTERSEC'])
               } else {
                 // core = parseFloat(axis_data[axis_data.length - 1]['y']) 
-                core = parseFloat(axis_data[axis_data.length - 1]['y']) +50
+                core = parseFloat(axis_data[axis_data.length - 1]['y']) + 50
               }
 
               //-----------------core
@@ -637,7 +659,7 @@ router.post('/SURTHI002-feedback', async (req, res) => {
               }
 
               //
-            } else if (SURTHI002db['GRAPHTYPE'] == 'CDT(S)' ) {
+            } else if (SURTHI002db['GRAPHTYPE'] == 'CDT(S)') {
 
               //
               let axis_data = [];
@@ -652,7 +674,7 @@ router.post('/SURTHI002-feedback', async (req, res) => {
               if (SURTHI002db['INTERSEC'] !== '') {
                 core = parseFloat(SURTHI002db['INTERSEC'])
               } else {
-                core = parseFloat(axis_data[axis_data.length - 1]['y']) +50
+                core = parseFloat(axis_data[axis_data.length - 1]['y']) + 50
               }
 
               //-----------------core
@@ -682,7 +704,7 @@ router.post('/SURTHI002-feedback', async (req, res) => {
               }
 
               //
-            } else  {
+            } else {
               try {
                 let axis_data = [];
                 for (i = 0; i < LISTbuffer.length; i++) {
@@ -747,7 +769,7 @@ router.post('/SURTHI002-feedback', async (req, res) => {
               catch (err) {
                 SURTHI002db[`INTERSEC_ERR`] = 1;
               }
-            } 
+            }
 
           } else if (masterITEMs[0]['RESULTFORMAT'] === 'Picture') {
             //
@@ -826,6 +848,9 @@ router.post('/SURTHI002-SETZERO', async (req, res) => {
       "ItemPickcode": [],
       "PCS": "",
       "PCSleft": "",
+
+      "SPEC": "",
+
       "UNIT": "",
       "INTERSEC": "",
       "RESULTFORMAT": "",

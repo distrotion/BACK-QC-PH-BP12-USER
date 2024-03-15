@@ -65,6 +65,9 @@ let SURBAL013db = {
   "POINTs": "",
   "PCS": "",
   "PCSleft": "",
+      
+  "SPEC":"",
+
   "UNIT": "",
   "INTERSEC": "",
   "RESULTFORMAT": "",
@@ -234,6 +237,9 @@ router.post('/GETINtoSURBAL013', async (req, res) => {
           "POINTs": "",
           "PCS": "",
           "PCSleft": "",
+      
+          "SPEC":"",
+        
           "UNIT": "",
           "INTERSEC": "",
           "RESULTFORMAT": "",
@@ -370,6 +376,19 @@ router.post('/SURBAL013-geteachITEM', async (req, res) => {
           SURBAL013db["PCS"] = findcp[0]['FINAL'][i]['PCS'];
           SURBAL013db["PCSleft"] = findcp[0]['FINAL'][i]['PCS'];
 
+          SURBAL013db["SPEC"]='';
+          if (findcp[0]['FINAL'][i]['SPECIFICATIONve'] !== undefined) {
+            if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'BTW') {
+              SURBAL013db["SPEC"] =  `${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_LOW']}-${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_HI']}`;
+            } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'HIM(>)') {
+              SURBAL013db["SPEC"] =  `>${findcp[0]['FINAL'][i]['SPECIFICATIONve']['HIM_L']}`;
+            } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'LOL(<)') {
+              SURBAL013db["SPEC"] =  `<${findcp[0]['FINAL'][i]['SPECIFICATIONve']['LOL_H']}`;
+            }else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'Actual'){
+              SURBAL013db["SPEC"] =  'Actual';
+            }
+          }
+
           SURBAL013db["K1b"] = findcp[0]['FINAL'][i]['K1b'];
           SURBAL013db["K1v"] = findcp[0]['FINAL'][i]['K1v'];
 
@@ -414,6 +433,9 @@ router.post('/SURBAL013-geteachITEM', async (req, res) => {
   } else {
     SURBAL013db["POINTs"] = '';
     SURBAL013db["PCS"] = '';
+
+    SURBAL013db["SPEC"] = '';
+
     SURBAL013db["PCSleft"] = '';
     SURBAL013db["UNIT"] = "";
     SURBAL013db["INTERSEC"] = "";
@@ -1006,6 +1028,9 @@ router.post('/SURBAL013-SETZERO', async (req, res) => {
       "ItemPickcode": [],
       "PCS": "",
       "PCSleft": "",
+    
+      "SPEC":"",
+
       "UNIT": "",
       "INTERSEC": "",
       "RESULTFORMAT": "",

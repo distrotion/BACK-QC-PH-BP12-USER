@@ -60,6 +60,9 @@ let SURRGH001db = {
   "POINTs": "",
   "PCS": "",
   "PCSleft": "",
+      
+  "SPEC":"",
+
   "UNIT": "",
   "INTERSEC": "",
   "RESULTFORMAT": "",
@@ -201,6 +204,9 @@ router.post('/GETINtoSURRGH001', async (req, res) => {
           "POINTs": "",
           "PCS": "",
           "PCSleft": "",
+      
+          "SPEC":"",
+        
           "UNIT": "",
           "INTERSEC": "",
           "RESULTFORMAT": "",
@@ -324,6 +330,20 @@ router.post('/SURRGH001-geteachITEM', async (req, res) => {
           SURRGH001db["POINTs"] = findcp[0]['FINAL'][i]['POINT'];
           SURRGH001db["PCS"] = findcp[0]['FINAL'][i]['PCS'];
           SURRGH001db["PCSleft"] = findcp[0]['FINAL'][i]['PCS'];
+          SURRGH001db["SPEC"]='';
+          if (findcp[0]['FINAL'][i]['SPECIFICATIONve'] !== undefined) {
+            if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'BTW') {
+              SURRGH001db["SPEC"] =  `${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_LOW']}-${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_HI']}`;
+            } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'HIM(>)') {
+              SURRGH001db["SPEC"] =  `>${findcp[0]['FINAL'][i]['SPECIFICATIONve']['HIM_L']}`;
+            } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'LOL(<)') {
+              SURRGH001db["SPEC"] =  `<${findcp[0]['FINAL'][i]['SPECIFICATIONve']['LOL_H']}`;
+            }else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'Actual'){
+              SURRGH001db["SPEC"] =  'Actual';
+            }
+          }
+
+          
 
           SURRGH001db["INTERSEC"] = masterITEMs[0]['INTERSECTION'];
           output = 'OK';
@@ -350,6 +370,7 @@ router.post('/SURRGH001-geteachITEM', async (req, res) => {
   } else {
     SURRGH001db["POINTs"] = '',
       SURRGH001db["PCS"] = '',
+      SURBAL013db["SPEC"] = '';
       SURRGH001db["PCSleft"] = '',
       SURRGH001db["UNIT"] = "",
       SURRGH001db["INTERSEC"] = "",
@@ -826,6 +847,9 @@ router.post('/SURRGH001-SETZERO', async (req, res) => {
       "ItemPickcode": [],
       "PCS": "",
       "PCSleft": "",
+      
+      "SPEC":"",
+    
       "UNIT": "",
       "INTERSEC": "",
       "RESULTFORMAT": "",

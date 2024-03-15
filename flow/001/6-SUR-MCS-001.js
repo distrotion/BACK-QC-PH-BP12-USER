@@ -59,6 +59,9 @@ let SURMCS001db = {
   "POINTs": "",
   "PCS": "",
   "PCSleft": "",
+      
+  "SPEC":"",
+
   "UNIT": "",
   "INTERSEC": "",
   "RESULTFORMAT": "",
@@ -196,6 +199,9 @@ router.post('/GETINtoSURMCS001', async (req, res) => {
           "POINTs": "",
           "PCS": "",
           "PCSleft": "",
+      
+          "SPEC":"",
+        
           "UNIT": "",
           "INTERSEC": "",
           "RESULTFORMAT": "",
@@ -300,6 +306,18 @@ router.post('/SURMCS001-geteachITEM', async (req, res) => {
           if (SURMCS001db["PCSleft"] === '') {
             SURMCS001db["PCSleft"] = findcp[0]['FINAL'][i]['PCS'];
           }
+          SURMCS001db["SPEC"]='';
+          if (findcp[0]['FINAL'][i]['SPECIFICATIONve'] !== undefined) {
+            if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'BTW') {
+              SURMCS001db["SPEC"] =  `${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_LOW']}-${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_HI']}`;
+            } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'HIM(>)') {
+              SURMCS001db["SPEC"] =  `>${findcp[0]['FINAL'][i]['SPECIFICATIONve']['HIM_L']}`;
+            } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'LOL(<)') {
+              SURMCS001db["SPEC"] =  `<${findcp[0]['FINAL'][i]['SPECIFICATIONve']['LOL_H']}`;
+            }else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'Actual'){
+              SURMCS001db["SPEC"] =  'Actual';
+            }
+          }
 
           SURMCS001db["INTERSEC"] = "";
           output = 'OK';
@@ -326,6 +344,7 @@ router.post('/SURMCS001-geteachITEM', async (req, res) => {
   } else {
     SURMCS001db["POINTs"] = '',
       SURMCS001db["PCS"] = '',
+      SURBAL013db["SPEC"] = '';
       SURMCS001db["PCSleft"] = '',
       SURMCS001db["UNIT"] = "",
       SURMCS001db["INTERSEC"] = "",
@@ -578,6 +597,9 @@ router.post('/SURMCS001-SETZERO', async (req, res) => {
       "ItemPickcode": [],
       "PCS": "",
       "PCSleft": "",
+      
+      "SPEC":"",
+    
       "UNIT": "",
       "INTERSEC": "",
       "RESULTFORMAT": "",

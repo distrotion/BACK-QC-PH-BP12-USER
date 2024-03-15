@@ -60,6 +60,9 @@ let SURMIC001db = {
   "POINTs": "",
   "PCS": "",
   "PCSleft": "",
+      
+  "SPEC":"",
+
   "UNIT": "",
   "INTERSEC": "",
   "RESULTFORMAT": "",
@@ -201,6 +204,9 @@ router.post('/GETINtoSURMIC001', async (req, res) => {
           "POINTs": "",
           "PCS": "",
           "PCSleft": "",
+      
+          "SPEC":"",
+        
           "UNIT": "",
           "INTERSEC": "",
           "RESULTFORMAT": "",
@@ -324,6 +330,18 @@ router.post('/SURMIC001-geteachITEM', async (req, res) => {
           SURMIC001db["POINTs"] = findcp[0]['FINAL'][i]['POINT'];
           SURMIC001db["PCS"] = findcp[0]['FINAL'][i]['PCS'];
           SURMIC001db["PCSleft"] = findcp[0]['FINAL'][i]['PCS'];
+          SURMIC001db["SPEC"]='';
+          if (findcp[0]['FINAL'][i]['SPECIFICATIONve'] !== undefined) {
+            if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'BTW') {
+              SURMIC001db["SPEC"] =  `${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_LOW']}-${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_HI']}`;
+            } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'HIM(>)') {
+              SURMIC001db["SPEC"] =  `>${findcp[0]['FINAL'][i]['SPECIFICATIONve']['HIM_L']}`;
+            } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'LOL(<)') {
+              SURMIC001db["SPEC"] =  `<${findcp[0]['FINAL'][i]['SPECIFICATIONve']['LOL_H']}`;
+            }else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'Actual'){
+              SURMIC001db["SPEC"] =  'Actual';
+            }
+          }
 
           SURMIC001db["INTERSEC"] = masterITEMs[0]['INTERSECTION'];
           output = 'OK';
@@ -350,6 +368,7 @@ router.post('/SURMIC001-geteachITEM', async (req, res) => {
   } else {
     SURMIC001db["POINTs"] = '',
       SURMIC001db["PCS"] = '',
+      SURBAL013db["SPEC"] = '';
       SURMIC001db["PCSleft"] = '',
       SURMIC001db["UNIT"] = "",
       SURMIC001db["INTERSEC"] = "",
@@ -826,6 +845,9 @@ router.post('/SURMIC001-SETZERO', async (req, res) => {
       "ItemPickcode": [],
       "PCS": "",
       "PCSleft": "",
+      
+      "SPEC":"",
+    
       "UNIT": "",
       "INTERSEC": "",
       "RESULTFORMAT": "",

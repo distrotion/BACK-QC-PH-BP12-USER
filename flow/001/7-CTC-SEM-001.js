@@ -60,6 +60,9 @@ let CTCSEM001db = {
   "POINTs": "",
   "PCS": "",
   "PCSleft": "",
+
+  "SPEC": "",
+
   "UNIT": "",
   "INTERSEC": "",
   "RESULTFORMAT": "",
@@ -81,9 +84,9 @@ let CTCSEM001db = {
   "value": [],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
   "dateupdatevalue": day,
   "INTERSEC_ERR": 0,
-   //----------------------
-   "USER": '',
-   "USERID": '',
+  //----------------------
+  "USER": '',
+  "USERID": '',
 }
 
 
@@ -120,7 +123,7 @@ router.post('/GETINtoCTCSEM001', async (req, res) => {
   //-------------------------------------
   let output = 'NOK';
   check = CTCSEM001db;
-  if (input['PO'] !== undefined && input['CP'] !== undefined && check['PO'] === ''&& input['USER'] !== undefined && input['USERID'] !== undefined) {
+  if (input['PO'] !== undefined && input['CP'] !== undefined && check['PO'] === '' && input['USER'] !== undefined && input['USERID'] !== undefined) {
     // let dbsap = await mssql.qurey(`select * FROM [SAPData_GW_GAS].[dbo].[tblSAPDetail] where [PO] = ${input['PO']}`);
 
     let findPO = await mongodb.findSAP('mongodb://172.23.10.39:12010', "ORDER", "ORDER", {});
@@ -133,7 +136,7 @@ router.post('/GETINtoCTCSEM001', async (req, res) => {
         if (findPO[0][`DATA`][i][`PO`] === input['PO']) {
           dbsap = findPO[0][`DATA`][i];
           // break;
-          cuslot = cuslot+ findPO[0][`DATA`][i][`CUSLOTNO`]+ ','
+          cuslot = cuslot + findPO[0][`DATA`][i][`CUSLOTNO`] + ','
         }
       }
 
@@ -190,7 +193,7 @@ router.post('/GETINtoCTCSEM001', async (req, res) => {
           "QUANTITY": dbsap['QUANTITY'] || '',
           // "PROCESS":dbsap ['PROCESS'] || '',
           // "CUSLOTNO": dbsap['CUSLOTNO'] || '',
-          "CUSLOTNO":  cuslot,
+          "CUSLOTNO": cuslot,
           "FG_CHARG": dbsap['FG_CHARG'] || '',
           "PARTNAME_PO": dbsap['PARTNAME_PO'] || '',
           "PART_PO": dbsap['PART_PO'] || '',
@@ -201,6 +204,9 @@ router.post('/GETINtoCTCSEM001', async (req, res) => {
           "POINTs": "",
           "PCS": "",
           "PCSleft": "",
+
+          "SPEC": "",
+
           "UNIT": "",
           "INTERSEC": "",
           "RESULTFORMAT": "",
@@ -222,9 +228,9 @@ router.post('/GETINtoCTCSEM001', async (req, res) => {
           "value": [],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
           "dateupdatevalue": day,
           "INTERSEC_ERR": 0,
-           //----------------------
-           "USER":input['USER'],
-           "USERID":input['USERID'],
+          //----------------------
+          "USER": input['USER'],
+          "USERID": input['USERID'],
         }
 
         output = 'OK';
@@ -324,6 +330,20 @@ router.post('/CTCSEM001-geteachITEM', async (req, res) => {
           CTCSEM001db["POINTs"] = findcp[0]['FINAL'][i]['POINT'];
           CTCSEM001db["PCS"] = findcp[0]['FINAL'][i]['PCS'];
           CTCSEM001db["PCSleft"] = findcp[0]['FINAL'][i]['PCS'];
+          CTCSEM001db["SPEC"]='';
+          if (findcp[0]['FINAL'][i]['SPECIFICATIONve'] !== undefined) {
+            if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'BTW') {
+              CTCSEM001db["SPEC"] =  `${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_LOW']}-${findcp[0]['FINAL']['SPECIFICATIONve'][i]['BTW_HI']}`;
+            } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'HIM(>)') {
+              CTCSEM001db["SPEC"] =  `>${findcp[0]['FINAL'][i]['SPECIFICATIONve']['HIM_L']}`;
+            } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'LOL(<)') {
+              CTCSEM001db["SPEC"] =  `<${findcp[0]['FINAL'][i]['SPECIFICATIONve']['LOL_H']}`;
+            }else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'Actual'){
+              CTCSEM001db["SPEC"] =  'Actual';
+            }
+          }
+
+          console.log(`>>>>>>${CTCSEM001db["SPEC"]}`);
 
           CTCSEM001db["INTERSEC"] = masterITEMs[0]['INTERSECTION'];
           output = 'OK';
@@ -348,12 +368,13 @@ router.post('/CTCSEM001-geteachITEM', async (req, res) => {
     }
 
   } else {
-    CTCSEM001db["POINTs"] = '',
-      CTCSEM001db["PCS"] = '',
-      CTCSEM001db["PCSleft"] = '',
-      CTCSEM001db["UNIT"] = "",
-      CTCSEM001db["INTERSEC"] = "",
-      output = 'NOK';
+    CTCSEM001db["POINTs"] = '';
+    CTCSEM001db["PCS"] = '';
+    SURBAL013db["SPEC"] = '';
+    CTCSEM001db["PCSleft"] = '';
+    CTCSEM001db["UNIT"] = "";
+    CTCSEM001db["INTERSEC"] = "";
+    output = 'NOK';
   }
 
   //-------------------------------------
@@ -425,13 +446,13 @@ router.post('/CTCSEM001-confirmdata', async (req, res) => {
       pushdata['V5'] = CTCSEM001db['GAP'];
       pushdata['V1'] = `${CTCSEM001db['confirmdata'].length + 1}:${pushdata['V1']}`;
 
-      if(CTCSEM001db['GAP'] !=''){
+      if (CTCSEM001db['GAP'] != '') {
 
         CTCSEM001db['confirmdata'].push(pushdata);
         CTCSEM001db['preview'] = [];
         output = 'OK';
         CTCSEM001db['GAP'] = CTCSEM001db['GAPnameListdata'][`GT${CTCSEM001db['confirmdata'].length + 1}`]
-      }else{
+      } else {
         output = 'NOK';
       }
 
@@ -546,7 +567,7 @@ router.post('/CTCSEM001-feedback', async (req, res) => {
 
           } else if (masterITEMs[0]['RESULTFORMAT'] === 'Graph') {
 
-            if (CTCSEM001db['GRAPHTYPE'] == 'CDE' ) {
+            if (CTCSEM001db['GRAPHTYPE'] == 'CDE') {
 
               //
               let axis_data = [];
@@ -561,7 +582,7 @@ router.post('/CTCSEM001-feedback', async (req, res) => {
               if (CTCSEM001db['INTERSEC'] !== '') {
                 core = parseFloat(CTCSEM001db['INTERSEC'])
               } else {
-                core = parseFloat(axis_data[axis_data.length - 1]['y']) 
+                core = parseFloat(axis_data[axis_data.length - 1]['y'])
               }
 
               //-----------------core
@@ -591,7 +612,7 @@ router.post('/CTCSEM001-feedback', async (req, res) => {
               }
 
               //
-            } else if (CTCSEM001db['GRAPHTYPE'] == 'CDT' ) {
+            } else if (CTCSEM001db['GRAPHTYPE'] == 'CDT') {
 
               //
               let axis_data = [];
@@ -607,7 +628,7 @@ router.post('/CTCSEM001-feedback', async (req, res) => {
                 core = parseFloat(CTCSEM001db['INTERSEC'])
               } else {
                 // core = parseFloat(axis_data[axis_data.length - 1]['y']) 
-                core = parseFloat(axis_data[axis_data.length - 1]['y']) +50
+                core = parseFloat(axis_data[axis_data.length - 1]['y']) + 50
               }
 
               //-----------------core
@@ -637,7 +658,7 @@ router.post('/CTCSEM001-feedback', async (req, res) => {
               }
 
               //
-            } else if (CTCSEM001db['GRAPHTYPE'] == 'CDT(S)' ) {
+            } else if (CTCSEM001db['GRAPHTYPE'] == 'CDT(S)') {
 
               //
               let axis_data = [];
@@ -652,7 +673,7 @@ router.post('/CTCSEM001-feedback', async (req, res) => {
               if (CTCSEM001db['INTERSEC'] !== '') {
                 core = parseFloat(CTCSEM001db['INTERSEC'])
               } else {
-                core = parseFloat(axis_data[axis_data.length - 1]['y']) +50
+                core = parseFloat(axis_data[axis_data.length - 1]['y']) + 50
               }
 
               //-----------------core
@@ -682,7 +703,7 @@ router.post('/CTCSEM001-feedback', async (req, res) => {
               }
 
               //
-            } else  {
+            } else {
               try {
                 let axis_data = [];
                 for (i = 0; i < LISTbuffer.length; i++) {
@@ -747,7 +768,7 @@ router.post('/CTCSEM001-feedback', async (req, res) => {
               catch (err) {
                 CTCSEM001db[`INTERSEC_ERR`] = 1;
               }
-            } 
+            }
 
           } else if (masterITEMs[0]['RESULTFORMAT'] === 'Picture') {
             //
@@ -826,6 +847,9 @@ router.post('/CTCSEM001-SETZERO', async (req, res) => {
       "ItemPickcode": [],
       "PCS": "",
       "PCSleft": "",
+
+      "SPEC": "",
+
       "UNIT": "",
       "INTERSEC": "",
       "RESULTFORMAT": "",
