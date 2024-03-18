@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb');
 // const url = 'mongodb://127.0.0.1:17020';
-const url = 'mongodb://172.23.10.39:12010';
+const url = 'mongodb://172.23.10.75:27017';
 
 // const client = new MongoClient(url);
 // await client.connect();
