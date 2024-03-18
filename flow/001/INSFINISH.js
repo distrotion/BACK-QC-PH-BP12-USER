@@ -666,7 +666,8 @@ router.post('/PHBP12report', async (req, res) => {
     }
   }
 
-  output = await mongodb.find(MAIN_DATA, MAIN, out);
+  // output = await mongodb.find(MAIN_DATA, MAIN, out);
+  output = await mongodb.findproject(MAIN_DATA, MAIN, out,{"PO":1,"CP":1,"MATCP":1,"CUSTOMER":1,"PART":1,"PARTNAME":1,"MATERIAL":1,"CUSLOTNO":1});
 
 
   //-------------------------------------
