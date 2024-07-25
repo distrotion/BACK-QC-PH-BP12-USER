@@ -90,7 +90,7 @@ router.get('/CHECK-SURMCS001', async (req, res) => {
 });
 
 
-router.post('/SURMCS001db', async (req, res) => {
+router.post('/FINAL/SURMCS001db', async (req, res) => {
   //-------------------------------------
   // console.log('--SURMCS001db--');
   // console.log(req.body);
@@ -108,7 +108,7 @@ router.post('/SURMCS001db', async (req, res) => {
   return res.json(finddb);
 });
 
-router.post('/GETINtoSURMCS001', async (req, res) => {
+router.post('/FINAL/GETINtoSURMCS001', async (req, res) => {
   //-------------------------------------
   console.log('--GETINtoSURMCS001--');
   console.log(req.body);
@@ -242,7 +242,7 @@ router.post('/GETINtoSURMCS001', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/SURMCS001-geteachITEM', async (req, res) => {
+router.post('/FINAL/SURMCS001-geteachITEM', async (req, res) => {
   //-------------------------------------
   console.log('--SURMCS001-geteachITEM--');
   console.log(req.body);
@@ -355,7 +355,7 @@ router.post('/SURMCS001-geteachITEM', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/SURMCS001-preview', async (req, res) => {
+router.post('/FINAL/SURMCS001-preview', async (req, res) => {
   //-------------------------------------
   console.log('--SURMCS001-preview--');
   console.log(req.body);
@@ -387,7 +387,7 @@ router.post('/SURMCS001-preview', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/SURMCS001-confirmdata', async (req, res) => {
+router.post('/FINAL/SURMCS001-confirmdata', async (req, res) => {
   //-------------------------------------
   console.log('--SURMCS001-confirmdata--');
   console.log(req.body);
@@ -421,7 +421,7 @@ router.post('/SURMCS001-confirmdata', async (req, res) => {
 
 
 
-router.post('/SURMCS001-feedback', async (req, res) => {
+router.post('/FINAL/SURMCS001-feedback', async (req, res) => {
   //-------------------------------------
   console.log('--SURMCS001-feedback--');
   console.log(req.body);
@@ -559,7 +559,7 @@ router.post('/SURMCS001-feedback', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/SURMCS001-SETZERO', async (req, res) => {
+router.post('/FINAL/SURMCS001-SETZERO', async (req, res) => {
   //-------------------------------------
   console.log('--SURMCS001fromINS--');
   console.log(req.body);
@@ -627,7 +627,7 @@ router.post('/SURMCS001-SETZERO', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/SURMCS001-CLEAR', async (req, res) => {
+router.post('/FINAL/SURMCS001-CLEAR', async (req, res) => {
   //-------------------------------------
   console.log('--SURMCS001fromINS--');
   console.log(req.body);
@@ -649,7 +649,7 @@ router.post('/SURMCS001-CLEAR', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/SURMCS001-RESETVALUE', async (req, res) => {
+router.post('/FINAL/SURMCS001-RESETVALUE', async (req, res) => {
   //-------------------------------------
   console.log('--SURMCS001fromINS--');
   console.log(req.body);
@@ -676,7 +676,7 @@ router.post('/SURMCS001-RESETVALUE', async (req, res) => {
 //"value":[],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
 
 
-router.post('/SURMCS001-FINISH', async (req, res) => {
+router.post('/FINAL/SURMCS001-FINISH', async (req, res) => {
   //-------------------------------------
   console.log('--SURMCS001-FINISH--');
   console.log(req.body);
@@ -766,7 +766,7 @@ router.post('/SURMCS001-FINISH', async (req, res) => {
 });
 
 
-router.post('/SURMCS001-FINISH-APR', async (req, res) => {
+router.post('/FINAL/SURMCS001-FINISH-APR', async (req, res) => {
   //-------------------------------------
   console.log('--SURMCS001-FINISH--');
   console.log(req.body);
@@ -834,7 +834,7 @@ router.post('/SURMCS001-FINISH-APR', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/SURMCS001-FINISH-APR', async (req, res) => {
+router.post('/FINAL/SURMCS001-FINISH-APR', async (req, res) => {
   //-------------------------------------
   console.log('--SURMCS001-FINISH--');
   console.log(req.body);
@@ -905,7 +905,7 @@ router.post('/SURMCS001-FINISH-APR', async (req, res) => {
 });
 
 
-router.post('/SURMCS001-FINISH-IMG', async (req, res) => {
+router.post('/FINAL/SURMCS001-FINISH-IMG', async (req, res) => {
   //-------------------------------------
   console.log('--SURMCS001-FINISH--');
   // console.log(req.body);

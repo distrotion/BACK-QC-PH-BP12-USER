@@ -90,7 +90,7 @@ router.get('/CHECK-APPPHBP12', async (req, res) => {
 });
 
 
-router.post('/APPPHBP12db', async (req, res) => {
+router.post('/FINAL/APPPHBP12db', async (req, res) => {
   //-------------------------------------
   console.log('--APPPHBP12db--');
   // console.log(req.body);
@@ -108,7 +108,7 @@ router.post('/APPPHBP12db', async (req, res) => {
   return res.json(finddb);
 });
 
-router.post('/GETINtoAPPPHBP12', async (req, res) => {
+router.post('/FINAL/GETINtoAPPPHBP12', async (req, res) => {
   //-------------------------------------
   console.log('--GETINtoAPPPHBP12--');
   console.log(req.body);
@@ -249,7 +249,7 @@ router.post('/GETINtoAPPPHBP12', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/APPPHBP12-geteachITEM', async (req, res) => {
+router.post('/FINAL/APPPHBP12-geteachITEM', async (req, res) => {
   //-------------------------------------
   console.log('--APPPHBP12-geteachITEM--');
   console.log(req.body);
@@ -351,7 +351,7 @@ router.post('/APPPHBP12-geteachITEM', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/APPPHBP12-preview', async (req, res) => {
+router.post('/FINAL/APPPHBP12-preview', async (req, res) => {
   //-------------------------------------
   console.log('--APPPHBP12-preview--');
   console.log(req.body);
@@ -383,7 +383,7 @@ router.post('/APPPHBP12-preview', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/APPPHBP12-confirmdata', async (req, res) => {
+router.post('/FINAL/APPPHBP12-confirmdata', async (req, res) => {
   //-------------------------------------
   console.log('--APPPHBP12-confirmdata--');
   console.log(req.body);
@@ -417,7 +417,7 @@ router.post('/APPPHBP12-confirmdata', async (req, res) => {
 
 
 
-router.post('/APPPHBP12-feedback', async (req, res) => {
+router.post('/FINAL/APPPHBP12-feedback', async (req, res) => {
   //-------------------------------------
   console.log('--APPPHBP12-feedback--');
   console.log(req.body);
@@ -543,7 +543,7 @@ router.post('/APPPHBP12-feedback', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/APPPHBP12-SETZERO', async (req, res) => {
+router.post('/FINAL/APPPHBP12-SETZERO', async (req, res) => {
   //-------------------------------------
   console.log('--APPPHBP12fromINS--');
   console.log(req.body);
@@ -613,7 +613,7 @@ router.post('/APPPHBP12-SETZERO', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/APPPHBP12-CLEAR', async (req, res) => {
+router.post('/FINAL/APPPHBP12-CLEAR', async (req, res) => {
   //-------------------------------------
   console.log('--APPPHBP12fromINS--');
   console.log(req.body);
@@ -635,7 +635,7 @@ router.post('/APPPHBP12-CLEAR', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/APPPHBP12-RESETVALUE', async (req, res) => {
+router.post('/FINAL/APPPHBP12-RESETVALUE', async (req, res) => {
   //-------------------------------------
   console.log('--APPPHBP12fromINS--');
   console.log(req.body);
@@ -662,7 +662,7 @@ router.post('/APPPHBP12-RESETVALUE', async (req, res) => {
 //"value":[],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
 
 
-router.post('/APPPHBP12-FINISH', async (req, res) => {
+router.post('/FINAL/APPPHBP12-FINISH', async (req, res) => {
   //-------------------------------------
   console.log('--APPPHBP12-FINISH--');
   console.log(req.body);
@@ -755,7 +755,7 @@ router.post('/APPPHBP12-FINISH', async (req, res) => {
 });
 
 
-router.post('/APPPHBP12-FINISH-APR', async (req, res) => {
+router.post('/FINAL/APPPHBP12-FINISH-APR', async (req, res) => {
   //-------------------------------------
   console.log('--APPPHBP12-FINISH-APR--');
   console.log(req.body);

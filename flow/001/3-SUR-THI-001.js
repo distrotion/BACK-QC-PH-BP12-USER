@@ -97,7 +97,7 @@ router.get('/CHECK-SURTHI002', async (req, res) => {
 });
 
 
-router.post('/SURTHI002db', async (req, res) => {
+router.post('/FINAL/SURTHI002db', async (req, res) => {
   //-------------------------------------
   // console.log('--SURTHI002db--');
   // console.log(req.body);
@@ -115,7 +115,7 @@ router.post('/SURTHI002db', async (req, res) => {
   return res.json(finddb);
 });
 
-router.post('/GETINtoSURTHI002', async (req, res) => {
+router.post('/FINAL/GETINtoSURTHI002', async (req, res) => {
   //-------------------------------------
   console.log('--GETINtoSURTHI002--');
   console.log(req.body);
@@ -253,7 +253,7 @@ router.post('/GETINtoSURTHI002', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/SURTHI002-geteachITEM', async (req, res) => {
+router.post('/FINAL/SURTHI002-geteachITEM', async (req, res) => {
   //-------------------------------------
   console.log('--SURTHI002-geteachITEM--');
   console.log(req.body);
@@ -382,7 +382,7 @@ router.post('/SURTHI002-geteachITEM', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/SURTHI002-geteachGRAPH', async (req, res) => {
+router.post('/FINAL/SURTHI002-geteachGRAPH', async (req, res) => {
   //-------------------------------------
   console.log('--SURTHI002-geteachGRAPH--');
   console.log(req.body);
@@ -401,7 +401,7 @@ router.post('/SURTHI002-geteachGRAPH', async (req, res) => {
   return res.json('ok');
 });
 
-router.post('/SURTHI002-preview', async (req, res) => {
+router.post('/FINAL/SURTHI002-preview', async (req, res) => {
   //-------------------------------------
   console.log('--SURTHI002-preview--');
   console.log(req.body);
@@ -430,7 +430,7 @@ router.post('/SURTHI002-preview', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/SURTHI002-confirmdata', async (req, res) => {
+router.post('/FINAL/SURTHI002-confirmdata', async (req, res) => {
   //-------------------------------------
   console.log('--SURTHI002-confirmdata--');
   console.log(req.body);
@@ -479,7 +479,7 @@ router.post('/SURTHI002-confirmdata', async (req, res) => {
 
 
 
-router.post('/SURTHI002-feedback', async (req, res) => {
+router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
   //-------------------------------------
   console.log('--SURTHI002-feedback--');
   console.log(req.body);
@@ -810,7 +810,7 @@ router.post('/SURTHI002-feedback', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/SURTHI002-SETZERO', async (req, res) => {
+router.post('/FINAL/SURTHI002-SETZERO', async (req, res) => {
   //-------------------------------------
   console.log('--SURTHI002fromINS--');
   console.log(req.body);
@@ -882,7 +882,7 @@ router.post('/SURTHI002-SETZERO', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/SURTHI002-CLEAR', async (req, res) => {
+router.post('/FINAL/SURTHI002-CLEAR', async (req, res) => {
   //-------------------------------------
   console.log('--SURTHI002fromINS--');
   console.log(req.body);
@@ -904,7 +904,7 @@ router.post('/SURTHI002-CLEAR', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/SURTHI002-RESETVALUE', async (req, res) => {
+router.post('/FINAL/SURTHI002-RESETVALUE', async (req, res) => {
   //-------------------------------------
   console.log('--SURTHI002fromINS--');
   console.log(req.body);
@@ -931,7 +931,7 @@ router.post('/SURTHI002-RESETVALUE', async (req, res) => {
 //"value":[],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
 
 
-router.post('/SURTHI002-FINISH', async (req, res) => {
+router.post('/FINAL/SURTHI002-FINISH', async (req, res) => {
   //-------------------------------------
   console.log('--SURTHI002-FINISH--');
   console.log(req.body);

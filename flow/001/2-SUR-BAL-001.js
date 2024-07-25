@@ -33,6 +33,8 @@ let MACHINE = 'MACHINE';
 let UNIT = 'UNIT';
 let CAL1 = 'CALCULATE';
 
+let  SURBAL013="SURBAL013";
+
 //----------------- dynamic
 
 let finddbbuffer = [{}];
@@ -92,12 +94,18 @@ let SURBAL013db = {
   "K1b": '',
   "K1v": '',
   "FORMULA": '',
-  "confirmdataCW": [{
+  "confirmdataCW": [
+    {
     "VAL1": "",
     "VAL2": "",
+    "VAL3": "",
+    "VAL4": "",
     "Aear": "",
     "FORMULA": "",
-  }],
+    "var": "",
+  },
+
+],
   //----------------------
   "USER": '',
   "USERID": '',
@@ -111,7 +119,7 @@ router.get('/CHECK-SURBAL013', async (req, res) => {
 });
 
 
-router.post('/SURBAL013db', async (req, res) => {
+router.post('/FINAL/SURBAL013db', async (req, res) => {
   //-------------------------------------
   // console.log('--SURBAL013db--');
   // console.log(req.body);
@@ -122,10 +130,12 @@ router.post('/SURBAL013db', async (req, res) => {
 
     // console.log(SURBAL013db['inspectionItem'])
     if (SURBAL013db['RESULTFORMAT'] === 'CAL1') {
-      let feedbackLast = await mongodb.find("BUFFERCAL", "SURBAL013", { "PO": SURBAL013db['PO'] });
+      let feedbackLast = await mongodb.find("BUFFERCAL", SURBAL013, { "PO": SURBAL013db['PO'] , 'NO': SURBAL013db["PCS"]});
       if (feedbackLast.length > 0) {
         SURBAL013db['confirmdataCW'][0]['VAL1'] = feedbackLast[0]['VAL1'];
         SURBAL013db['confirmdataCW'][0]['VAL2'] = feedbackLast[0]['VAL2'];
+        SURBAL013db['confirmdataCW'][0]['VAL3'] = feedbackLast[0]['VAL3'];
+        SURBAL013db['confirmdataCW'][0]['VAL4'] = feedbackLast[0]['VAL4'];
         SURBAL013db['confirmdataCW'][0]['Area'] = feedbackLast[0]['Area'];
         SURBAL013db['confirmdataCW'][0]['FORMULA'] = feedbackLast[0]['FORMULA'];
 
@@ -133,6 +143,8 @@ router.post('/SURBAL013db', async (req, res) => {
     } else {
       SURBAL013db['confirmdataCW'][0]['VAL1'] = "";
       SURBAL013db['confirmdataCW'][0]['VAL2'] = "";
+      SURBAL013db['confirmdataCW'][0]['VAL3'] = "";
+      SURBAL013db['confirmdataCW'][0]['VAL4'] = "";
       SURBAL013db['confirmdataCW'][0]['Area'] = "";
       SURBAL013db['confirmdataCW'][0]['FORMULA'] = "";
     }
@@ -148,7 +160,7 @@ router.post('/SURBAL013db', async (req, res) => {
   return res.json(finddb);
 });
 
-router.post('/GETINtoSURBAL013', async (req, res) => {
+router.post('/FINAL/GETINtoSURBAL013', async (req, res) => {
   //-------------------------------------
   console.log('--GETINtoSURBAL013--');
   console.log(req.body);
@@ -267,8 +279,11 @@ router.post('/GETINtoSURBAL013', async (req, res) => {
           "confirmdataCW": [{
             "VAL1": "",
             "VAL2": "",
+            "VAL3": "",
+            "VAL4": "",
             "Aear": "",
             "FORMULA": "",
+            "var": "",
           }],
           //----------------------
           "USER": input['USER'],
@@ -295,7 +310,7 @@ router.post('/GETINtoSURBAL013', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/SURBAL013-geteachITEM', async (req, res) => {
+router.post('/FINAL/SURBAL013-geteachITEM', async (req, res) => {
   //-------------------------------------
   console.log('--SURBAL013-geteachITEM--');
   console.log(req.body);
@@ -450,7 +465,7 @@ router.post('/SURBAL013-geteachITEM', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/SURBAL013-geteachGRAPH', async (req, res) => {
+router.post('/FINAL/SURBAL013-geteachGRAPH', async (req, res) => {
   //-------------------------------------
   console.log('--SURBAL013-geteachGRAPH--');
   console.log(req.body);
@@ -469,7 +484,7 @@ router.post('/SURBAL013-geteachGRAPH', async (req, res) => {
   return res.json('ok');
 });
 
-router.post('/SURBAL013-preview', async (req, res) => {
+router.post('/FINAL/SURBAL013-preview', async (req, res) => {
   //-------------------------------------
   console.log('--SURBAL013-preview--');
   console.log(req.body);
@@ -498,7 +513,37 @@ router.post('/SURBAL013-preview', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/SURBAL013-confirmdata', async (req, res) => {
+router.post('/FINAL/SURBAL013-preview-aear', async (req, res) => {
+  //-------------------------------------
+  console.log('--SURBAL013-preview--');
+  console.log(req.body);
+  let input = req.body;
+  //-------------------------------------
+  let output = 'NOK';
+  if (input.length > 0) {
+    if (input[0]['AEAR'] !== undefined) {
+      //-------------------------------------
+      try {
+        console.log(`---------------${input[0]['AEAR'] }`);
+        SURBAL013db['K1v'] = input[0]['AEAR'] ;
+        output = 'OK';
+      }
+      catch (err) {
+        output = 'NOK';
+      }
+      //-------------------------------------
+    } else {
+      output = 'NOK';
+    }
+  } else {
+    SURBAL013db['preview'] = [];
+    output = 'clear';
+  }
+  //-------------------------------------
+  return res.json(output);
+});
+
+router.post('/FINAL/SURBAL013-confirmdata', async (req, res) => {
   //-------------------------------------
   console.log('--SURBAL013-confirmdata--');
   console.log(req.body);
@@ -507,7 +552,7 @@ router.post('/SURBAL013-confirmdata', async (req, res) => {
   let output = 'NOK';
   //-------------------------------------
   try {
-    let datapush = SURBAL013db['preview'][0]
+    // let datapush = SURBAL013db['preview'][0]
 
     // if (SURBAL013db['RESULTFORMAT'] === 'Graph') {
     //   let pushdata = SURBAL013db['preview'][0]
@@ -549,12 +594,14 @@ router.post('/SURBAL013-confirmdata', async (req, res) => {
       console.log(pushdata);
 
 
-      let feedback = await mongodb.find("BUFFERCAL", "SURBAL013", { "PO": SURBAL013db['PO'] });
+      let feedback = await mongodb.find("BUFFERCAL", SURBAL013, { "PO": SURBAL013db['PO'] , 'NO': SURBAL013db["PCS"]});
 
       console.log(feedback);
       if (feedback.length > 0) {
+        console.log("-----------------1");
         if (feedback[0]['VAL1'] != '' && feedback[0]['VAL2'] == '') {
-          let feedbackupdate = await mongodb.update("BUFFERCAL", "SURBAL013", { "PO": SURBAL013db['PO'] }, { "$set": { 'VAL2': pushdata['V2'] } });
+          console.log("-----------------2");
+          let feedbackupdate = await mongodb.update("BUFFERCAL", SURBAL013, { "PO": SURBAL013db['PO'] , 'NO': SURBAL013db["PCS"]}, { "$set": { 'VAL2': pushdata['V2'] } });
         }
 
       } else {
@@ -562,20 +609,19 @@ router.post('/SURBAL013-confirmdata', async (req, res) => {
         if (SURBAL013db['K1b'] === '1') {
           areadata = SURBAL013db['K1v']
         }
-        var ins = await mongodb.insertMany("BUFFERCAL", "SURBAL013", [{ "PO": SURBAL013db['PO'], 'VAL1': pushdata['V2'], 'VAL2': "", 'VAL3': "", 'VAL4': "", 'Area': areadata, 'FORMULA': SURBAL013db["FORMULA"] }]);
+        var ins = await mongodb.insertMany("BUFFERCAL", SURBAL013, [{ "PO": SURBAL013db['PO'], 'VAL1': pushdata['V2'], 'VAL2': "", 'VAL3': "", 'VAL4': "", 'Area': areadata, 'FORMULA': SURBAL013db["FORMULA"] , 'NO': SURBAL013db["PCS"] }]);
       }
 
       SURBAL013db['preview'] = [];
-      let feedbackLast = await mongodb.find("BUFFERCAL", "SURBAL013", { "PO": SURBAL013db['PO'] });
+      let feedbackLast = await mongodb.find("BUFFERCAL", SURBAL013, { "PO": SURBAL013db['PO'] , 'NO': SURBAL013db["PCS"]});
       if (feedbackLast.length > 0) {
         SURBAL013db['confirmdataCW'][0]['VAL1'] = feedbackLast[0]['VAL1'];
         SURBAL013db['confirmdataCW'][0]['VAL2'] = feedbackLast[0]['VAL2'];
+        SURBAL013db['confirmdataCW'][0]['VAL3'] = feedbackLast[0]['VAL3'];
+        SURBAL013db['confirmdataCW'][0]['VAL4'] = feedbackLast[0]['VAL4'];
         SURBAL013db['confirmdataCW'][0]['Area'] = feedbackLast[0]['Area'];
 
       }
-
-
-
       output = 'OK';
     }
   }
@@ -588,7 +634,7 @@ router.post('/SURBAL013-confirmdata', async (req, res) => {
 
 
 
-router.post('/SURBAL013-feedback', async (req, res) => {
+router.post('/FINAL/SURBAL013-feedback', async (req, res) => {
   //-------------------------------------
   console.log('--SURBAL013-feedback--');
   console.log(req.body);
@@ -889,7 +935,7 @@ router.post('/SURBAL013-feedback', async (req, res) => {
           else if (masterITEMs[0]['RESULTFORMAT'] === 'CAL1') {
 
             console.log("---CALCULATEDATA---")
-            let feedback = await mongodb.find("BUFFERCAL", "SURBAL013", { "PO": input["PO"] });
+            let feedback = await mongodb.find("BUFFERCAL", SURBAL013, { "PO": input["PO"] , 'NO': SURBAL013db["PCS"]});
             if (feedback.length > 0) {
               if (feedback[0]['VAL1'] !== '' && feedback[0]['VAL2'] !== '' && feedback[0]['Area'] !== '' && feedback[0]['FORMULA'] !== '') {
 
@@ -990,7 +1036,7 @@ router.post('/SURBAL013-feedback', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/SURBAL013-SETZERO', async (req, res) => {
+router.post('/FINAL/SURBAL013-SETZERO', async (req, res) => {
   //-------------------------------------
   console.log('--SURBAL013fromINS--');
   console.log(req.body);
@@ -1058,8 +1104,11 @@ router.post('/SURBAL013-SETZERO', async (req, res) => {
       "confirmdataCW": [{
         "VAL1": "",
         "VAL2": "",
+        "VAL3": "",
+        "VAL4": "",
         "Aear": "",
         "FORMULA": "",
+        "var": "",
       }],
     }
     output = 'OK';
@@ -1071,7 +1120,7 @@ router.post('/SURBAL013-SETZERO', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/SURBAL013-CLEAR', async (req, res) => {
+router.post('/FINAL/SURBAL013-CLEAR', async (req, res) => {
   //-------------------------------------
   console.log('--SURBAL013fromINS--');
   console.log(req.body);
@@ -1093,7 +1142,7 @@ router.post('/SURBAL013-CLEAR', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/SURBAL013-RESETVALUE', async (req, res) => {
+router.post('/FINAL/SURBAL013-RESETVALUE', async (req, res) => {
   //-------------------------------------
   console.log('--SURBAL013fromINS--');
   console.log(req.body);
@@ -1120,7 +1169,7 @@ router.post('/SURBAL013-RESETVALUE', async (req, res) => {
 //"value":[],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
 
 
-router.post('/SURBAL013-FINISH', async (req, res) => {
+router.post('/FINAL/SURBAL013-FINISH', async (req, res) => {
   //-------------------------------------
   console.log('--SURBAL013-FINISH--');
   console.log(req.body);
@@ -1245,7 +1294,7 @@ router.post('/SURBAL013-FINISH', async (req, res) => {
   return res.json(SURBAL013db);
 });
 
-router.post('/SURBAL013-FINISH-CAL1', async (req, res) => {
+router.post('/FINAL/SURBAL013-FINISH-CAL1', async (req, res) => {
   //-------------------------------------
   console.log('--SURBAL013-FINISH-CAL1--');
   console.log(req.body);
@@ -1257,7 +1306,7 @@ router.post('/SURBAL013-FINISH-CAL1', async (req, res) => {
 
 
     SURBAL013db["value"] = [];
-    let feedback = await mongodb.find("BUFFERCAL", "SURBAL013", { "PO": SURBAL013db['PO'] });
+    let feedback = await mongodb.find("BUFFERCAL", SURBAL013, { "PO": SURBAL013db['PO'] , 'NO': SURBAL013db["PCS"] });
     if (feedback.length > 0) {
       if (feedback[0]['VAL1'] !== '' && feedback[0]['VAL2'] !== '' && feedback[0]['Area'] !== '') {
         SURBAL013db["value"].push({
