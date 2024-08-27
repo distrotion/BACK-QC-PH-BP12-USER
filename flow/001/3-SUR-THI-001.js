@@ -351,7 +351,7 @@ router.post('/FINAL/SURTHI002-geteachITEM', async (req, res) => {
           let findpo = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
           if (findpo.length > 0) {
             request.post(
-              'http://127.0.0.1:16070/SURTHI002-feedback',
+              'http://127.0.0.1:16070/FINAL/SURTHI002-feedback',
               { json: { "PO": SURTHI002db['PO'], "ITEMs": SURTHI002db['inspectionItem'] } },
               function (error, response, body2) {
                 if (!error && response.statusCode == 200) {
@@ -1033,7 +1033,7 @@ router.post('/FINAL/SURTHI002-FINISH', async (req, res) => {
           //------------------------------------------------------------------------------------
 
           request.post(
-            'http://127.0.0.1:16070/SURTHI002-feedback',
+            'http://127.0.0.1:16070/FINAL/SURTHI002-feedback',
             { json: { "PO": SURTHI002db['PO'], "ITEMs": SURTHI002db['inspectionItem'] } },
             function (error, response, body2) {
               if (!error && response.statusCode == 200) {

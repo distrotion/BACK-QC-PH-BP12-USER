@@ -321,7 +321,7 @@ router.post('/FINAL/APPPHBP12-geteachITEM', async (req, res) => {
           let findpo = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
           if (findpo.length > 0) {
             request.post(
-              'http://127.0.0.1:16070/APPPHBP12-feedback',
+              'http://127.0.0.1:16070/FINAL/APPPHBP12-feedback',
               { json: { "PO": APPPHBP12db['PO'], "ITEMs": APPPHBP12db['inspectionItem'] } },
               function (error, response, body2) {
                 if (!error && response.statusCode == 200) {
@@ -729,7 +729,7 @@ router.post('/FINAL/APPPHBP12-FINISH', async (req, res) => {
           //------------------------------------------------------------------------------------
 
           request.post(
-            'http://127.0.0.1:16070/APPPHBP12-feedback',
+            'http://127.0.0.1:16070/FINAL/APPPHBP12-feedback',
             { json: { "PO": APPPHBP12db['PO'], "ITEMs": APPPHBP12db['inspectionItem'] } },
             function (error, response, body2) {
               if (!error && response.statusCode == 200) {
@@ -795,7 +795,7 @@ router.post('/FINAL/APPPHBP12-FINISH-APR', async (req, res) => {
           APPPHBP12db["value"] = [];
           //------------------------------------------------------------------------------------
           request.post(
-            'http://127.0.0.1:16070/APPPHBP12-feedback',
+            'http://127.0.0.1:16070/FINAL/APPPHBP12-feedback',
             { json: { "PO": APPPHBP12db['PO'], "ITEMs": APPPHBP12db['inspectionItem'] } },
             function (error, response, body2) {
               if (!error && response.statusCode == 200) {

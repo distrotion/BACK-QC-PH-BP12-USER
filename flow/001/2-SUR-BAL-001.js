@@ -33,7 +33,7 @@ let MACHINE = 'MACHINE';
 let UNIT = 'UNIT';
 let CAL1 = 'CALCULATE';
 
-let  SURBAL013="SURBAL013";
+let SURBAL013 = "SURBAL013";
 
 //----------------- dynamic
 
@@ -67,8 +67,8 @@ let SURBAL013db = {
   "POINTs": "",
   "PCS": "",
   "PCSleft": "",
-      
-  "SPEC":"",
+
+  "SPEC": "",
 
   "UNIT": "",
   "INTERSEC": "",
@@ -94,18 +94,20 @@ let SURBAL013db = {
   "K1b": '',
   "K1v": '',
   "FORMULA": '',
+  "ANSCAL2" :'',
   "confirmdataCW": [
     {
-    "VAL1": "",
-    "VAL2": "",
-    "VAL3": "",
-    "VAL4": "",
-    "Aear": "",
-    "FORMULA": "",
-    "var": "",
-  },
+      "VAL1": "",
+      "VAL2": "",
+      "VAL3": "",
+      "VAL4": "",
+      "Aear": "",
+      "FORMULA": "",
+   "ANSCAL2" :'',
+      "var": "",
+    },
 
-],
+  ],
   //----------------------
   "USER": '',
   "USERID": '',
@@ -129,8 +131,8 @@ router.post('/FINAL/SURBAL013db', async (req, res) => {
 
 
     // console.log(SURBAL013db['inspectionItem'])
-    if (SURBAL013db['RESULTFORMAT'] === 'CAL1') {
-      let feedbackLast = await mongodb.find("BUFFERCAL", SURBAL013, { "PO": SURBAL013db['PO'] , 'NO': SURBAL013db["PCS"]});
+    if (SURBAL013db['RESULTFORMAT'] === 'CAL1' || SURBAL013db['RESULTFORMAT'] === 'CAL2') {
+      let feedbackLast = await mongodb.find("BUFFERCAL", SURBAL013, { "PO": SURBAL013db['PO'], 'NO': SURBAL013db["PCS"] });
       if (feedbackLast.length > 0) {
         SURBAL013db['confirmdataCW'][0]['VAL1'] = feedbackLast[0]['VAL1'];
         SURBAL013db['confirmdataCW'][0]['VAL2'] = feedbackLast[0]['VAL2'];
@@ -249,9 +251,9 @@ router.post('/FINAL/GETINtoSURBAL013', async (req, res) => {
           "POINTs": "",
           "PCS": "",
           "PCSleft": "",
-      
-          "SPEC":"",
-        
+
+          "SPEC": "",
+
           "UNIT": "",
           "INTERSEC": "",
           "RESULTFORMAT": "",
@@ -276,6 +278,7 @@ router.post('/FINAL/GETINtoSURBAL013', async (req, res) => {
           "K1b": '',
           "K1v": '',
           "FORMULA": '',
+          "ANSCAL2" :'',
           "confirmdataCW": [{
             "VAL1": "",
             "VAL2": "",
@@ -390,17 +393,18 @@ router.post('/FINAL/SURBAL013-geteachITEM', async (req, res) => {
           SURBAL013db["POINTs"] = findcp[0]['FINAL'][i]['POINT'];
           SURBAL013db["PCS"] = findcp[0]['FINAL'][i]['PCS'];
           SURBAL013db["PCSleft"] = findcp[0]['FINAL'][i]['PCS'];
+          SURBAL013db["shape"] = findcp[0]['FINAL'][i]['shape']
 
-          SURBAL013db["SPEC"]='';
+          SURBAL013db["SPEC"] = '';
           if (findcp[0]['FINAL'][i]['SPECIFICATIONve'] !== undefined) {
             if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'BTW') {
-              SURBAL013db["SPEC"] =  `${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_LOW']}-${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_HI']}`;
+              SURBAL013db["SPEC"] = `${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_LOW']}-${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_HI']}`;
             } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'HIM(>)') {
-              SURBAL013db["SPEC"] =  `>${findcp[0]['FINAL'][i]['SPECIFICATIONve']['HIM_L']}`;
+              SURBAL013db["SPEC"] = `>${findcp[0]['FINAL'][i]['SPECIFICATIONve']['HIM_L']}`;
             } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'LOL(<)') {
-              SURBAL013db["SPEC"] =  `<${findcp[0]['FINAL'][i]['SPECIFICATIONve']['LOL_H']}`;
-            }else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'Actual'){
-              SURBAL013db["SPEC"] =  'Actual';
+              SURBAL013db["SPEC"] = `<${findcp[0]['FINAL'][i]['SPECIFICATIONve']['LOL_H']}`;
+            } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'Actual') {
+              SURBAL013db["SPEC"] = 'Actual';
             }
           }
 
@@ -410,25 +414,30 @@ router.post('/FINAL/SURBAL013-geteachITEM', async (req, res) => {
           SURBAL013db["INTERSEC"] = masterITEMs[0]['INTERSECTION'];
 
           let masterITEMsC = await mongodb.find(master_FN, ITEMs, { "masterID": SURBAL013db['inspectionItem'] });
-          // console.log(masterITEMsC);
+          console.log(masterITEMsC);
           if (masterITEMsC.length > 0) {
 
             if (masterITEMsC[0]['CALCULATE'] !== '') {
 
               let masterCALCULATE = await mongodb.find(master_FN, CAL1, { "masterID": masterITEMsC[0]['CALCULATE'] });
               if (masterCALCULATE.length > 0) {
-                console.log(masterCALCULATE[0]["FORMULA"]);
+                console.log(masterCALCULATE[0]);
+                
                 SURBAL013db["FORMULA"] = masterCALCULATE[0]["FORMULA"]
               }
             }
           }
+
+          SURBAL013db["ANSCAL2"] = '';
+
+       
 
 
           output = 'OK';
           let findpo = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
           if (findpo.length > 0) {
             request.post(
-              'http://127.0.0.1:16070/SURBAL013-feedback',
+              'http://127.0.0.1:16070/FINAL/SURBAL013-feedback',
               { json: { "PO": SURBAL013db['PO'], "ITEMs": SURBAL013db['inspectionItem'] } },
               function (error, response, body2) {
                 if (!error && response.statusCode == 200) {
@@ -439,6 +448,8 @@ router.post('/FINAL/SURBAL013-geteachITEM', async (req, res) => {
                 }
               }
             );
+
+           
           }
           break;
         }
@@ -448,6 +459,7 @@ router.post('/FINAL/SURBAL013-geteachITEM', async (req, res) => {
   } else {
     SURBAL013db["POINTs"] = '';
     SURBAL013db["PCS"] = '';
+    SURBAL013db["ANSCAL2"] = '';
 
     SURBAL013db["SPEC"] = '';
 
@@ -524,8 +536,8 @@ router.post('/FINAL/SURBAL013-preview-aear', async (req, res) => {
     if (input[0]['AEAR'] !== undefined) {
       //-------------------------------------
       try {
-        console.log(`---------------${input[0]['AEAR'] }`);
-        SURBAL013db['K1v'] = input[0]['AEAR'] ;
+        console.log(`---------------${input[0]['AEAR']}`);
+        SURBAL013db['K1v'] = input[0]['AEAR'];
         output = 'OK';
       }
       catch (err) {
@@ -594,26 +606,75 @@ router.post('/FINAL/SURBAL013-confirmdata', async (req, res) => {
       console.log(pushdata);
 
 
-      let feedback = await mongodb.find("BUFFERCAL", SURBAL013, { "PO": SURBAL013db['PO'] , 'NO': SURBAL013db["PCS"]});
+      let feedback = await mongodb.find("BUFFERCAL", SURBAL013, { "PO": SURBAL013db['PO'], 'NO': SURBAL013db["PCS"] });
 
       console.log(feedback);
       if (feedback.length > 0) {
         console.log("-----------------1");
         if (feedback[0]['VAL1'] != '' && feedback[0]['VAL2'] == '') {
           console.log("-----------------2");
-          let feedbackupdate = await mongodb.update("BUFFERCAL", SURBAL013, { "PO": SURBAL013db['PO'] , 'NO': SURBAL013db["PCS"]}, { "$set": { 'VAL2': pushdata['V2'] } });
+          let feedbackupdate = await mongodb.update("BUFFERCAL", SURBAL013, { "PO": SURBAL013db['PO'], 'NO': SURBAL013db["PCS"] }, { "$set": { 'VAL2': pushdata['V2'] } });
         }
 
       } else {
+
         let areadata = ''
-        if (SURBAL013db['K1b'] === '1') {
+        // if (SURBAL013db['K1b'] === '1') {
           areadata = SURBAL013db['K1v']
-        }
-        var ins = await mongodb.insertMany("BUFFERCAL", SURBAL013, [{ "PO": SURBAL013db['PO'], 'VAL1': pushdata['V2'], 'VAL2': "", 'VAL3': "", 'VAL4': "", 'Area': areadata, 'FORMULA': SURBAL013db["FORMULA"] , 'NO': SURBAL013db["PCS"] }]);
+        // }
+        var ins = await mongodb.insertMany("BUFFERCAL", SURBAL013, [{ "PO": SURBAL013db['PO'], 'VAL1': pushdata['V2'], 'VAL2': "", 'VAL3': "", 'VAL4': "", 'Area': areadata, 'FORMULA': SURBAL013db["FORMULA"], 'NO': SURBAL013db["PCS"] }]);
       }
 
       SURBAL013db['preview'] = [];
-      let feedbackLast = await mongodb.find("BUFFERCAL", SURBAL013, { "PO": SURBAL013db['PO'] , 'NO': SURBAL013db["PCS"]});
+      let feedbackLast = await mongodb.find("BUFFERCAL", SURBAL013, { "PO": SURBAL013db['PO'], 'NO': SURBAL013db["PCS"] });
+      if (feedbackLast.length > 0) {
+        SURBAL013db['confirmdataCW'][0]['VAL1'] = feedbackLast[0]['VAL1'];
+        SURBAL013db['confirmdataCW'][0]['VAL2'] = feedbackLast[0]['VAL2'];
+        SURBAL013db['confirmdataCW'][0]['VAL3'] = feedbackLast[0]['VAL3'];
+        SURBAL013db['confirmdataCW'][0]['VAL4'] = feedbackLast[0]['VAL4'];
+        SURBAL013db['confirmdataCW'][0]['Area'] = feedbackLast[0]['Area'];
+
+      }
+      output = 'OK';
+    }
+    if (SURBAL013db['RESULTFORMAT'] === 'CAL2') {
+
+      let pushdata = SURBAL013db['preview'][0]
+      // pushdata['V5'] = SURBAL013db['confirmdata'].length + 1
+      // pushdata['V1'] = `${SURBAL013db['confirmdata'].length + 1}:${pushdata['V1']}`
+
+      // SURBAL013db['confirmdata'].push(pushdata);
+      // SURBAL013db['preview'] = [];
+      console.log(pushdata);
+
+
+      let feedback = await mongodb.find("BUFFERCAL", SURBAL013, { "PO": SURBAL013db['PO'], 'NO': SURBAL013db["PCS"] });
+      console.log("-----------");
+      console.log(feedback);
+      if (feedback.length > 0) {
+        console.log("-----------------1");
+        if (feedback[0]['VAL1'] != '' && feedback[0]['VAL2'] == '') {
+          console.log("-----------------2");
+          let feedbackupdate = await mongodb.update("BUFFERCAL", SURBAL013, { "PO": SURBAL013db['PO'], 'NO': SURBAL013db["PCS"] }, { "$set": { 'VAL2': pushdata['V2'] } });
+        }else if (feedback[0]['VAL1'] != '' && feedback[0]['VAL2'] != '' && feedback[0]['VAL3'] == '') {
+          console.log("-----------------2");
+          let feedbackupdate = await mongodb.update("BUFFERCAL", SURBAL013, { "PO": SURBAL013db['PO'], 'NO': SURBAL013db["PCS"] }, { "$set": { 'VAL3': pushdata['V2'] } });
+        } if (feedback[0]['VAL1'] != '' && feedback[0]['VAL2'] != '' && feedback[0]['VAL3'] != '' && feedback[0]['VAL4'] == '') {
+          console.log("-----------------2");
+          let feedbackupdate = await mongodb.update("BUFFERCAL", SURBAL013, { "PO": SURBAL013db['PO'], 'NO': SURBAL013db["PCS"] }, { "$set": { 'VAL4': pushdata['V2'] } });
+        }
+
+      } else {
+
+        let areadata = ''
+        // if (SURBAL013db['K1b'] === '1') {
+          areadata = SURBAL013db['K1v']
+        // }
+        var ins = await mongodb.insertMany("BUFFERCAL", SURBAL013, [{ "PO": SURBAL013db['PO'], 'VAL1': pushdata['V2'], 'VAL2': "", 'VAL3': "", 'VAL4': "", 'Area': areadata, 'FORMULA': SURBAL013db["FORMULA"], 'NO': SURBAL013db["PCS"] }]);
+      }
+
+      SURBAL013db['preview'] = [];
+      let feedbackLast = await mongodb.find("BUFFERCAL", SURBAL013, { "PO": SURBAL013db['PO'], 'NO': SURBAL013db["PCS"] });
       if (feedbackLast.length > 0) {
         SURBAL013db['confirmdataCW'][0]['VAL1'] = feedbackLast[0]['VAL1'];
         SURBAL013db['confirmdataCW'][0]['VAL2'] = feedbackLast[0]['VAL2'];
@@ -935,7 +996,7 @@ router.post('/FINAL/SURBAL013-feedback', async (req, res) => {
           else if (masterITEMs[0]['RESULTFORMAT'] === 'CAL1') {
 
             console.log("---CALCULATEDATA---")
-            let feedback = await mongodb.find("BUFFERCAL", SURBAL013, { "PO": input["PO"] , 'NO': SURBAL013db["PCS"]});
+            let feedback = await mongodb.find("BUFFERCAL", SURBAL013, { "PO": input["PO"], 'NO': SURBAL013db["PCS"] });
             if (feedback.length > 0) {
               if (feedback[0]['VAL1'] !== '' && feedback[0]['VAL2'] !== '' && feedback[0]['Area'] !== '' && feedback[0]['FORMULA'] !== '') {
 
@@ -1004,6 +1065,57 @@ router.post('/FINAL/SURBAL013-feedback', async (req, res) => {
               }
             }
 
+          }else  if (masterITEMs[0]['RESULTFORMAT'] === 'CAL2') {
+            console.log("---CALCULATEDATA 2---")
+            let feedback = await mongodb.find("BUFFERCAL", SURBAL013, { "PO": input["PO"], 'NO': SURBAL013db["PCS"] });
+            if (feedback.length > 0) {
+              if (feedback[0]['VAL1'] !== '' && feedback[0]['VAL2'] !== '' && feedback[0]['VAL3'] !== '' && feedback[0]['VAL4'] !== '' && feedback[0]['Area'] !== '' && SURBAL013db['FORMULA'] !== '') {
+                console.log("-------------------VV------------------")
+                console.log(feedback[0]['VAL1'])
+                console.log(feedback[0]['VAL2'])
+                console.log(feedback[0]['VAL3'])
+                console.log(feedback[0]['VAL4'])
+                console.log(feedback[0]['Area'])
+                console.log(SURBAL013db['FORMULA'])
+
+                let FORMULAdata = SURBAL013db['FORMULA'];
+                let VAL1data = feedback[0]['VAL1'];
+                let VAL2data = feedback[0]['VAL2'];
+                let VAL3data = feedback[0]['VAL3'];
+                let VAL4data = feedback[0]['VAL4'];
+                let Areadata = feedback[0]['Area'];
+
+                let FORMULAresult = FORMULAdata.replace("X", `${VAL1data}`).replace("Y", `${VAL2data}`).replace("K1", `${Areadata}`).replace("Z", `${VAL3data}`).replace("I", `${VAL4data}`)
+                console.log(FORMULAresult)
+                let result = evil(FORMULAresult)
+                console.log(result)
+
+                // if (result < 0) {
+                //   result = - result;
+                // }
+                // console.log(result)
+
+  
+                SURBAL013db["ANSCAL2"] = result;
+       
+                
+
+                let feedbackres = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
+                console.log(feedbackres)
+                if (feedbackres[0]['FINAL_ANS'] === undefined) {
+                  feedbackres[0]['FINAL_ANS'] = {}
+                  feedbackres[0]['FINAL_ANS'][input["ITEMs"]] = result;
+                  console.log(feedbackres)
+                  let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedbackres[0]['FINAL_ANS'] } });
+                } else {
+                  feedbackres[0]['FINAL_ANS'][input["ITEMs"]] = result;
+                  console.log(feedbackres)
+                  let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedbackres[0]['FINAL_ANS'] } });
+                }
+
+                output = 'OK'
+
+              }}
           }
         }
 
@@ -1074,8 +1186,8 @@ router.post('/FINAL/SURBAL013-SETZERO', async (req, res) => {
       "ItemPickcode": [],
       "PCS": "",
       "PCSleft": "",
-    
-      "SPEC":"",
+
+      "SPEC": "",
 
       "UNIT": "",
       "INTERSEC": "",
@@ -1101,6 +1213,7 @@ router.post('/FINAL/SURBAL013-SETZERO', async (req, res) => {
       "K1b": '',
       "K1v": '',
       "FORMULA": '',
+      "ANSCAL2" : '',
       "confirmdataCW": [{
         "VAL1": "",
         "VAL2": "",
@@ -1109,6 +1222,7 @@ router.post('/FINAL/SURBAL013-SETZERO', async (req, res) => {
         "Aear": "",
         "FORMULA": "",
         "var": "",
+        "ANSCAL2" : '',
       }],
     }
     output = 'OK';
@@ -1271,7 +1385,7 @@ router.post('/FINAL/SURBAL013-FINISH', async (req, res) => {
           //------------------------------------------------------------------------------------
 
           request.post(
-            'http://127.0.0.1:16070/SURBAL013-feedback',
+            'http://127.0.0.1:16070/FINAL/SURBAL013-feedback',
             { json: { "PO": SURBAL013db['PO'], "ITEMs": SURBAL013db['inspectionItem'] } },
             function (error, response, body2) {
               if (!error && response.statusCode == 200) {
@@ -1306,7 +1420,7 @@ router.post('/FINAL/SURBAL013-FINISH-CAL1', async (req, res) => {
 
 
     SURBAL013db["value"] = [];
-    let feedback = await mongodb.find("BUFFERCAL", SURBAL013, { "PO": SURBAL013db['PO'] , 'NO': SURBAL013db["PCS"] });
+    let feedback = await mongodb.find("BUFFERCAL", SURBAL013, { "PO": SURBAL013db['PO'], 'NO': SURBAL013db["PCS"] });
     if (feedback.length > 0) {
       if (feedback[0]['VAL1'] !== '' && feedback[0]['VAL2'] !== '' && feedback[0]['Area'] !== '') {
         SURBAL013db["value"].push({
@@ -1328,7 +1442,76 @@ router.post('/FINAL/SURBAL013-FINISH-CAL1', async (req, res) => {
                 SURBAL013db["value"] = [];
                 //------------------------------------------------------------------------------------
                 request.post(
-                  'http://127.0.0.1:16070/SURBAL013-feedback',
+                  'http://127.0.0.1:16070/FINAL/SURBAL013-feedback',
+                  { json: { "PO": SURBAL013db['PO'], "ITEMs": SURBAL013db['inspectionItem'] } },
+                  function (error, response, body2) {
+                    if (!error && response.statusCode == 200) {
+                      // console.log(body2);
+                      // if (body2 === 'OK') {
+                      output = 'OK';
+                      // }
+                    }
+                  }
+                );
+                //------------------------------------------------------------------------------------
+                // }
+
+              }
+            }
+          );
+        }
+      }
+    }
+
+
+
+  }
+
+  //-------------------------------------
+  return res.json(SURBAL013db);
+});
+
+router.post('/FINAL/SURBAL013-FINISH-CAL2', async (req, res) => {
+  //-------------------------------------
+  console.log('--SURBAL013-FINISH-CAL2--');
+  console.log(req.body);
+  let input = req.body;
+  //-------------------------------------
+  let output = 'OK';
+  if ((SURBAL013db['RESULTFORMAT'] === 'CAL2')) {
+
+//FORMULA
+    console.log(SURBAL013db['FORMULA'])
+
+
+    SURBAL013db["value"] = [];
+    let feedback = await mongodb.find("BUFFERCAL", SURBAL013, { "PO": SURBAL013db['PO'], 'NO': SURBAL013db["PCS"] });
+    if (feedback.length > 0) {
+      if (feedback[0]['VAL1'] !== '' && feedback[0]['VAL2'] !== '' && feedback[0]['Area'] !== '') {
+        SURBAL013db["value"].push({
+          "VAL1": feedback[0]['VAL1'],
+          "VAL2": feedback[0]['VAL2'],
+          "VAL3": feedback[0]['VAL3'],
+          "VAL4": feedback[0]['VAL4'],
+          "Area": feedback[0]['Area'],
+          "FORMULA": SURBAL013db['FORMULA'],
+
+        });
+        console.log(SURBAL013db)
+
+        if (SURBAL013db['RESULTFORMAT'] === 'CAL2') {
+          request.post(
+            'http://127.0.0.1:16070/FINISHtoDB',
+            { json: SURBAL013db },
+            function (error, response, body) {
+              if (!error && response.statusCode == 200) {
+                // console.log(body);
+                // if (body === 'OK') {
+                // SURBAL013db['confirmdata'] = [];
+                // SURBAL013db["value"] = [];
+                //------------------------------------------------------------------------------------
+                request.post(
+                  'http://127.0.0.1:16070/FINAL/SURBAL013-feedback',
                   { json: { "PO": SURBAL013db['PO'], "ITEMs": SURBAL013db['inspectionItem'] } },
                   function (error, response, body2) {
                     if (!error && response.statusCode == 200) {
