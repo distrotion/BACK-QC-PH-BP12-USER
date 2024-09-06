@@ -1071,7 +1071,7 @@ router.post('/FINAL/SURBAL013-feedback', async (req, res) => {
 
           }else  if (masterITEMs[0]['RESULTFORMAT'] === 'CAL2') {
             console.log("---CALCULATEDATA 2---")
-            let feedback = await mongodb.find("BUFFERCAL", SURBAL013, { "PO": input["PO"],"CP": SURBAL013db['CP'],"POINTs": SURBAL013db['POINTs'],"PCSleft": SURBAL013db['PCSleft'], 'NO': SURBAL013db["PCS"] });
+            let feedback = await mongodb.find("BUFFERCAL", SURBAL013, { "PO": input["PO"],"CP": SURBAL013db['CP'],"POINTs": SURBAL013db['POINTs'], 'NO': SURBAL013db["PCS"] });
             if (feedback.length > 0) {
               if (feedback[0]['VAL1'] !== '' && feedback[0]['VAL2'] !== '' && feedback[0]['VAL3'] !== '' && feedback[0]['VAL4'] !== '' && feedback[0]['Area'] !== '' && SURBAL013db['FORMULA'] !== '') {
                 console.log("-------------------VV------------------")
