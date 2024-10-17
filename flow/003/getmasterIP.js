@@ -155,6 +155,38 @@ router.post('/GETINSset_IP', async (req, res) => {
 //         "PARTNAME": "",
 //         "MATERIAL": "",
 
+router.post('/RAWDATA/sapget', async (req, res) => {
+  //-------------------------------------
+  console.log("--RAWDATA/sapget--");
+  console.log(req.body);
+  let input = req.body;
+  //-------------------------------------
+  let output = [];
+  if (input[`ORDER`] !== undefined) {
+
+
+    try {
+      let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', {
+        "BAPI_NAME": "ZPPIN011_OUT",
+        "IMP_TEXT02": input[`ORDER`],
+        "TABLE_NAME": "PPORDER"
+      });
+      if (resp.status == 200) {
+        let returnDATA = resp.data;
+        output = returnDATA["Records"] || []
+        //  console.log(output)
+      }
+    } catch (err) {
+      output = [];
+    }
+
+  }
+
+
+  //-------------------------------------
+  return res.json(output);
+});
+
 
 
 module.exports = router;
