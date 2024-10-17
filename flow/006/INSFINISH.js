@@ -34,7 +34,7 @@ Number.prototype.pad = function (n) {
 }
 
 
-router.post('/FINAL/FINISHtoDB', async (req, res) => {
+router.post('/INPROCESS/FINISHtoDB', async (req, res) => {
   //-------------------------------------
   console.log('--FINISHtoDB--');
   console.log(req.body);
@@ -88,15 +88,15 @@ router.post('/FINAL/FINISHtoDB', async (req, res) => {
     let MACHINEmaster = await mongodb.find(master_FN, MACHINE, {});
 
     let ItemPickcodeout = [];
-    for (i = 0; i < findcp[0]['FINAL'].length; i++) {
+    for (i = 0; i < findcp[0]['INPROCESS'].length; i++) {
       for (j = 0; j < masterITEMs.length; j++) {
-        if (findcp[0]['FINAL'][i]['ITEMs'] === masterITEMs[j]['masterID']) {
-          ItemPickcodeout.push({ "key": masterITEMs[j]['masterID'], "value": masterITEMs[j]['ITEMs'], "METHOD": findcp[0]['FINAL'][i]['METHOD'] });
+        if (findcp[0]['INPROCESS'][i]['ITEMs'] === masterITEMs[j]['masterID']) {
+          ItemPickcodeout.push({ "key": masterITEMs[j]['masterID'], "value": masterITEMs[j]['ITEMs'], "METHOD": findcp[0]['INPROCESS'][i]['METHOD'] });
         }
       }
     }
 
-    output['CHECKlist'] = ItemPickcodeout;
+    output['CHECKlist_IP'] = ItemPickcodeout;
 
     let insertdb = await mongodb.insertMany(MAIN_DATA, MAIN, [output]);
 
@@ -136,7 +136,7 @@ router.post('/FINAL/FINISHtoDB', async (req, res) => {
       let input_S3_1 = findpo[0]; //input1
       let input_S3_2 = output;    //input2
       // let objectR = Object.getOwnPropertyNames(nput_S3_1)
-      let nameMF = "FINAL";
+      let nameMF = "INPROCESS";
 
 
       let nameTool = "";
@@ -167,7 +167,7 @@ router.post('/FINAL/FINISHtoDB', async (req, res) => {
       } else {
         let input_S4_1 = findpo[0]; //input1
         let input_S4_2 = output;    //input2
-        let nameMF = "FINAL";
+        let nameMF = "INPROCESS";
 
         let buff = input_S4_1[nameMF];
         let objectB = Object.getOwnPropertyNames(buff)
@@ -234,7 +234,7 @@ router.post('/FINAL/FINISHtoDB', async (req, res) => {
   return res.json(outputs);
 });
 
-router.post('/FINAL/FINISHtoDB-apr', async (req, res) => {
+router.post('/INPROCESS/FINISHtoDB-apr', async (req, res) => {
   //-------------------------------------
   console.log('--FINISHtoDB-apr--');
   console.log(req.body);
@@ -244,7 +244,6 @@ router.post('/FINAL/FINISHtoDB-apr', async (req, res) => {
   //-------------------------------------
   let output = input;
   //-------------------------------------
-  console.log(output)
   let outputs = '';
   let findpo = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
   if (findpo.length === 0) {
@@ -252,26 +251,10 @@ router.post('/FINAL/FINISHtoDB-apr', async (req, res) => {
     let nameTool = input['tool'];
     let nameItem = input['inspectionItem'];
     let value = input['value'];
-  
     let Item = {};
     let Tool = {};
 
-
-    let PIC = parseInt(input['PCS']);
-    let PICs = 1;
-    if(PIC != NaN || PIC != "NaN"){
-      PICs = PIC;
-    }
-
-    // Item[nameItem] = { "PSC1": value, "PSC2": value, "PSC3": value, "PSC4": value, "PSC5": value, "PSC6": value, "PSC7": value, "PSC8": value, "PSC9": value, "PSC10": value };
-    Item[nameItem] = { };
-    for (let l = 0; l < PICs; l++) {
-      Item[nameItem][`PSC${l+1}`] = value
-      
-    }
-
-    console.log(Item[nameItem])
-
+    Item[nameItem] = { "PSC1": value, "PSC2": value, "PSC3": value, "PSC4": value, "PSC5": value, "PSC6": value, "PSC7": value, "PSC8": value, "PSC9": value, "PSC10": value };
     Tool[nameTool] = Item;
 
     output[nameFOR] = Tool;
@@ -304,15 +287,15 @@ router.post('/FINAL/FINISHtoDB-apr', async (req, res) => {
     let MACHINEmaster = await mongodb.find(master_FN, MACHINE, {});
 
     let ItemPickcodeout = [];
-    for (i = 0; i < findcp[0]['FINAL'].length; i++) {
+    for (i = 0; i < findcp[0]['INPROCESS'].length; i++) {
       for (j = 0; j < masterITEMs.length; j++) {
-        if (findcp[0]['FINAL'][i]['ITEMs'] === masterITEMs[j]['masterID']) {
-          ItemPickcodeout.push({ "key": masterITEMs[j]['masterID'], "value": masterITEMs[j]['ITEMs'], "METHOD": findcp[0]['FINAL'][i]['METHOD'] });
+        if (findcp[0]['INPROCESS'][i]['ITEMs'] === masterITEMs[j]['masterID']) {
+          ItemPickcodeout.push({ "key": masterITEMs[j]['masterID'], "value": masterITEMs[j]['ITEMs'], "METHOD": findcp[0]['INPROCESS'][i]['METHOD'] });
         }
       }
     }
 
-    output['CHECKlist'] = ItemPickcodeout;
+    output['CHECKlist_IP'] = ItemPickcodeout;
 
     let insertdb = await mongodb.insertMany(MAIN_DATA, MAIN, [output]);
 
@@ -342,18 +325,7 @@ router.post('/FINAL/FINISHtoDB-apr', async (req, res) => {
       FOR[nameFOR] = Tool;
       let out_S2_1 = { "PO": input_S2_2.PO };
       let out_S2_2 = { $set: FOR }
-      let PIC = parseInt(input_S2_2['PCS']);
-      let PICs = 1;
-      if(PIC != NaN || PIC != "NaN"){
-        PICs = PIC;
-      }
-  
-      // Item[nameItem] = { "PSC1": value, "PSC2": value, "PSC3": value, "PSC4": value, "PSC5": value, "PSC6": value, "PSC7": value, "PSC8": value, "PSC9": value, "PSC10": value };
-      Item[nameItem] = { };
-      for (let l = 0; l < PICs; l++) {
-        Item[nameItem][`PSC${l+1}`] = value
-        
-      }
+      Item[nameItem] = { "PSC1": value, "PSC2": value, "PSC3": value, "PSC4": value, "PSC5": value, "PSC6": value, "PSC7": value, "PSC8": value, "PSC9": value, "PSC10": value };
       // outputs=[out_S2_1,out_S2_2]
       outputs = 'OK'
       let upd = await mongodb.update(MAIN_DATA, MAIN, out_S2_1, out_S2_2);
@@ -363,7 +335,7 @@ router.post('/FINAL/FINISHtoDB-apr', async (req, res) => {
       let input_S3_1 = findpo[0]; //input1
       let input_S3_2 = output;    //input2
       // let objectR = Object.getOwnPropertyNames(nput_S3_1)
-      let nameMF = "FINAL";
+      let nameMF = "INPROCESS";
 
 
       let nameTool = "";
@@ -383,18 +355,7 @@ router.post('/FINAL/FINISHtoDB-apr', async (req, res) => {
         let Tool = {};
         let FOR = input_S3_1[nameFOR];
 
-        let PIC = parseInt(input_S3_2['PCS']);
-        let PICs = 1;
-        if(PIC != NaN || PIC != "NaN"){
-          PICs = PIC;
-        }
-    
-        // Item[nameItem] = { "PSC1": value, "PSC2": value, "PSC3": value, "PSC4": value, "PSC5": value, "PSC6": value, "PSC7": value, "PSC8": value, "PSC9": value, "PSC10": value };
-        Item[nameItem] = { };
-        for (let l = 0; l < PICs; l++) {
-          Item[nameItem][`PSC${l+1}`] = value
-          
-        }
+        Item[nameItem] = { "PSC1": value, "PSC2": value, "PSC3": value, "PSC4": value, "PSC5": value, "PSC6": value, "PSC7": value, "PSC8": value, "PSC9": value, "PSC10": value };
         input_S3_1[nameFOR][nameTool] = Item;
         let out_S3_1 = { PO: input_S3_2.PO };
         let out_S3_2 = { $set: input_S3_1 }
@@ -405,7 +366,7 @@ router.post('/FINAL/FINISHtoDB-apr', async (req, res) => {
       } else {
         let input_S4_1 = findpo[0]; //input1
         let input_S4_2 = output;    //input2
-        let nameMF = "FINAL";
+        let nameMF = "INPROCESS";
 
         let buff = input_S4_1[nameMF];
         let objectB = Object.getOwnPropertyNames(buff)
@@ -433,18 +394,7 @@ router.post('/FINAL/FINISHtoDB-apr', async (req, res) => {
           let FOR = input_S4_1[nameFOR];
           let Tool = FOR[nameTool];
           let Item = Tool
-          let PIC = parseInt(input_S4_2['PCS']);
-          let PICs = 1;
-          if(PIC != NaN || PIC != "NaN"){
-            PICs = PIC;
-          }
-      
-          // Item[nameItem] = { "PSC1": value, "PSC2": value, "PSC3": value, "PSC4": value, "PSC5": value, "PSC6": value, "PSC7": value, "PSC8": value, "PSC9": value, "PSC10": value };
-          Item[nameItem] = { };
-          for (let l = 0; l < PICs; l++) {
-            Item[nameItem][`PSC${l+1}`] = value
-            
-          }
+          Item[nameItem] = { "PSC1": value, "PSC2": value, "PSC3": value, "PSC4": value, "PSC5": value, "PSC6": value, "PSC7": value, "PSC8": value, "PSC9": value, "PSC10": value };
           let out_S4_1 = { PO: input_S4_2.PO };
           let out_S4_2 = { $set: input_S4_1 }
 
@@ -482,7 +432,7 @@ router.post('/FINAL/FINISHtoDB-apr', async (req, res) => {
   return res.json(outputs);
 });
 
-router.post('/FINAL/GRAPH-recal', async (req, res) => {
+router.post('/INPROCESS/GRAPH-recal', async (req, res) => {
   //-------------------------------------
   console.log('--GRAPH-recal--');
   console.log(req.body);
@@ -494,10 +444,10 @@ router.post('/FINAL/GRAPH-recal', async (req, res) => {
   if (input["PO"] !== undefined && input["ITEMs"] !== undefined) {
     let feedback = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
 
-    if (feedback.length > 0 && feedback[0]['FINAL'] != undefined && feedback[0]['FINAL'][input["NAME_INS"]] != undefined && feedback[0]['FINAL'][input["NAME_INS"]][input["ITEMs"]] != undefined) {
-      // console.log(Object.keys(feedback[0]['FINAL'][NAME_INS][input["ITEMs"]]));
-      let oblist = Object.keys(feedback[0]['FINAL'][input["NAME_INS"]][input["ITEMs"]]);
-      let ob = feedback[0]['FINAL'][input["NAME_INS"]][input["ITEMs"]];
+    if (feedback.length > 0 && feedback[0]['INPROCESS'] != undefined && feedback[0]['INPROCESS'][input["NAME_INS"]] != undefined && feedback[0]['INPROCESS'][input["NAME_INS"]][input["ITEMs"]] != undefined) {
+      // console.log(Object.keys(feedback[0]['INPROCESS'][NAME_INS][input["ITEMs"]]));
+      let oblist = Object.keys(feedback[0]['INPROCESS'][input["NAME_INS"]][input["ITEMs"]]);
+      let ob = feedback[0]['INPROCESS'][input["NAME_INS"]][input["ITEMs"]];
 
       let LISTbuffer = [];
       let ITEMleftVALUEout = [];
@@ -542,10 +492,10 @@ router.post('/FINAL/GRAPH-recal', async (req, res) => {
           let RawData = RawPoint[0].Point1.x + (data2 / data3 * pointvalue);
           let graph_ans_X = parseFloat(RawData.toFixed(2));
           console.log("-----------")
-          feedback[0]['FINAL_ANS'][input["ITEMs"]] = graph_ans_X;
-          feedback[0]['FINAL_ANS'][`${input["ITEMs"]}_point`] = { "x": graph_ans_X, "y": core };
+          feedback[0]['INPROCESS_ANS'][input["ITEMs"]] = graph_ans_X;
+          feedback[0]['INPROCESS_ANS'][`${input["ITEMs"]}_point`] = { "x": graph_ans_X, "y": core };
 
-          let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedback[0]['FINAL_ANS'] } });
+          let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'INPROCESS_ANS': feedback[0]['INPROCESS_ANS'] } });
         }
         catch (err) {
           // TPGHMV002db[`INTERSEC_ERR`] = 1;
@@ -608,10 +558,10 @@ router.post('/FINAL/GRAPH-recal', async (req, res) => {
         let graph_ans_X = parseFloat(Xans.toFixed(2));
         let graph_ans_Y = parseFloat(Yans.toFixed(2));
 
-        feedback[0]['FINAL_ANS'][input["ITEMs"]] = graph_ans_X;
-        feedback[0]['FINAL_ANS'][`${input["ITEMs"]}_point`] = { "x": graph_ans_X, "y": graph_ans_Y };
+        feedback[0]['INPROCESS_ANS'][input["ITEMs"]] = graph_ans_X;
+        feedback[0]['INPROCESS_ANS'][`${input["ITEMs"]}_point`] = { "x": graph_ans_X, "y": graph_ans_Y };
 
-        let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedback[0]['FINAL_ANS'] } });
+        let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'INPROCESS_ANS': feedback[0]['INPROCESS_ANS'] } });
         output = 'OK2';
 
       }
@@ -625,7 +575,7 @@ router.post('/FINAL/GRAPH-recal', async (req, res) => {
 });
 
 
-router.post('/FINAL/CAL1-recal', async (req, res) => {
+router.post('/INPROCESS/CAL1-recal', async (req, res) => {
   //-------------------------------------
   console.log('--CAL1-recal--');
   console.log(req.body);
@@ -654,26 +604,26 @@ router.post('/FINAL/CAL1-recal', async (req, res) => {
         let FORMULAresult = FORMULAdata.replace("X", `${VAL1data}`).replace("Y", `${VAL2data}`).replace("K1", `${Areadata}`)
         console.log(FORMULAresult)
         let result = evil(FORMULAresult)
-        let finalresult = result;
-        console.log(finalresult)
+        let INPROCESSresult = result;
+        console.log(INPROCESSresult)
         if (result < 0) {
-          finalresult = - finalresult;
+          INPROCESSresult = - INPROCESSresult;
         }
-        console.log(finalresult)
+        console.log(INPROCESSresult)
 
 
 
         let feedbackres = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
         console.log(feedbackres)
-        if(feedbackres[0]['FINAL_ANS'] === undefined){
-        feedbackres[0]['FINAL_ANS']={}
-        feedbackres[0]['FINAL_ANS'][input["ITEMs"]] = finalresult;
+        if(feedbackres[0]['INPROCESS_ANS'] === undefined){
+        feedbackres[0]['INPROCESS_ANS']={}
+        feedbackres[0]['INPROCESS_ANS'][input["ITEMs"]] = INPROCESSresult;
         console.log(feedbackres)
-        let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedbackres[0]['FINAL_ANS'] } });
+        let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'INPROCESS_ANS': feedbackres[0]['INPROCESS_ANS'] } });
         }else{
-        feedbackres[0]['FINAL_ANS'][input["ITEMs"]] = finalresult;
+        feedbackres[0]['INPROCESS_ANS'][input["ITEMs"]] = INPROCESSresult;
         console.log(feedbackres)
-        let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedbackres[0]['FINAL_ANS'] } });
+        let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'INPROCESS_ANS': feedbackres[0]['INPROCESS_ANS'] } });
         }
 
 
@@ -689,7 +639,7 @@ router.post('/FINAL/CAL1-recal', async (req, res) => {
 });
 
 
-router.post('/FINAL/PHBP12report', async (req, res) => {
+router.post('/INPROCESS/PHBP12report', async (req, res) => {
   //-------------------------------------
   console.log('--PHBP12report--');
   console.log(req.body);

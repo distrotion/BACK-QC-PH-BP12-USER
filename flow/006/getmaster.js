@@ -15,24 +15,24 @@ let ITEMs = 'ITEMs';
 let METHOD = 'METHOD';
 let MACHINE = 'MACHINE';
 
-// router.post('/FINAL/getmaster', async (req, res) => {
-//   //-------------------------------------
-//   console.log('--getmaster--');
-//   console.log(req.body);
-//   let input = req.body;
-//   //-------------------------------------
-//   let output = 'NOK';
+router.post('/INPROCESS/getmaster', async (req, res) => {
+  //-------------------------------------
+  console.log('--getmaster--');
+  console.log(req.body);
+  let input = req.body;
+  //-------------------------------------
+  let output = 'NOK';
 
-//   if (input['PO'] !== undefined && input['CP'] !== undefined) {
+  if (input['PO'] !== undefined && input['CP'] !== undefined) {
 
-//   }
+  }
 
 
-//   //-------------------------------------
-//   return  res.json(output);
-// });
+  //-------------------------------------
+  return  res.json(output);
+});
 
-router.post('/FINAL/GETINSset', async (req, res) => {
+router.post('/INPROCESS/GETINSset', async (req, res) => {
   //-------------------------------------
   console.log('--GETINSset--');
   console.log(req.body);
@@ -53,9 +53,9 @@ router.post('/FINAL/GETINSset', async (req, res) => {
     findPO = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
   }
   if (findcp.length > 0 && findPO.length === 0) {
-    if (findcp[0]['FINAL'] !== undefined && findcp[0]['FINAL'].length > 0) {
-      for (i = 0; i < findcp[0]['FINAL'].length; i++) {
-        ITEMMETHODlist.push({ "ITEMs": findcp[0]['FINAL'][i]['ITEMs'], "METHOD": findcp[0]['FINAL'][i]['METHOD'] })
+    if (findcp[0]['INPROCESS'] !== undefined && findcp[0]['INPROCESS'].length > 0) {
+      for (i = 0; i < findcp[0]['INPROCESS'].length; i++) {
+        ITEMMETHODlist.push({ "ITEMs": findcp[0]['INPROCESS'][i]['ITEMs'], "METHOD": findcp[0]['INPROCESS'][i]['METHOD'] })
       }
 
       METHODmaster = await mongodb.find(master_FN, METHOD, {});
@@ -110,8 +110,8 @@ router.post('/FINAL/GETINSset', async (req, res) => {
     }
     catch (errin) {
       if (findcp.length > 0) {
-        for (i = 0; i < findcp[0]['FINAL'].length; i++) {
-          ITEMMETHODlist.push({ "ITEMs": findcp[0]['FINAL'][i]['ITEMs'], "METHOD": findcp[0]['FINAL'][i]['METHOD'] })
+        for (i = 0; i < findcp[0]['INPROCESS'].length; i++) {
+          ITEMMETHODlist.push({ "ITEMs": findcp[0]['INPROCESS'][i]['ITEMs'], "METHOD": findcp[0]['INPROCESS'][i]['METHOD'] })
         }
 
         METHODmaster = await mongodb.find(master_FN, METHOD, {});

@@ -12,7 +12,7 @@ let day = d;
 
 //----------------- SETUP
 
-let NAME_INS = 'SUR-THI-002'
+let NAME_INS = 'CTC-SEM-001'
 
 //----------------- DATABASE
 
@@ -32,7 +32,7 @@ let UNIT = 'UNIT';
 
 let finddbbuffer = [{}];
 
-let SURTHI002db = {
+let CTCSEM001db = {
   "INS": NAME_INS,
   "PO": "",
   "CP": "",
@@ -77,7 +77,7 @@ let SURTHI002db = {
   "ITEMleftUNIT": [],
   "ITEMleftVALUE": [],
   //
-  "MeasurmentFOR": "FINAL",
+  "MeasurmentFOR": "INPROCESS",
   "inspectionItem": "", //ITEMpice
   "inspectionItemNAME": "",
   "tool": NAME_INS,
@@ -91,21 +91,21 @@ let SURTHI002db = {
 
 
 
-router.get('/FINAL/CHECK-SURTHI002', async (req, res) => {
+router.get('/INPROCESS/CHECK-CTCSEM001', async (req, res) => {
 
-  return res.json(SURTHI002db['PO']);
+  return res.json(CTCSEM001db['PO']);
 });
 
 
-router.post('/FINAL/SURTHI002db', async (req, res) => {
+router.post('/INPROCESS/CTCSEM001db', async (req, res) => {
   //-------------------------------------
-  // console.log('--SURTHI002db--');
+  console.log('--CTCSEM001db--');
   // console.log(req.body);
   //-------------------------------------
   let finddb = [{}];
   try {
 
-    finddb = SURTHI002db;
+    finddb = CTCSEM001db;
     finddbbuffer = finddb;
   }
   catch (err) {
@@ -115,14 +115,14 @@ router.post('/FINAL/SURTHI002db', async (req, res) => {
   return res.json(finddb);
 });
 
-router.post('/FINAL/GETINtoSURTHI002', async (req, res) => {
+router.post('/INPROCESS/GETINtoCTCSEM001', async (req, res) => {
   //-------------------------------------
-  console.log('--GETINtoSURTHI002--');
+  console.log('--GETINtoCTCSEM001--');
   console.log(req.body);
   let input = req.body;
   //-------------------------------------
   let output = 'NOK';
-  check = SURTHI002db;
+  check = CTCSEM001db;
   if (input['PO'] !== undefined && input['CP'] !== undefined && check['PO'] === '' && input['USER'] !== undefined && input['USERID'] !== undefined) {
     // let dbsap = await mssql.qurey(`select * FROM [SAPData_GW_GAS].[dbo].[tblSAPDetail] where [PO] = ${input['PO']}`);
 
@@ -150,11 +150,11 @@ router.post('/FINAL/GETINtoSURTHI002', async (req, res) => {
         let ItemPickout = [];
         let ItemPickcodeout = [];
 
-        for (i = 0; i < findcp[0]['FINAL'].length; i++) {
+        for (i = 0; i < findcp[0]['INPROCESS'].length; i++) {
           for (j = 0; j < masterITEMs.length; j++) {
-            if (findcp[0]['FINAL'][i]['ITEMs'] === masterITEMs[j]['masterID']) {
+            if (findcp[0]['INPROCESS'][i]['ITEMs'] === masterITEMs[j]['masterID']) {
               ItemPickout.push(masterITEMs[j]['ITEMs']);
-              ItemPickcodeout.push({ "key": masterITEMs[j]['masterID'], "value": masterITEMs[j]['ITEMs'], "METHOD": findcp[0]['FINAL'][i]['METHOD'] });
+              ItemPickcodeout.push({ "key": masterITEMs[j]['masterID'], "value": masterITEMs[j]['ITEMs'], "METHOD": findcp[0]['INPROCESS'][i]['METHOD'] });
             }
           }
         }
@@ -174,7 +174,7 @@ router.post('/FINAL/GETINtoSURTHI002', async (req, res) => {
 
 
 
-        SURTHI002db = {
+        CTCSEM001db = {
           "INS": NAME_INS,
           "PO": input['PO'] || '',
           "CP": input['CP'] || '',
@@ -221,7 +221,7 @@ router.post('/FINAL/GETINtoSURTHI002', async (req, res) => {
           "ITEMleftUNIT": [],
           "ITEMleftVALUE": [],
           //
-          "MeasurmentFOR": "FINAL",
+          "MeasurmentFOR": "INPROCESS",
           "inspectionItem": "", //ITEMpice
           "inspectionItemNAME": "",
           "tool": NAME_INS,
@@ -253,18 +253,18 @@ router.post('/FINAL/GETINtoSURTHI002', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/SURTHI002-geteachITEM', async (req, res) => {
+router.post('/INPROCESS/CTCSEM001-geteachITEM', async (req, res) => {
   //-------------------------------------
-  console.log('--SURTHI002-geteachITEM--');
+  console.log('--CTCSEM001-geteachITEM--');
   console.log(req.body);
   let inputB = req.body;
 
   let ITEMSS = '';
   let output = 'NOK';
 
-  for (i = 0; i < SURTHI002db['ItemPickcode'].length; i++) {
-    if (SURTHI002db['ItemPickcode'][i]['value'] === inputB['ITEMs']) {
-      ITEMSS = SURTHI002db['ItemPickcode'][i]['key'];
+  for (i = 0; i < CTCSEM001db['ItemPickcode'].length; i++) {
+    if (CTCSEM001db['ItemPickcode'][i]['value'] === inputB['ITEMs']) {
+      ITEMSS = CTCSEM001db['ItemPickcode'][i]['key'];
     }
   }
 
@@ -272,32 +272,32 @@ router.post('/FINAL/SURTHI002-geteachITEM', async (req, res) => {
   if (ITEMSS !== '') {
 
     //-------------------------------------
-    SURTHI002db['inspectionItem'] = ITEMSS;
-    SURTHI002db['inspectionItemNAME'] = inputB['ITEMs'];
-    let input = { 'PO': SURTHI002db["PO"], 'CP': SURTHI002db["CP"], 'ITEMs': SURTHI002db['inspectionItem'] };
+    CTCSEM001db['inspectionItem'] = ITEMSS;
+    CTCSEM001db['inspectionItemNAME'] = inputB['ITEMs'];
+    let input = { 'PO': CTCSEM001db["PO"], 'CP': CTCSEM001db["CP"], 'ITEMs': CTCSEM001db['inspectionItem'] };
     //-------------------------------------
     if (input['PO'] !== undefined && input['CP'] !== undefined && input['ITEMs'] !== undefined) {
       let findcp = await mongodb.find(PATTERN, PATTERN_01, { "CP": input['CP'] });
       let UNITdata = await mongodb.find(master_FN, UNIT, {});
-      let masterITEMs = await mongodb.find(master_FN, ITEMs, { "masterID": SURTHI002db['inspectionItem'] });
+      let masterITEMs = await mongodb.find(master_FN, ITEMs, { "masterID": CTCSEM001db['inspectionItem'] });
 
-      for (i = 0; i < findcp[0]['FINAL'].length; i++) {
-        if (findcp[0]['FINAL'][i]['ITEMs'] === input['ITEMs']) {
+      for (i = 0; i < findcp[0]['INPROCESS'].length; i++) {
+        if (findcp[0]['INPROCESS'][i]['ITEMs'] === input['ITEMs']) {
 
           // output = [{
-          //   "RESULTFORMAT": findcp[0]['FINAL'][i]['RESULTFORMAT'],
-          //   "GRAPHTYPE": findcp[0]['FINAL'][i]['GRAPHTYPE'],
-          //   "INTERSECTION": findcp[0]['FINAL'][i]['INTERSECTION'],
-          //   "DOCUMENT": findcp[0]['FINAL'][i]['DOCUMENT'],
-          //   "SPECIFICATION": findcp[0]['FINAL'][i]['SPECIFICATION'],
-          //   "POINTPCS": findcp[0]['FINAL'][i]['POINTPCS'],
-          //   "POINT": findcp[0]['FINAL'][i]['POINT'],
-          //   "PCS": findcp[0]['FINAL'][i]['PCS'],
-          //   "FREQUENCY": findcp[0]['FINAL'][i]['FREQUENCY'],
-          //   "MODE": findcp[0]['FINAL'][i]['MODE'],
-          //   "REMARK": findcp[0]['FINAL'][i]['REMARK'],
-          //   "LOAD": findcp[0]['FINAL'][i]['LOAD'],
-          //   "CONVERSE": findcp[0]['FINAL'][i]['CONVERSE'],
+          //   "RESULTFORMAT": findcp[0]['INPROCESS'][i]['RESULTFORMAT'],
+          //   "GRAPHTYPE": findcp[0]['INPROCESS'][i]['GRAPHTYPE'],
+          //   "INTERSECTION": findcp[0]['INPROCESS'][i]['INTERSECTION'],
+          //   "DOCUMENT": findcp[0]['INPROCESS'][i]['DOCUMENT'],
+          //   "SPECIFICATION": findcp[0]['INPROCESS'][i]['SPECIFICATION'],
+          //   "POINTPCS": findcp[0]['INPROCESS'][i]['POINTPCS'],
+          //   "POINT": findcp[0]['INPROCESS'][i]['POINT'],
+          //   "PCS": findcp[0]['INPROCESS'][i]['PCS'],
+          //   "FREQUENCY": findcp[0]['INPROCESS'][i]['FREQUENCY'],
+          //   "MODE": findcp[0]['INPROCESS'][i]['MODE'],
+          //   "REMARK": findcp[0]['INPROCESS'][i]['REMARK'],
+          //   "LOAD": findcp[0]['INPROCESS'][i]['LOAD'],
+          //   "CONVERSE": findcp[0]['INPROCESS'][i]['CONVERSE'],
           // }]
 
 
@@ -308,51 +308,50 @@ router.post('/FINAL/SURTHI002-geteachITEM', async (req, res) => {
 
           if (masterITEMs.length > 0) {
             //
-            SURTHI002db["RESULTFORMAT"] = masterITEMs[0]['RESULTFORMAT']
-            SURTHI002db["GRAPHTYPE"] = masterITEMs[0]['GRAPHTYPE']
+            CTCSEM001db["RESULTFORMAT"] = masterITEMs[0]['RESULTFORMAT']
+            CTCSEM001db["GRAPHTYPE"] = masterITEMs[0]['GRAPHTYPE']
             //------------------------------------
 
             let graph = await mongodb.find(PATTERN, GRAPH_TABLE, {});
-            SURTHI002db['GAPnameList'] = [];
+            CTCSEM001db['GAPnameList'] = [];
             for (k = 0; k < graph.length; k++) {
-              SURTHI002db['GAPnameList'].push(graph[k]['NO']);
+              CTCSEM001db['GAPnameList'].push(graph[k]['NO']);
             }
           }
 
           for (j = 0; j < UNITdata.length; j++) {
-            if (findcp[0]['FINAL'][i]['UNIT'] == UNITdata[j]['masterID']) {
-              SURTHI002db["UNIT"] = UNITdata[j]['UNIT'];
+            if (findcp[0]['INPROCESS'][i]['UNIT'] == UNITdata[j]['masterID']) {
+              CTCSEM001db["UNIT"] = UNITdata[j]['UNIT'];
             }
           }
 
-          console.log(findcp[0]['FINAL'][i]['POINT']);
+          console.log(findcp[0]['INPROCESS'][i]['POINT']);
 
-          SURTHI002db["POINTs"] = findcp[0]['FINAL'][i]['POINT'];
-          SURTHI002db["PCS"] = findcp[0]['FINAL'][i]['PCS'];
-          SURTHI002db["PCSleft"] = findcp[0]['FINAL'][i]['PCS'];
-
-          SURTHI002db["SPEC"]='';
-          if (findcp[0]['FINAL'][i]['SPECIFICATIONve'] !== undefined) {
-            if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'BTW') {
-              SURTHI002db["SPEC"] =  `${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_LOW']}-${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_HI']}`;
-            } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'HIM(>)') {
-              SURTHI002db["SPEC"] =  `>${findcp[0]['FINAL'][i]['SPECIFICATIONve']['HIM_L']}`;
-            } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'LOL(<)') {
-              SURTHI002db["SPEC"] =  `<${findcp[0]['FINAL'][i]['SPECIFICATIONve']['LOL_H']}`;
-            }else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'Actual'){
-              SURTHI002db["SPEC"] =  'Actual';
+          CTCSEM001db["POINTs"] = findcp[0]['INPROCESS'][i]['POINT'];
+          CTCSEM001db["PCS"] = findcp[0]['INPROCESS'][i]['PCS'];
+          CTCSEM001db["PCSleft"] = findcp[0]['INPROCESS'][i]['PCS'];
+          CTCSEM001db["SPEC"]='';
+          if (findcp[0]['INPROCESS'][i]['SPECIFICATIONve'] !== undefined) {
+            if (findcp[0]['INPROCESS'][i]['SPECIFICATIONve']['condition'] === 'BTW') {
+              CTCSEM001db["SPEC"] =  `${findcp[0]['INPROCESS'][i]['SPECIFICATIONve']['BTW_LOW']}-${findcp[0]['INPROCESS']['SPECIFICATIONve'][i]['BTW_HI']}`;
+            } else if (findcp[0]['INPROCESS'][i]['SPECIFICATIONve']['condition'] === 'HIM(>)') {
+              CTCSEM001db["SPEC"] =  `>${findcp[0]['INPROCESS'][i]['SPECIFICATIONve']['HIM_L']}`;
+            } else if (findcp[0]['INPROCESS'][i]['SPECIFICATIONve']['condition'] === 'LOL(<)') {
+              CTCSEM001db["SPEC"] =  `<${findcp[0]['INPROCESS'][i]['SPECIFICATIONve']['LOL_H']}`;
+            }else if (findcp[0]['INPROCESS'][i]['SPECIFICATIONve']['condition'] === 'Actual'){
+              CTCSEM001db["SPEC"] =  'Actual';
             }
           }
 
+          console.log(`>>>>>>${CTCSEM001db["SPEC"]}`);
 
-
-          SURTHI002db["INTERSEC"] = masterITEMs[0]['INTERSECTION'];
+          CTCSEM001db["INTERSEC"] = masterITEMs[0]['INTERSECTION'];
           output = 'OK';
           let findpo = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
           if (findpo.length > 0) {
             request.post(
-              'http://127.0.0.1:16070/FINAL/SURTHI002-feedback',
-              { json: { "PO": SURTHI002db['PO'], "ITEMs": SURTHI002db['inspectionItem'] } },
+              'http://127.0.0.1:16070/CTCSEM001-feedback',
+              { json: { "PO": CTCSEM001db['PO'], "ITEMs": CTCSEM001db['inspectionItem'] } },
               function (error, response, body2) {
                 if (!error && response.statusCode == 200) {
                   // console.log(body2);
@@ -369,12 +368,12 @@ router.post('/FINAL/SURTHI002-geteachITEM', async (req, res) => {
     }
 
   } else {
-    SURTHI002db["POINTs"] = '';
-    SURTHI002db["PCS"] = '';
+    CTCSEM001db["POINTs"] = '';
+    CTCSEM001db["PCS"] = '';
     SURBAL013db["SPEC"] = '';
-    SURTHI002db["PCSleft"] = '';
-    SURTHI002db["UNIT"] = "";
-    SURTHI002db["INTERSEC"] = "";
+    CTCSEM001db["PCSleft"] = '';
+    CTCSEM001db["UNIT"] = "";
+    CTCSEM001db["INTERSEC"] = "";
     output = 'NOK';
   }
 
@@ -382,17 +381,17 @@ router.post('/FINAL/SURTHI002-geteachITEM', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/SURTHI002-geteachGRAPH', async (req, res) => {
+router.post('/INPROCESS/CTCSEM001-geteachGRAPH', async (req, res) => {
   //-------------------------------------
-  console.log('--SURTHI002-geteachGRAPH--');
+  console.log('--CTCSEM001-geteachGRAPH--');
   console.log(req.body);
   let input = req.body;
   //-------------------------------------
   try {
     let graph = await mongodb.find(PATTERN, GRAPH_TABLE, { "NO": input['GAPname'] });
     console.log(graph);
-    SURTHI002db['GAPnameListdata'] = graph[0];//confirmdata
-    SURTHI002db['GAP'] = SURTHI002db['GAPnameListdata'][`GT${SURTHI002db['confirmdata'].length + 1}`]
+    CTCSEM001db['GAPnameListdata'] = graph[0];//confirmdata
+    CTCSEM001db['GAP'] = CTCSEM001db['GAPnameListdata'][`GT${CTCSEM001db['confirmdata'].length + 1}`]
   }
   catch (err) {
 
@@ -401,9 +400,9 @@ router.post('/FINAL/SURTHI002-geteachGRAPH', async (req, res) => {
   return res.json('ok');
 });
 
-router.post('/FINAL/SURTHI002-preview', async (req, res) => {
+router.post('/INPROCESS/CTCSEM001-preview', async (req, res) => {
   //-------------------------------------
-  console.log('--SURTHI002-preview--');
+  console.log('--CTCSEM001-preview--');
   console.log(req.body);
   let input = req.body;
   //-------------------------------------
@@ -412,7 +411,7 @@ router.post('/FINAL/SURTHI002-preview', async (req, res) => {
     if (input[0]['V1'] !== undefined) {
       //-------------------------------------
       try {
-        SURTHI002db['preview'] = input;
+        CTCSEM001db['preview'] = input;
         output = 'OK';
       }
       catch (err) {
@@ -423,50 +422,50 @@ router.post('/FINAL/SURTHI002-preview', async (req, res) => {
       output = 'NOK';
     }
   } else {
-    SURTHI002db['preview'] = [];
+    CTCSEM001db['preview'] = [];
     output = 'clear';
   }
   //-------------------------------------
   return res.json(output);
 });
 
-router.post('/FINAL/SURTHI002-confirmdata', async (req, res) => {
+router.post('/INPROCESS/CTCSEM001-confirmdata', async (req, res) => {
   //-------------------------------------
-  console.log('--SURTHI002-confirmdata--');
+  console.log('--CTCSEM001-confirmdata--');
   console.log(req.body);
   // let input = req.body;
   //-------------------------------------
   let output = 'NOK';
   //-------------------------------------
   try {
-    let datapush = SURTHI002db['preview'][0]
+    let datapush = CTCSEM001db['preview'][0]
 
-    if (SURTHI002db['RESULTFORMAT'] === 'Graph') {
-      let pushdata = SURTHI002db['preview'][0]
+    if (CTCSEM001db['RESULTFORMAT'] === 'Graph') {
+      let pushdata = CTCSEM001db['preview'][0]
 
-      pushdata['V5'] = SURTHI002db['GAP'];
-      pushdata['V1'] = `${SURTHI002db['confirmdata'].length + 1}:${pushdata['V1']}`;
+      pushdata['V5'] = CTCSEM001db['GAP'];
+      pushdata['V1'] = `${CTCSEM001db['confirmdata'].length + 1}:${pushdata['V1']}`;
 
-      if (SURTHI002db['GAP'] != '') {
+      if (CTCSEM001db['GAP'] != '') {
 
-        SURTHI002db['confirmdata'].push(pushdata);
-        SURTHI002db['preview'] = [];
+        CTCSEM001db['confirmdata'].push(pushdata);
+        CTCSEM001db['preview'] = [];
         output = 'OK';
-        SURTHI002db['GAP'] = SURTHI002db['GAPnameListdata'][`GT${SURTHI002db['confirmdata'].length + 1}`]
+        CTCSEM001db['GAP'] = CTCSEM001db['GAPnameListdata'][`GT${CTCSEM001db['confirmdata'].length + 1}`]
       } else {
         output = 'NOK';
       }
 
 
-    } else if (SURTHI002db['RESULTFORMAT'] === 'Number') {
+    } else if (CTCSEM001db['RESULTFORMAT'] === 'Number') {
 
-      let pushdata = SURTHI002db['preview'][0]
+      let pushdata = CTCSEM001db['preview'][0]
 
-      pushdata['V5'] = SURTHI002db['confirmdata'].length + 1
-      pushdata['V1'] = `${SURTHI002db['confirmdata'].length + 1}:${pushdata['V1']}`
+      pushdata['V5'] = CTCSEM001db['confirmdata'].length + 1
+      pushdata['V1'] = `${CTCSEM001db['confirmdata'].length + 1}:${pushdata['V1']}`
 
-      SURTHI002db['confirmdata'].push(pushdata);
-      SURTHI002db['preview'] = [];
+      CTCSEM001db['confirmdata'].push(pushdata);
+      CTCSEM001db['preview'] = [];
       output = 'OK';
     }
   }
@@ -479,9 +478,9 @@ router.post('/FINAL/SURTHI002-confirmdata', async (req, res) => {
 
 
 
-router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
+router.post('/INPROCESS/CTCSEM001-feedback', async (req, res) => {
   //-------------------------------------
-  console.log('--SURTHI002-feedback--');
+  console.log('--CTCSEM001-feedback--');
   console.log(req.body);
   let input = req.body;
   //-------------------------------------
@@ -490,10 +489,10 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
   //-------------------------------------
   if (input["PO"] !== undefined && input["ITEMs"] !== undefined) {
     let feedback = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
-    if (feedback.length > 0 && feedback[0]['FINAL'] != undefined && feedback[0]['FINAL'][NAME_INS] != undefined && feedback[0]['FINAL'][NAME_INS][input["ITEMs"]] != undefined) {
-      // console.log(Object.keys(feedback[0]['FINAL'][NAME_INS][input["ITEMs"]]));
-      let oblist = Object.keys(feedback[0]['FINAL'][NAME_INS][input["ITEMs"]]);
-      let ob = feedback[0]['FINAL'][NAME_INS][input["ITEMs"]];
+    if (feedback.length > 0 && feedback[0]['INPROCESS'] != undefined && feedback[0]['INPROCESS'][NAME_INS] != undefined && feedback[0]['INPROCESS'][NAME_INS][input["ITEMs"]] != undefined) {
+      // console.log(Object.keys(feedback[0]['INPROCESS'][NAME_INS][input["ITEMs"]]));
+      let oblist = Object.keys(feedback[0]['INPROCESS'][NAME_INS][input["ITEMs"]]);
+      let ob = feedback[0]['INPROCESS'][NAME_INS][input["ITEMs"]];
 
 
 
@@ -503,8 +502,8 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
       for (i = 0; i < oblist.length; i++) {
         LISTbuffer.push(...ob[oblist[i]])
       }
-      SURTHI002db["PCSleft"] = `${parseInt(SURTHI002db["PCS"]) - oblist.length}`;
-      if (SURTHI002db['RESULTFORMAT'] === 'Number' || SURTHI002db['RESULTFORMAT'] === 'Text' || SURTHI002db['RESULTFORMAT'] === 'Graph') {
+      CTCSEM001db["PCSleft"] = `${parseInt(CTCSEM001db["PCS"]) - oblist.length}`;
+      if (CTCSEM001db['RESULTFORMAT'] === 'Number' || CTCSEM001db['RESULTFORMAT'] === 'Text' || CTCSEM001db['RESULTFORMAT'] === 'Graph') {
         for (i = 0; i < LISTbuffer.length; i++) {
           if (LISTbuffer[i]['PO1'] === 'Mean') {
             ITEMleftVALUEout.push({ "V1": 'Mean', "V2": `${LISTbuffer[i]['PO3']}` })
@@ -516,14 +515,14 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
 
 
 
-        SURTHI002db["ITEMleftUNIT"] = [{ "V1": "FINAL", "V2": `${oblist.length}` }];
-        SURTHI002db["ITEMleftVALUE"] = ITEMleftVALUEout;
+        CTCSEM001db["ITEMleftUNIT"] = [{ "V1": "INPROCESS", "V2": `${oblist.length}` }];
+        CTCSEM001db["ITEMleftVALUE"] = ITEMleftVALUEout;
 
       } else {
 
       }
       // output = 'OK';
-      if ((parseInt(SURTHI002db["PCS"]) - oblist.length) == 0) {
+      if ((parseInt(CTCSEM001db["PCS"]) - oblist.length) == 0) {
         //CHECKlist
         for (i = 0; i < feedback[0]['CHECKlist'].length; i++) {
           if (input["ITEMs"] === feedback[0]['CHECKlist'][i]['key']) {
@@ -537,8 +536,8 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
         let masterITEMs = await mongodb.find(master_FN, ITEMs, { "masterID": input["ITEMs"] });
 
 
-        if (feedback[0]['FINAL_ANS'] === undefined) {
-          feedback[0]['FINAL_ANS'] = {}
+        if (feedback[0]['INPROCESS_ANS'] === undefined) {
+          feedback[0]['INPROCESS_ANS'] = {}
         }
         if (masterITEMs.length > 0) {
           let anslist = [];
@@ -558,17 +557,17 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
             let sum2 = anslist_con.reduce((a, b) => a + b, 0);
             let avg2 = (sum2 / anslist_con.length) || 0;
 
-            feedback[0]['FINAL_ANS'][input["ITEMs"]] = avg1;
-            feedback[0]['FINAL_ANS'][`${input["ITEMs"]}_c`] = avg2;
+            feedback[0]['INPROCESS_ANS'][input["ITEMs"]] = avg1;
+            feedback[0]['INPROCESS_ANS'][`${input["ITEMs"]}_c`] = avg2;
 
-            let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedback[0]['FINAL_ANS'] } });
+            let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'INPROCESS_ANS': feedback[0]['INPROCESS_ANS'] } });
 
 
           } else if (masterITEMs[0]['RESULTFORMAT'] === 'Text') {
 
           } else if (masterITEMs[0]['RESULTFORMAT'] === 'Graph') {
 
-            if (SURTHI002db['GRAPHTYPE'] == 'CDE') {
+            if (CTCSEM001db['GRAPHTYPE'] == 'CDE') {
 
               //
               let axis_data = [];
@@ -580,8 +579,8 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
               //-----------------core
 
               let core = 0;
-              if (SURTHI002db['INTERSEC'] !== '') {
-                core = parseFloat(SURTHI002db['INTERSEC'])
+              if (CTCSEM001db['INTERSEC'] !== '') {
+                core = parseFloat(CTCSEM001db['INTERSEC'])
               } else {
                 core = parseFloat(axis_data[axis_data.length - 1]['y'])
               }
@@ -603,17 +602,17 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
                 let RawData = RawPoint[0].Point1.x + (data2 / data3 * pointvalue);
                 let graph_ans_X = parseFloat(RawData.toFixed(2));
 
-                feedback[0]['FINAL_ANS'][input["ITEMs"]] = graph_ans_X;
-                feedback[0]['FINAL_ANS'][`${input["ITEMs"]}_point`] = { "x": graph_ans_X, "y": core };
+                feedback[0]['INPROCESS_ANS'][input["ITEMs"]] = graph_ans_X;
+                feedback[0]['INPROCESS_ANS'][`${input["ITEMs"]}_point`] = { "x": graph_ans_X, "y": core };
 
-                let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedback[0]['FINAL_ANS'] } });
+                let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'INPROCESS_ANS': feedback[0]['INPROCESS_ANS'] } });
               }
               catch (err) {
-                SURTHI002db[`INTERSEC_ERR`] = 1;
+                CTCSEM001db[`INTERSEC_ERR`] = 1;
               }
 
               //
-            } else if (SURTHI002db['GRAPHTYPE'] == 'CDT') {
+            } else if (CTCSEM001db['GRAPHTYPE'] == 'CDT') {
 
               //
               let axis_data = [];
@@ -625,8 +624,8 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
               //-----------------core
 
               let core = 0;
-              if (SURTHI002db['INTERSEC'] !== '') {
-                core = parseFloat(SURTHI002db['INTERSEC'])
+              if (CTCSEM001db['INTERSEC'] !== '') {
+                core = parseFloat(CTCSEM001db['INTERSEC'])
               } else {
                 // core = parseFloat(axis_data[axis_data.length - 1]['y']) 
                 core = parseFloat(axis_data[axis_data.length - 1]['y']) + 50
@@ -649,17 +648,17 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
                 let RawData = RawPoint[0].Point1.x + (data2 / data3 * pointvalue);
                 let graph_ans_X = parseFloat(RawData.toFixed(2));
 
-                feedback[0]['FINAL_ANS'][input["ITEMs"]] = graph_ans_X;
-                feedback[0]['FINAL_ANS'][`${input["ITEMs"]}_point`] = { "x": graph_ans_X, "y": core };
+                feedback[0]['INPROCESS_ANS'][input["ITEMs"]] = graph_ans_X;
+                feedback[0]['INPROCESS_ANS'][`${input["ITEMs"]}_point`] = { "x": graph_ans_X, "y": core };
 
-                let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedback[0]['FINAL_ANS'] } });
+                let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'INPROCESS_ANS': feedback[0]['INPROCESS_ANS'] } });
               }
               catch (err) {
-                SURTHI002db[`INTERSEC_ERR`] = 1;
+                CTCSEM001db[`INTERSEC_ERR`] = 1;
               }
 
               //
-            } else if (SURTHI002db['GRAPHTYPE'] == 'CDT(S)') {
+            } else if (CTCSEM001db['GRAPHTYPE'] == 'CDT(S)') {
 
               //
               let axis_data = [];
@@ -671,8 +670,8 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
               //-----------------core
 
               let core = 0;
-              if (SURTHI002db['INTERSEC'] !== '') {
-                core = parseFloat(SURTHI002db['INTERSEC'])
+              if (CTCSEM001db['INTERSEC'] !== '') {
+                core = parseFloat(CTCSEM001db['INTERSEC'])
               } else {
                 core = parseFloat(axis_data[axis_data.length - 1]['y']) + 50
               }
@@ -694,13 +693,13 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
                 let RawData = RawPoint[0].Point1.x + (data2 / data3 * pointvalue);
                 let graph_ans_X = parseFloat(RawData.toFixed(2));
 
-                feedback[0]['FINAL_ANS'][input["ITEMs"]] = graph_ans_X;
-                feedback[0]['FINAL_ANS'][`${input["ITEMs"]}_point`] = { "x": graph_ans_X, "y": core };
+                feedback[0]['INPROCESS_ANS'][input["ITEMs"]] = graph_ans_X;
+                feedback[0]['INPROCESS_ANS'][`${input["ITEMs"]}_point`] = { "x": graph_ans_X, "y": core };
 
-                let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedback[0]['FINAL_ANS'] } });
+                let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'INPROCESS_ANS': feedback[0]['INPROCESS_ANS'] } });
               }
               catch (err) {
-                SURTHI002db[`INTERSEC_ERR`] = 1;
+                CTCSEM001db[`INTERSEC_ERR`] = 1;
               }
 
               //
@@ -760,14 +759,14 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
                 let graph_ans_X = parseFloat(Xans.toFixed(2));
                 let graph_ans_Y = parseFloat(Yans.toFixed(2));
 
-                feedback[0]['FINAL_ANS'][input["ITEMs"]] = graph_ans_X;
-                feedback[0]['FINAL_ANS'][`${input["ITEMs"]}_point`] = { "x": graph_ans_X, "y": graph_ans_Y };
+                feedback[0]['INPROCESS_ANS'][input["ITEMs"]] = graph_ans_X;
+                feedback[0]['INPROCESS_ANS'][`${input["ITEMs"]}_point`] = { "x": graph_ans_X, "y": graph_ans_Y };
 
-                let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedback[0]['FINAL_ANS'] } });
+                let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'INPROCESS_ANS': feedback[0]['INPROCESS_ANS'] } });
 
               }
               catch (err) {
-                SURTHI002db[`INTERSEC_ERR`] = 1;
+                CTCSEM001db[`INTERSEC_ERR`] = 1;
               }
             }
 
@@ -793,15 +792,15 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
         }
 
         if (CHECKlistdataFINISH.length === feedback[0]['CHECKlist'].length) {
-          // feedback[0]['FINAL_ANS']["ALL_DONE"] = "DONE";
-          // feedback[0]['FINAL_ANS']["PO_judgment"] ="pass";
+          // feedback[0]['INPROCESS_ANS']["ALL_DONE"] = "DONE";
+          // feedback[0]['INPROCESS_ANS']["PO_judgment"] ="pass";
           let feedbackupdateFINISH = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { "ALL_DONE": "DONE", "PO_judgment": "pass", } });
         }
 
       }
     } else {
-      SURTHI002db["ITEMleftUNIT"] = '';
-      SURTHI002db["ITEMleftVALUE"] = '';
+      CTCSEM001db["ITEMleftUNIT"] = '';
+      CTCSEM001db["ITEMleftVALUE"] = '';
     }
 
   }
@@ -810,9 +809,9 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/SURTHI002-SETZERO', async (req, res) => {
+router.post('/INPROCESS/CTCSEM001-SETZERO', async (req, res) => {
   //-------------------------------------
-  console.log('--SURTHI002fromINS--');
+  console.log('--CTCSEM001fromINS--');
   console.log(req.body);
   let input = req.body;
   //-------------------------------------
@@ -820,7 +819,7 @@ router.post('/FINAL/SURTHI002-SETZERO', async (req, res) => {
   //-------------------------------------
   try {
 
-    SURTHI002db = {
+    CTCSEM001db = {
       "INS": NAME_INS,
       "PO": "",
       "CP": "",
@@ -865,7 +864,7 @@ router.post('/FINAL/SURTHI002-SETZERO', async (req, res) => {
       "ITEMleftUNIT": [],
       "ITEMleftVALUE": [],
       //
-      "MeasurmentFOR": "FINAL",
+      "MeasurmentFOR": "INPROCESS",
       "inspectionItem": "", //ITEMpice
       "inspectionItemNAME": "",
       "tool": NAME_INS,
@@ -882,9 +881,9 @@ router.post('/FINAL/SURTHI002-SETZERO', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/SURTHI002-CLEAR', async (req, res) => {
+router.post('/INPROCESS/CTCSEM001-CLEAR', async (req, res) => {
   //-------------------------------------
-  console.log('--SURTHI002fromINS--');
+  console.log('--CTCSEM001fromINS--');
   console.log(req.body);
   let input = req.body;
   //-------------------------------------
@@ -892,8 +891,8 @@ router.post('/FINAL/SURTHI002-CLEAR', async (req, res) => {
   //-------------------------------------
   try {
 
-    SURTHI002db['preview'] = [];
-    SURTHI002db['confirmdata'] = [];
+    CTCSEM001db['preview'] = [];
+    CTCSEM001db['confirmdata'] = [];
 
     output = 'OK';
   }
@@ -904,9 +903,9 @@ router.post('/FINAL/SURTHI002-CLEAR', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/SURTHI002-RESETVALUE', async (req, res) => {
+router.post('/INPROCESS/CTCSEM001-RESETVALUE', async (req, res) => {
   //-------------------------------------
-  console.log('--SURTHI002fromINS--');
+  console.log('--CTCSEM001fromINS--');
   console.log(req.body);
   let input = req.body;
   //-------------------------------------
@@ -914,9 +913,9 @@ router.post('/FINAL/SURTHI002-RESETVALUE', async (req, res) => {
   //-------------------------------------
   try {
 
-    let all = SURTHI002db['confirmdata'].length
+    let all = CTCSEM001db['confirmdata'].length
     if (all > 0) {
-      SURTHI002db['confirmdata'].pop();
+      CTCSEM001db['confirmdata'].pop();
     }
 
     output = 'OK';
@@ -931,24 +930,24 @@ router.post('/FINAL/SURTHI002-RESETVALUE', async (req, res) => {
 //"value":[],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
 
 
-router.post('/FINAL/SURTHI002-FINISH', async (req, res) => {
+router.post('/INPROCESS/CTCSEM001-FINISH', async (req, res) => {
   //-------------------------------------
-  console.log('--SURTHI002-FINISH--');
+  console.log('--CTCSEM001-FINISH--');
   console.log(req.body);
   let input = req.body;
   //-------------------------------------
   let output = 'OK';
 
-  if (SURTHI002db['RESULTFORMAT'] === 'Number' || SURTHI002db['RESULTFORMAT'] === 'Text') {
+  if (CTCSEM001db['RESULTFORMAT'] === 'Number' || CTCSEM001db['RESULTFORMAT'] === 'Text') {
 
-    SURTHI002db["value"] = [];
-    for (i = 0; i < SURTHI002db['confirmdata'].length; i++) {
-      SURTHI002db["value"].push({
-        "PO1": SURTHI002db["inspectionItemNAME"],
-        "PO2": SURTHI002db['confirmdata'][i]['V1'],
-        "PO3": SURTHI002db['confirmdata'][i]['V2'],
-        "PO4": SURTHI002db['confirmdata'][i]['V3'],
-        "PO5": SURTHI002db['confirmdata'][i]['V4'],
+    CTCSEM001db["value"] = [];
+    for (i = 0; i < CTCSEM001db['confirmdata'].length; i++) {
+      CTCSEM001db["value"].push({
+        "PO1": CTCSEM001db["inspectionItemNAME"],
+        "PO2": CTCSEM001db['confirmdata'][i]['V1'],
+        "PO3": CTCSEM001db['confirmdata'][i]['V2'],
+        "PO4": CTCSEM001db['confirmdata'][i]['V3'],
+        "PO5": CTCSEM001db['confirmdata'][i]['V4'],
         "PO6": "-",
         "PO7": "-",
         "PO8": '-',
@@ -956,85 +955,85 @@ router.post('/FINAL/SURTHI002-FINISH', async (req, res) => {
         "PO10": "AUTO",
       });
     }
-    if (SURTHI002db["value"].length > 0) {
+    if (CTCSEM001db["value"].length > 0) {
       let mean01 = [];
       let mean02 = [];
-      for (i = 0; i < SURTHI002db["value"].length; i++) {
-        mean01.push(parseFloat(SURTHI002db["value"][i]["PO3"]));
-        mean02.push(parseFloat(SURTHI002db["value"][i]["PO5"]));
+      for (i = 0; i < CTCSEM001db["value"].length; i++) {
+        mean01.push(parseFloat(CTCSEM001db["value"][i]["PO3"]));
+        mean02.push(parseFloat(CTCSEM001db["value"][i]["PO5"]));
       }
       let sum1 = mean01.reduce((a, b) => a + b, 0);
       let avg1 = (sum1 / mean01.length) || 0;
       let sum2 = mean02.reduce((a, b) => a + b, 0);
       let avg2 = (sum2 / mean02.length) || 0;
-      SURTHI002db["value"].push({
+      CTCSEM001db["value"].push({
         "PO1": 'Mean',
-        "PO2": SURTHI002db['confirmdata'][0]['V1'],
+        "PO2": CTCSEM001db['confirmdata'][0]['V1'],
         "PO3": avg1,
-        "PO4": SURTHI002db['confirmdata'][0]['V3'],
+        "PO4": CTCSEM001db['confirmdata'][0]['V3'],
         "PO5": avg2,
       });
     }
 
-  } else if (SURTHI002db['RESULTFORMAT'] === 'OCR' || SURTHI002db['RESULTFORMAT'] === 'Picture') {
+  } else if (CTCSEM001db['RESULTFORMAT'] === 'OCR' || CTCSEM001db['RESULTFORMAT'] === 'Picture') {
 
-  } else if (SURTHI002db['RESULTFORMAT'] === 'Graph') {
+  } else if (CTCSEM001db['RESULTFORMAT'] === 'Graph') {
 
-    SURTHI002db["value"] = [];
-    for (i = 0; i < SURTHI002db['confirmdata'].length; i++) {
-      SURTHI002db["value"].push({
-        "PO1": SURTHI002db["inspectionItemNAME"],
-        "PO2": SURTHI002db['confirmdata'][i]['V1'],
-        "PO3": SURTHI002db['confirmdata'][i]['V2'],
-        "PO4": SURTHI002db['confirmdata'][i]['V3'],
-        "PO5": SURTHI002db['confirmdata'][i]['V4'],
+    CTCSEM001db["value"] = [];
+    for (i = 0; i < CTCSEM001db['confirmdata'].length; i++) {
+      CTCSEM001db["value"].push({
+        "PO1": CTCSEM001db["inspectionItemNAME"],
+        "PO2": CTCSEM001db['confirmdata'][i]['V1'],
+        "PO3": CTCSEM001db['confirmdata'][i]['V2'],
+        "PO4": CTCSEM001db['confirmdata'][i]['V3'],
+        "PO5": CTCSEM001db['confirmdata'][i]['V4'],
         "PO6": "-",
         "PO7": "-",
-        "PO8": SURTHI002db['confirmdata'][i]['V5'],
+        "PO8": CTCSEM001db['confirmdata'][i]['V5'],
         "PO9": i + 1,
         "PO10": "AUTO",
       });
     }
-    if (SURTHI002db["value"].length > 0) {
+    if (CTCSEM001db["value"].length > 0) {
       let mean01 = [];
       let mean02 = [];
-      for (i = 0; i < SURTHI002db["value"].length; i++) {
-        mean01.push(parseFloat(SURTHI002db["value"][i]["PO3"]));
-        mean02.push(parseFloat(SURTHI002db["value"][i]["PO5"]));
+      for (i = 0; i < CTCSEM001db["value"].length; i++) {
+        mean01.push(parseFloat(CTCSEM001db["value"][i]["PO3"]));
+        mean02.push(parseFloat(CTCSEM001db["value"][i]["PO5"]));
       }
       let sum1 = mean01.reduce((a, b) => a + b, 0);
       let avg1 = (sum1 / mean01.length) || 0;
       let sum2 = mean02.reduce((a, b) => a + b, 0);
       let avg2 = (sum2 / mean02.length) || 0;
-      SURTHI002db["value"].push({
+      CTCSEM001db["value"].push({
         "PO1": 'Mean',
-        "PO2": SURTHI002db['confirmdata'][0]['V1'],
+        "PO2": CTCSEM001db['confirmdata'][0]['V1'],
         "PO3": avg1,
-        "PO4": SURTHI002db['confirmdata'][0]['V3'],
+        "PO4": CTCSEM001db['confirmdata'][0]['V3'],
         "PO5": avg2,
       });
     }
 
   }
 
-  if (SURTHI002db['RESULTFORMAT'] === 'Number' ||
-    SURTHI002db['RESULTFORMAT'] === 'Text' ||
-    SURTHI002db['RESULTFORMAT'] === 'OCR' ||
-    SURTHI002db['RESULTFORMAT'] === 'Picture' || SURTHI002db['RESULTFORMAT'] === 'Graph') {
+  if (CTCSEM001db['RESULTFORMAT'] === 'Number' ||
+    CTCSEM001db['RESULTFORMAT'] === 'Text' ||
+    CTCSEM001db['RESULTFORMAT'] === 'OCR' ||
+    CTCSEM001db['RESULTFORMAT'] === 'Picture' || CTCSEM001db['RESULTFORMAT'] === 'Graph') {
     request.post(
-      'http://127.0.0.1:16070/FINAL/FINISHtoDB',
-      { json: SURTHI002db },
+      'http://127.0.0.1:16070/FINISHtoDB',
+      { json: CTCSEM001db },
       function (error, response, body) {
         if (!error && response.statusCode == 200) {
           // console.log(body);
           // if (body === 'OK') {
-          SURTHI002db['confirmdata'] = [];
-          SURTHI002db["value"] = [];
+          CTCSEM001db['confirmdata'] = [];
+          CTCSEM001db["value"] = [];
           //------------------------------------------------------------------------------------
 
           request.post(
-            'http://127.0.0.1:16070/FINAL/SURTHI002-feedback',
-            { json: { "PO": SURTHI002db['PO'], "ITEMs": SURTHI002db['inspectionItem'] } },
+            'http://127.0.0.1:16070/CTCSEM001-feedback',
+            { json: { "PO": CTCSEM001db['PO'], "ITEMs": CTCSEM001db['inspectionItem'] } },
             function (error, response, body2) {
               if (!error && response.statusCode == 200) {
                 // console.log(body2);
@@ -1053,7 +1052,7 @@ router.post('/FINAL/SURTHI002-FINISH', async (req, res) => {
     );
   }
   //-------------------------------------
-  return res.json(SURTHI002db);
+  return res.json(CTCSEM001db);
 });
 
 

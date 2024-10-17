@@ -71,7 +71,7 @@ let APPPHBP12db = {
   "ITEMleftUNIT": [],
   "ITEMleftVALUE": [],
   //
-  "MeasurmentFOR": "FINAL",
+  "MeasurmentFOR": "INPROCESS",
   "inspectionItem": "", //ITEMpice
   "inspectionItemNAME": "",
   "tool": NAME_INS,
@@ -84,13 +84,13 @@ let APPPHBP12db = {
   "USERID": '',
 }
 
-router.get('/FINAL/CHECK-APPPHBP12', async (req, res) => {
+router.get('/INPROCESS/CHECK-APPPHBP12', async (req, res) => {
 
   return res.json(APPPHBP12db['PO']);
 });
 
 
-router.post('/FINAL/APPPHBP12db', async (req, res) => {
+router.post('/INPROCESS/APPPHBP12db', async (req, res) => {
   //-------------------------------------
   console.log('--APPPHBP12db--');
   // console.log(req.body);
@@ -108,7 +108,7 @@ router.post('/FINAL/APPPHBP12db', async (req, res) => {
   return res.json(finddb);
 });
 
-router.post('/FINAL/GETINtoAPPPHBP12', async (req, res) => {
+router.post('/INPROCESS/GETINtoAPPPHBP12', async (req, res) => {
   //-------------------------------------
   console.log('--GETINtoAPPPHBP12--');
   console.log(req.body);
@@ -144,11 +144,11 @@ router.post('/FINAL/GETINtoAPPPHBP12', async (req, res) => {
         let ItemPickout = [];
         let ItemPickcodeout = [];
 
-        for (i = 0; i < findcp[0]['FINAL'].length; i++) {
+        for (i = 0; i < findcp[0]['INPROCESS'].length; i++) {
           for (j = 0; j < masterITEMs.length; j++) {
-            if (findcp[0]['FINAL'][i]['ITEMs'] === masterITEMs[j]['masterID']) {
+            if (findcp[0]['INPROCESS'][i]['ITEMs'] === masterITEMs[j]['masterID']) {
               ItemPickout.push(masterITEMs[j]['ITEMs']);
-              ItemPickcodeout.push({ "key": masterITEMs[j]['masterID'], "value": masterITEMs[j]['ITEMs'], "METHOD": findcp[0]['FINAL'][i]['METHOD'] });
+              ItemPickcodeout.push({ "key": masterITEMs[j]['masterID'], "value": masterITEMs[j]['ITEMs'], "METHOD": findcp[0]['INPROCESS'][i]['METHOD'] });
             }
           }
         }
@@ -216,7 +216,7 @@ router.post('/FINAL/GETINtoAPPPHBP12', async (req, res) => {
           "ITEMleftUNIT": [],
           "ITEMleftVALUE": [],
           //
-          "MeasurmentFOR": "FINAL",
+          "MeasurmentFOR": "INPROCESS",
           "inspectionItem": "", //ITEMpice
           "inspectionItemNAME": "",
           "tool": NAME_INS,
@@ -249,7 +249,7 @@ router.post('/FINAL/GETINtoAPPPHBP12', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/APPPHBP12-geteachITEM', async (req, res) => {
+router.post('/INPROCESS/APPPHBP12-geteachITEM', async (req, res) => {
   //-------------------------------------
   console.log('--APPPHBP12-geteachITEM--');
   console.log(req.body);
@@ -277,23 +277,23 @@ router.post('/FINAL/APPPHBP12-geteachITEM', async (req, res) => {
       let UNITdata = await mongodb.find(master_FN, UNIT, {});
       let masterITEMs = await mongodb.find(master_FN, ITEMs, { "masterID": APPPHBP12db['inspectionItem'] });
 
-      for (i = 0; i < findcp[0]['FINAL'].length; i++) {
-        if (findcp[0]['FINAL'][i]['ITEMs'] === input['ITEMs']) {
+      for (i = 0; i < findcp[0]['INPROCESS'].length; i++) {
+        if (findcp[0]['INPROCESS'][i]['ITEMs'] === input['ITEMs']) {
 
           // output = [{
-          //   "RESULTFORMAT": findcp[0]['FINAL'][i]['RESULTFORMAT'],
-          //   "GRAPHTYPE": findcp[0]['FINAL'][i]['GRAPHTYPE'],
-          //   "INTERSECTION": findcp[0]['FINAL'][i]['INTERSECTION'],
-          //   "DOCUMENT": findcp[0]['FINAL'][i]['DOCUMENT'],
-          //   "SPECIFICATION": findcp[0]['FINAL'][i]['SPECIFICATION'],
-          //   "POINTPCS": findcp[0]['FINAL'][i]['POINTPCS'],
-          //   "POINT": findcp[0]['FINAL'][i]['POINT'],
-          //   "PCS": findcp[0]['FINAL'][i]['PCS'],
-          //   "FREQUENCY": findcp[0]['FINAL'][i]['FREQUENCY'],
-          //   "MODE": findcp[0]['FINAL'][i]['MODE'],
-          //   "REMARK": findcp[0]['FINAL'][i]['REMARK'],
-          //   "LOAD": findcp[0]['FINAL'][i]['LOAD'],
-          //   "CONVERSE": findcp[0]['FINAL'][i]['CONVERSE'],
+          //   "RESULTFORMAT": findcp[0]['INPROCESS'][i]['RESULTFORMAT'],
+          //   "GRAPHTYPE": findcp[0]['INPROCESS'][i]['GRAPHTYPE'],
+          //   "INTERSECTION": findcp[0]['INPROCESS'][i]['INTERSECTION'],
+          //   "DOCUMENT": findcp[0]['INPROCESS'][i]['DOCUMENT'],
+          //   "SPECIFICATION": findcp[0]['INPROCESS'][i]['SPECIFICATION'],
+          //   "POINTPCS": findcp[0]['INPROCESS'][i]['POINTPCS'],
+          //   "POINT": findcp[0]['INPROCESS'][i]['POINT'],
+          //   "PCS": findcp[0]['INPROCESS'][i]['PCS'],
+          //   "FREQUENCY": findcp[0]['INPROCESS'][i]['FREQUENCY'],
+          //   "MODE": findcp[0]['INPROCESS'][i]['MODE'],
+          //   "REMARK": findcp[0]['INPROCESS'][i]['REMARK'],
+          //   "LOAD": findcp[0]['INPROCESS'][i]['LOAD'],
+          //   "CONVERSE": findcp[0]['INPROCESS'][i]['CONVERSE'],
           // }]
 
           if (masterITEMs.length > 0) {
@@ -303,16 +303,16 @@ router.post('/FINAL/APPPHBP12-geteachITEM', async (req, res) => {
           }
 
           for (j = 0; j < UNITdata.length; j++) {
-            if (findcp[0]['FINAL'][i]['UNIT'] == UNITdata[j]['masterID']) {
+            if (findcp[0]['INPROCESS'][i]['UNIT'] == UNITdata[j]['masterID']) {
               APPPHBP12db["UNIT"] = UNITdata[j]['UNIT'];
             }
           }
 
-          APPPHBP12db["POINTs"] = findcp[0]['FINAL'][i]['POINT'];
-          APPPHBP12db["PCS"] = findcp[0]['FINAL'][i]['PCS'];
+          APPPHBP12db["POINTs"] = findcp[0]['INPROCESS'][i]['POINT'];
+          APPPHBP12db["PCS"] = findcp[0]['INPROCESS'][i]['PCS'];
 
 
-          APPPHBP12db["PCSleft"] = findcp[0]['FINAL'][i]['PCS'];
+          APPPHBP12db["PCSleft"] = findcp[0]['INPROCESS'][i]['PCS'];
 
 
 
@@ -321,7 +321,7 @@ router.post('/FINAL/APPPHBP12-geteachITEM', async (req, res) => {
           let findpo = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
           if (findpo.length > 0) {
             request.post(
-              'http://127.0.0.1:16070/FINAL/APPPHBP12-feedback',
+              'http://127.0.0.1:16070/INPROCESS/APPPHBP12-feedback',
               { json: { "PO": APPPHBP12db['PO'], "ITEMs": APPPHBP12db['inspectionItem'] } },
               function (error, response, body2) {
                 if (!error && response.statusCode == 200) {
@@ -351,7 +351,7 @@ router.post('/FINAL/APPPHBP12-geteachITEM', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/APPPHBP12-preview', async (req, res) => {
+router.post('/INPROCESS/APPPHBP12-preview', async (req, res) => {
   //-------------------------------------
   console.log('--APPPHBP12-preview--');
   console.log(req.body);
@@ -383,7 +383,7 @@ router.post('/FINAL/APPPHBP12-preview', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/APPPHBP12-confirmdata', async (req, res) => {
+router.post('/INPROCESS/APPPHBP12-confirmdata', async (req, res) => {
   //-------------------------------------
   console.log('--APPPHBP12-confirmdata--');
   console.log(req.body);
@@ -417,7 +417,7 @@ router.post('/FINAL/APPPHBP12-confirmdata', async (req, res) => {
 
 
 
-router.post('/FINAL/APPPHBP12-feedback', async (req, res) => {
+router.post('/INPROCESS/APPPHBP12-feedback', async (req, res) => {
   //-------------------------------------
   console.log('--APPPHBP12-feedback--');
   console.log(req.body);
@@ -428,10 +428,10 @@ router.post('/FINAL/APPPHBP12-feedback', async (req, res) => {
   //-------------------------------------
   if (input["PO"] !== undefined && input["ITEMs"] !== undefined) {
     let feedback = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
-    if (feedback.length > 0 && feedback[0]['FINAL'] != undefined && feedback[0]['FINAL'][NAME_INS] != undefined && feedback[0]['FINAL'][NAME_INS][input["ITEMs"]] != undefined) {
-      // console.log(Object.keys(feedback[0]['FINAL'][NAME_INS][input["ITEMs"]]));
-      let oblist = Object.keys(feedback[0]['FINAL'][NAME_INS][input["ITEMs"]]);
-      let ob = feedback[0]['FINAL'][NAME_INS][input["ITEMs"]];
+    if (feedback.length > 0 && feedback[0]['INPROCESS'] != undefined && feedback[0]['INPROCESS'][NAME_INS] != undefined && feedback[0]['INPROCESS'][NAME_INS][input["ITEMs"]] != undefined) {
+      // console.log(Object.keys(feedback[0]['INPROCESS'][NAME_INS][input["ITEMs"]]));
+      let oblist = Object.keys(feedback[0]['INPROCESS'][NAME_INS][input["ITEMs"]]);
+      let ob = feedback[0]['INPROCESS'][NAME_INS][input["ITEMs"]];
 
 
       let LISTbuffer = [];
@@ -459,7 +459,7 @@ router.post('/FINAL/APPPHBP12-feedback', async (req, res) => {
 
         }
 
-        APPPHBP12db["ITEMleftUNIT"] = [{ "V1": "FINAL", "V2": `${oblist.length}` }];
+        APPPHBP12db["ITEMleftUNIT"] = [{ "V1": "INPROCESS", "V2": `${oblist.length}` }];
         APPPHBP12db["ITEMleftVALUE"] = ITEMleftVALUEout;
 
       } else if (APPPHBP12db['RESULTFORMAT'] === 'Text') { //add
@@ -468,7 +468,7 @@ router.post('/FINAL/APPPHBP12-feedback', async (req, res) => {
           ITEMleftVALUEout.push({ "V1": `${LISTbuffer[i]['PO1']}`, "V2": `${LISTbuffer[i]['PO2']}` })
         }
 
-        APPPHBP12db["ITEMleftUNIT"] = [{ "V1": "FINAL", "V2": `${oblist.length}` }];
+        APPPHBP12db["ITEMleftUNIT"] = [{ "V1": "INPROCESS", "V2": `${oblist.length}` }];
         APPPHBP12db["ITEMleftVALUE"] = ITEMleftVALUEout;
 
       }
@@ -487,8 +487,8 @@ router.post('/FINAL/APPPHBP12-feedback', async (req, res) => {
         let masterITEMs = await mongodb.find(master_FN, ITEMs, { "masterID": input["ITEMs"] });
 
 
-        if (feedback[0]['FINAL_ANS'] === undefined) {
-          feedback[0]['FINAL_ANS'] = {}
+        if (feedback[0]['INPROCESS_ANS'] === undefined) {
+          feedback[0]['INPROCESS_ANS'] = {}
         }
         if (masterITEMs.length > 0) {
           let anslist = [];
@@ -508,16 +508,16 @@ router.post('/FINAL/APPPHBP12-feedback', async (req, res) => {
             let sum2 = anslist_con.reduce((a, b) => a + b, 0);
             let avg2 = (sum2 / anslist_con.length) || 0;
 
-            feedback[0]['FINAL_ANS'][input["ITEMs"]] = avg1;
-            feedback[0]['FINAL_ANS'][`${input["ITEMs"]}_c`] = avg2;
+            feedback[0]['INPROCESS_ANS'][input["ITEMs"]] = avg1;
+            feedback[0]['INPROCESS_ANS'][`${input["ITEMs"]}_c`] = avg2;
 
-            let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedback[0]['FINAL_ANS'] } });
+            let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'INPROCESS_ANS': feedback[0]['INPROCESS_ANS'] } });
 
 
           } else if (masterITEMs[0]['RESULTFORMAT'] === 'Text') {
 
-            feedback[0]['FINAL_ANS'][input["ITEMs"]] = LISTbuffer[0]['PO2'];
-            let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedback[0]['FINAL_ANS'] } });
+            feedback[0]['INPROCESS_ANS'][input["ITEMs"]] = LISTbuffer[0]['PO2'];
+            let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'INPROCESS_ANS': feedback[0]['INPROCESS_ANS'] } });
 
 
           } else if (masterITEMs[0]['RESULTFORMAT'] === 'Graph') {
@@ -543,7 +543,7 @@ router.post('/FINAL/APPPHBP12-feedback', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/APPPHBP12-SETZERO', async (req, res) => {
+router.post('/INPROCESS/APPPHBP12-SETZERO', async (req, res) => {
   //-------------------------------------
   console.log('--APPPHBP12fromINS--');
   console.log(req.body);
@@ -592,7 +592,7 @@ router.post('/FINAL/APPPHBP12-SETZERO', async (req, res) => {
       "ITEMleftUNIT": [],
       "ITEMleftVALUE": [],
       //
-      "MeasurmentFOR": "FINAL",
+      "MeasurmentFOR": "INPROCESS",
       "inspectionItem": "", //ITEMpice
       "inspectionItemNAME": "",
       "tool": NAME_INS,
@@ -613,7 +613,7 @@ router.post('/FINAL/APPPHBP12-SETZERO', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/APPPHBP12-CLEAR', async (req, res) => {
+router.post('/INPROCESS/APPPHBP12-CLEAR', async (req, res) => {
   //-------------------------------------
   console.log('--APPPHBP12fromINS--');
   console.log(req.body);
@@ -635,7 +635,7 @@ router.post('/FINAL/APPPHBP12-CLEAR', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/APPPHBP12-RESETVALUE', async (req, res) => {
+router.post('/INPROCESS/APPPHBP12-RESETVALUE', async (req, res) => {
   //-------------------------------------
   console.log('--APPPHBP12fromINS--');
   console.log(req.body);
@@ -662,7 +662,7 @@ router.post('/FINAL/APPPHBP12-RESETVALUE', async (req, res) => {
 //"value":[],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
 
 
-router.post('/FINAL/APPPHBP12-FINISH', async (req, res) => {
+router.post('/INPROCESS/APPPHBP12-FINISH', async (req, res) => {
   //-------------------------------------
   console.log('--APPPHBP12-FINISH--');
   console.log(req.body);
@@ -718,7 +718,7 @@ router.post('/FINAL/APPPHBP12-FINISH', async (req, res) => {
     APPPHBP12db['RESULTFORMAT'] === 'OCR' ||
     APPPHBP12db['RESULTFORMAT'] === 'Picture') {
     request.post(
-      'http://127.0.0.1:16070/FINAL/FINISHtoDB',
+      'http://127.0.0.1:16070/FINISHtoDB',
       { json: APPPHBP12db },
       function (error, response, body) {
         if (!error && response.statusCode == 200) {
@@ -729,7 +729,7 @@ router.post('/FINAL/APPPHBP12-FINISH', async (req, res) => {
           //------------------------------------------------------------------------------------
 
           request.post(
-            'http://127.0.0.1:16070/FINAL/APPPHBP12-feedback',
+            'http://127.0.0.1:16070/INPROCESS/APPPHBP12-feedback',
             { json: { "PO": APPPHBP12db['PO'], "ITEMs": APPPHBP12db['inspectionItem'] } },
             function (error, response, body2) {
               if (!error && response.statusCode == 200) {
@@ -755,7 +755,7 @@ router.post('/FINAL/APPPHBP12-FINISH', async (req, res) => {
 });
 
 
-router.post('/FINAL/APPPHBP12-FINISH-APR', async (req, res) => {
+router.post('/INPROCESS/APPPHBP12-FINISH-APR', async (req, res) => {
   //-------------------------------------
   console.log('--APPPHBP12-FINISH-APR--');
   console.log(req.body);
@@ -780,12 +780,12 @@ router.post('/FINAL/APPPHBP12-FINISH-APR', async (req, res) => {
       "PO10": "AUTO",
     };
 
-  
+
   }
 
   if (APPPHBP12db['RESULTFORMAT'] === 'Text') {
     request.post(
-      'http://127.0.0.1:16070/FINAL/FINISHtoDB-apr',
+      'http://127.0.0.1:16070/FINISHtoDB-apr',
       { json: APPPHBP12db },
       function (error, response, body) {
         if (!error && response.statusCode == 200) {
@@ -795,8 +795,8 @@ router.post('/FINAL/APPPHBP12-FINISH-APR', async (req, res) => {
           APPPHBP12db["value"] = [];
           //------------------------------------------------------------------------------------
           request.post(
-            'http://127.0.0.1:16070/FINAL/APPPHBP12-feedback',
-            { json: { "PO": APPPHBP12db['PO'], "ITEMs": APPPHBP12db['inspectionItem'], "PIC": APPPHBP12db['PIC'] } },
+            'http://127.0.0.1:16070/INPROCESS/APPPHBP12-feedback',
+            { json: { "PO": APPPHBP12db['PO'], "ITEMs": APPPHBP12db['inspectionItem'] } },
             function (error, response, body2) {
               if (!error && response.statusCode == 200) {
                 // console.log(body2);

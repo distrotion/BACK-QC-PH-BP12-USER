@@ -19,7 +19,7 @@ let MACHINE = 'MACHINE';
 
 //------------------
 
-router.post('/FINAL/GRAPH-STD-UPDATE', async (req, res) => {
+router.post('/INPROCESS/GRAPH-STD-UPDATE', async (req, res) => {
   //-------------------------------------
   console.log('--GRAPH-STD-UPDATE--');
   // console.log(req.body);
@@ -65,7 +65,7 @@ router.post('/FINAL/GRAPH-STD-UPDATE', async (req, res) => {
   return  res.json(output);
 });
 
-router.post('/FINAL/GRAPH-STD-GET', async (req, res) => {
+router.post('/INPROCESS/GRAPH-STD-GET', async (req, res) => {
   //-------------------------------------
   console.log('--GRAPH-STD-GET--');
   // console.log(req.body);

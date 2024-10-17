@@ -91,7 +91,7 @@ let CTCSEM001db = {
 
 
 
-router.get('/CHECK-CTCSEM001', async (req, res) => {
+router.get('/FINAL/CHECK-CTCSEM001', async (req, res) => {
 
   return res.json(CTCSEM001db['PO']);
 });
@@ -1021,7 +1021,7 @@ router.post('/FINAL/CTCSEM001-FINISH', async (req, res) => {
     CTCSEM001db['RESULTFORMAT'] === 'OCR' ||
     CTCSEM001db['RESULTFORMAT'] === 'Picture' || CTCSEM001db['RESULTFORMAT'] === 'Graph') {
     request.post(
-      'http://127.0.0.1:16070/FINISHtoDB',
+      'http://127.0.0.1:16070/FINAL/FINISHtoDB',
       { json: CTCSEM001db },
       function (error, response, body) {
         if (!error && response.statusCode == 200) {

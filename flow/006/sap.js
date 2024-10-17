@@ -15,12 +15,12 @@ let PATTERN_01 = 'PATTERN_01';
 //-----------------
 
 
-router.get('/flow001', async (req, res) => {
+router.get('/INPROCESS/flow001', async (req, res) => {
 
   return  res.json("testflow1");
 });
 
-router.post('/FINAL/sap_GASHES', async (req, res) => {
+router.post('/INPROCESS/sap_GASHES', async (req, res) => {
   //-------------------------------------
   console.log('--sap--');
   console.log(req.body);
@@ -69,7 +69,7 @@ router.post('/FINAL/sap_GASHES', async (req, res) => {
   return  res.json(output);
 });
 
-router.post('/FINAL/sapdummy', async (req, res) => {
+router.post('/INPROCESS/sapdummy', async (req, res) => {
   //-------------------------------------
   console.log('--sapdumm--');
   console.log(req.body);
@@ -2526,7 +2526,7 @@ var datadummy = [
     "OILTYPE": null,
     "FN_FixMC4": null,
     "PART": "23431-K1B-T000-H1",
-    "PARTNAME": "SHAFT,FINAL",
+    "PARTNAME": "SHAFT,INPROCESS",
     "MATERIAL": "SCR420HV-SG",
     "CUSTOMER": "MAP",
     "PROCESS": "HCQT",

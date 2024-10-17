@@ -91,7 +91,7 @@ let SURRGH001db = {
 
 
 
-router.get('/CHECK-SURRGH001', async (req, res) => {
+router.get('/FINAL/CHECK-SURRGH001', async (req, res) => {
 
   return res.json(SURRGH001db['PO']);
 });
@@ -1021,7 +1021,7 @@ router.post('/FINAL/SURRGH001-FINISH', async (req, res) => {
     SURRGH001db['RESULTFORMAT'] === 'OCR' ||
     SURRGH001db['RESULTFORMAT'] === 'Picture' || SURRGH001db['RESULTFORMAT'] === 'Graph') {
     request.post(
-      'http://127.0.0.1:16070/FINISHtoDB',
+      'http://127.0.0.1:16070/FINAL/FINISHtoDB',
       { json: SURRGH001db },
       function (error, response, body) {
         if (!error && response.statusCode == 200) {

@@ -77,7 +77,7 @@ let SURTHI002db = {
   "ITEMleftUNIT": [],
   "ITEMleftVALUE": [],
   //
-  "MeasurmentFOR": "FINAL",
+  "MeasurmentFOR": "INPROCESS",
   "inspectionItem": "", //ITEMpice
   "inspectionItemNAME": "",
   "tool": NAME_INS,
@@ -91,13 +91,13 @@ let SURTHI002db = {
 
 
 
-router.get('/FINAL/CHECK-SURTHI002', async (req, res) => {
+router.get('/INPROCESS/CHECK-SURTHI002', async (req, res) => {
 
   return res.json(SURTHI002db['PO']);
 });
 
 
-router.post('/FINAL/SURTHI002db', async (req, res) => {
+router.post('/INPROCESS/SURTHI002db', async (req, res) => {
   //-------------------------------------
   // console.log('--SURTHI002db--');
   // console.log(req.body);
@@ -115,7 +115,7 @@ router.post('/FINAL/SURTHI002db', async (req, res) => {
   return res.json(finddb);
 });
 
-router.post('/FINAL/GETINtoSURTHI002', async (req, res) => {
+router.post('/INPROCESS/GETINtoSURTHI002', async (req, res) => {
   //-------------------------------------
   console.log('--GETINtoSURTHI002--');
   console.log(req.body);
@@ -150,11 +150,11 @@ router.post('/FINAL/GETINtoSURTHI002', async (req, res) => {
         let ItemPickout = [];
         let ItemPickcodeout = [];
 
-        for (i = 0; i < findcp[0]['FINAL'].length; i++) {
+        for (i = 0; i < findcp[0]['INPROCESS'].length; i++) {
           for (j = 0; j < masterITEMs.length; j++) {
-            if (findcp[0]['FINAL'][i]['ITEMs'] === masterITEMs[j]['masterID']) {
+            if (findcp[0]['INPROCESS'][i]['ITEMs'] === masterITEMs[j]['masterID']) {
               ItemPickout.push(masterITEMs[j]['ITEMs']);
-              ItemPickcodeout.push({ "key": masterITEMs[j]['masterID'], "value": masterITEMs[j]['ITEMs'], "METHOD": findcp[0]['FINAL'][i]['METHOD'] });
+              ItemPickcodeout.push({ "key": masterITEMs[j]['masterID'], "value": masterITEMs[j]['ITEMs'], "METHOD": findcp[0]['INPROCESS'][i]['METHOD'] });
             }
           }
         }
@@ -221,7 +221,7 @@ router.post('/FINAL/GETINtoSURTHI002', async (req, res) => {
           "ITEMleftUNIT": [],
           "ITEMleftVALUE": [],
           //
-          "MeasurmentFOR": "FINAL",
+          "MeasurmentFOR": "INPROCESS",
           "inspectionItem": "", //ITEMpice
           "inspectionItemNAME": "",
           "tool": NAME_INS,
@@ -253,7 +253,7 @@ router.post('/FINAL/GETINtoSURTHI002', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/SURTHI002-geteachITEM', async (req, res) => {
+router.post('/INPROCESS/SURTHI002-geteachITEM', async (req, res) => {
   //-------------------------------------
   console.log('--SURTHI002-geteachITEM--');
   console.log(req.body);
@@ -281,23 +281,23 @@ router.post('/FINAL/SURTHI002-geteachITEM', async (req, res) => {
       let UNITdata = await mongodb.find(master_FN, UNIT, {});
       let masterITEMs = await mongodb.find(master_FN, ITEMs, { "masterID": SURTHI002db['inspectionItem'] });
 
-      for (i = 0; i < findcp[0]['FINAL'].length; i++) {
-        if (findcp[0]['FINAL'][i]['ITEMs'] === input['ITEMs']) {
+      for (i = 0; i < findcp[0]['INPROCESS'].length; i++) {
+        if (findcp[0]['INPROCESS'][i]['ITEMs'] === input['ITEMs']) {
 
           // output = [{
-          //   "RESULTFORMAT": findcp[0]['FINAL'][i]['RESULTFORMAT'],
-          //   "GRAPHTYPE": findcp[0]['FINAL'][i]['GRAPHTYPE'],
-          //   "INTERSECTION": findcp[0]['FINAL'][i]['INTERSECTION'],
-          //   "DOCUMENT": findcp[0]['FINAL'][i]['DOCUMENT'],
-          //   "SPECIFICATION": findcp[0]['FINAL'][i]['SPECIFICATION'],
-          //   "POINTPCS": findcp[0]['FINAL'][i]['POINTPCS'],
-          //   "POINT": findcp[0]['FINAL'][i]['POINT'],
-          //   "PCS": findcp[0]['FINAL'][i]['PCS'],
-          //   "FREQUENCY": findcp[0]['FINAL'][i]['FREQUENCY'],
-          //   "MODE": findcp[0]['FINAL'][i]['MODE'],
-          //   "REMARK": findcp[0]['FINAL'][i]['REMARK'],
-          //   "LOAD": findcp[0]['FINAL'][i]['LOAD'],
-          //   "CONVERSE": findcp[0]['FINAL'][i]['CONVERSE'],
+          //   "RESULTFORMAT": findcp[0]['INPROCESS'][i]['RESULTFORMAT'],
+          //   "GRAPHTYPE": findcp[0]['INPROCESS'][i]['GRAPHTYPE'],
+          //   "INTERSECTION": findcp[0]['INPROCESS'][i]['INTERSECTION'],
+          //   "DOCUMENT": findcp[0]['INPROCESS'][i]['DOCUMENT'],
+          //   "SPECIFICATION": findcp[0]['INPROCESS'][i]['SPECIFICATION'],
+          //   "POINTPCS": findcp[0]['INPROCESS'][i]['POINTPCS'],
+          //   "POINT": findcp[0]['INPROCESS'][i]['POINT'],
+          //   "PCS": findcp[0]['INPROCESS'][i]['PCS'],
+          //   "FREQUENCY": findcp[0]['INPROCESS'][i]['FREQUENCY'],
+          //   "MODE": findcp[0]['INPROCESS'][i]['MODE'],
+          //   "REMARK": findcp[0]['INPROCESS'][i]['REMARK'],
+          //   "LOAD": findcp[0]['INPROCESS'][i]['LOAD'],
+          //   "CONVERSE": findcp[0]['INPROCESS'][i]['CONVERSE'],
           // }]
 
 
@@ -320,26 +320,26 @@ router.post('/FINAL/SURTHI002-geteachITEM', async (req, res) => {
           }
 
           for (j = 0; j < UNITdata.length; j++) {
-            if (findcp[0]['FINAL'][i]['UNIT'] == UNITdata[j]['masterID']) {
+            if (findcp[0]['INPROCESS'][i]['UNIT'] == UNITdata[j]['masterID']) {
               SURTHI002db["UNIT"] = UNITdata[j]['UNIT'];
             }
           }
 
-          console.log(findcp[0]['FINAL'][i]['POINT']);
+          console.log(findcp[0]['INPROCESS'][i]['POINT']);
 
-          SURTHI002db["POINTs"] = findcp[0]['FINAL'][i]['POINT'];
-          SURTHI002db["PCS"] = findcp[0]['FINAL'][i]['PCS'];
-          SURTHI002db["PCSleft"] = findcp[0]['FINAL'][i]['PCS'];
+          SURTHI002db["POINTs"] = findcp[0]['INPROCESS'][i]['POINT'];
+          SURTHI002db["PCS"] = findcp[0]['INPROCESS'][i]['PCS'];
+          SURTHI002db["PCSleft"] = findcp[0]['INPROCESS'][i]['PCS'];
 
           SURTHI002db["SPEC"]='';
-          if (findcp[0]['FINAL'][i]['SPECIFICATIONve'] !== undefined) {
-            if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'BTW') {
-              SURTHI002db["SPEC"] =  `${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_LOW']}-${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_HI']}`;
-            } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'HIM(>)') {
-              SURTHI002db["SPEC"] =  `>${findcp[0]['FINAL'][i]['SPECIFICATIONve']['HIM_L']}`;
-            } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'LOL(<)') {
-              SURTHI002db["SPEC"] =  `<${findcp[0]['FINAL'][i]['SPECIFICATIONve']['LOL_H']}`;
-            }else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'Actual'){
+          if (findcp[0]['INPROCESS'][i]['SPECIFICATIONve'] !== undefined) {
+            if (findcp[0]['INPROCESS'][i]['SPECIFICATIONve']['condition'] === 'BTW') {
+              SURTHI002db["SPEC"] =  `${findcp[0]['INPROCESS'][i]['SPECIFICATIONve']['BTW_LOW']}-${findcp[0]['INPROCESS'][i]['SPECIFICATIONve']['BTW_HI']}`;
+            } else if (findcp[0]['INPROCESS'][i]['SPECIFICATIONve']['condition'] === 'HIM(>)') {
+              SURTHI002db["SPEC"] =  `>${findcp[0]['INPROCESS'][i]['SPECIFICATIONve']['HIM_L']}`;
+            } else if (findcp[0]['INPROCESS'][i]['SPECIFICATIONve']['condition'] === 'LOL(<)') {
+              SURTHI002db["SPEC"] =  `<${findcp[0]['INPROCESS'][i]['SPECIFICATIONve']['LOL_H']}`;
+            }else if (findcp[0]['INPROCESS'][i]['SPECIFICATIONve']['condition'] === 'Actual'){
               SURTHI002db["SPEC"] =  'Actual';
             }
           }
@@ -351,7 +351,7 @@ router.post('/FINAL/SURTHI002-geteachITEM', async (req, res) => {
           let findpo = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
           if (findpo.length > 0) {
             request.post(
-              'http://127.0.0.1:16070/FINAL/SURTHI002-feedback',
+              'http://127.0.0.1:16070/INPROCESS/SURTHI002-feedback',
               { json: { "PO": SURTHI002db['PO'], "ITEMs": SURTHI002db['inspectionItem'] } },
               function (error, response, body2) {
                 if (!error && response.statusCode == 200) {
@@ -382,7 +382,7 @@ router.post('/FINAL/SURTHI002-geteachITEM', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/SURTHI002-geteachGRAPH', async (req, res) => {
+router.post('/INPROCESS/SURTHI002-geteachGRAPH', async (req, res) => {
   //-------------------------------------
   console.log('--SURTHI002-geteachGRAPH--');
   console.log(req.body);
@@ -401,7 +401,7 @@ router.post('/FINAL/SURTHI002-geteachGRAPH', async (req, res) => {
   return res.json('ok');
 });
 
-router.post('/FINAL/SURTHI002-preview', async (req, res) => {
+router.post('/INPROCESS/SURTHI002-preview', async (req, res) => {
   //-------------------------------------
   console.log('--SURTHI002-preview--');
   console.log(req.body);
@@ -430,7 +430,7 @@ router.post('/FINAL/SURTHI002-preview', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/SURTHI002-confirmdata', async (req, res) => {
+router.post('/INPROCESS/SURTHI002-confirmdata', async (req, res) => {
   //-------------------------------------
   console.log('--SURTHI002-confirmdata--');
   console.log(req.body);
@@ -479,7 +479,7 @@ router.post('/FINAL/SURTHI002-confirmdata', async (req, res) => {
 
 
 
-router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
+router.post('/INPROCESS/SURTHI002-feedback', async (req, res) => {
   //-------------------------------------
   console.log('--SURTHI002-feedback--');
   console.log(req.body);
@@ -490,10 +490,10 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
   //-------------------------------------
   if (input["PO"] !== undefined && input["ITEMs"] !== undefined) {
     let feedback = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
-    if (feedback.length > 0 && feedback[0]['FINAL'] != undefined && feedback[0]['FINAL'][NAME_INS] != undefined && feedback[0]['FINAL'][NAME_INS][input["ITEMs"]] != undefined) {
-      // console.log(Object.keys(feedback[0]['FINAL'][NAME_INS][input["ITEMs"]]));
-      let oblist = Object.keys(feedback[0]['FINAL'][NAME_INS][input["ITEMs"]]);
-      let ob = feedback[0]['FINAL'][NAME_INS][input["ITEMs"]];
+    if (feedback.length > 0 && feedback[0]['INPROCESS'] != undefined && feedback[0]['INPROCESS'][NAME_INS] != undefined && feedback[0]['INPROCESS'][NAME_INS][input["ITEMs"]] != undefined) {
+      // console.log(Object.keys(feedback[0]['INPROCESS'][NAME_INS][input["ITEMs"]]));
+      let oblist = Object.keys(feedback[0]['INPROCESS'][NAME_INS][input["ITEMs"]]);
+      let ob = feedback[0]['INPROCESS'][NAME_INS][input["ITEMs"]];
 
 
 
@@ -516,7 +516,7 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
 
 
 
-        SURTHI002db["ITEMleftUNIT"] = [{ "V1": "FINAL", "V2": `${oblist.length}` }];
+        SURTHI002db["ITEMleftUNIT"] = [{ "V1": "INPROCESS", "V2": `${oblist.length}` }];
         SURTHI002db["ITEMleftVALUE"] = ITEMleftVALUEout;
 
       } else {
@@ -537,8 +537,8 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
         let masterITEMs = await mongodb.find(master_FN, ITEMs, { "masterID": input["ITEMs"] });
 
 
-        if (feedback[0]['FINAL_ANS'] === undefined) {
-          feedback[0]['FINAL_ANS'] = {}
+        if (feedback[0]['INPROCESS_ANS'] === undefined) {
+          feedback[0]['INPROCESS_ANS'] = {}
         }
         if (masterITEMs.length > 0) {
           let anslist = [];
@@ -558,10 +558,10 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
             let sum2 = anslist_con.reduce((a, b) => a + b, 0);
             let avg2 = (sum2 / anslist_con.length) || 0;
 
-            feedback[0]['FINAL_ANS'][input["ITEMs"]] = avg1;
-            feedback[0]['FINAL_ANS'][`${input["ITEMs"]}_c`] = avg2;
+            feedback[0]['INPROCESS_ANS'][input["ITEMs"]] = avg1;
+            feedback[0]['INPROCESS_ANS'][`${input["ITEMs"]}_c`] = avg2;
 
-            let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedback[0]['FINAL_ANS'] } });
+            let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'INPROCESS_ANS': feedback[0]['INPROCESS_ANS'] } });
 
 
           } else if (masterITEMs[0]['RESULTFORMAT'] === 'Text') {
@@ -603,10 +603,10 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
                 let RawData = RawPoint[0].Point1.x + (data2 / data3 * pointvalue);
                 let graph_ans_X = parseFloat(RawData.toFixed(2));
 
-                feedback[0]['FINAL_ANS'][input["ITEMs"]] = graph_ans_X;
-                feedback[0]['FINAL_ANS'][`${input["ITEMs"]}_point`] = { "x": graph_ans_X, "y": core };
+                feedback[0]['INPROCESS_ANS'][input["ITEMs"]] = graph_ans_X;
+                feedback[0]['INPROCESS_ANS'][`${input["ITEMs"]}_point`] = { "x": graph_ans_X, "y": core };
 
-                let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedback[0]['FINAL_ANS'] } });
+                let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'INPROCESS_ANS': feedback[0]['INPROCESS_ANS'] } });
               }
               catch (err) {
                 SURTHI002db[`INTERSEC_ERR`] = 1;
@@ -649,10 +649,10 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
                 let RawData = RawPoint[0].Point1.x + (data2 / data3 * pointvalue);
                 let graph_ans_X = parseFloat(RawData.toFixed(2));
 
-                feedback[0]['FINAL_ANS'][input["ITEMs"]] = graph_ans_X;
-                feedback[0]['FINAL_ANS'][`${input["ITEMs"]}_point`] = { "x": graph_ans_X, "y": core };
+                feedback[0]['INPROCESS_ANS'][input["ITEMs"]] = graph_ans_X;
+                feedback[0]['INPROCESS_ANS'][`${input["ITEMs"]}_point`] = { "x": graph_ans_X, "y": core };
 
-                let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedback[0]['FINAL_ANS'] } });
+                let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'INPROCESS_ANS': feedback[0]['INPROCESS_ANS'] } });
               }
               catch (err) {
                 SURTHI002db[`INTERSEC_ERR`] = 1;
@@ -694,10 +694,10 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
                 let RawData = RawPoint[0].Point1.x + (data2 / data3 * pointvalue);
                 let graph_ans_X = parseFloat(RawData.toFixed(2));
 
-                feedback[0]['FINAL_ANS'][input["ITEMs"]] = graph_ans_X;
-                feedback[0]['FINAL_ANS'][`${input["ITEMs"]}_point`] = { "x": graph_ans_X, "y": core };
+                feedback[0]['INPROCESS_ANS'][input["ITEMs"]] = graph_ans_X;
+                feedback[0]['INPROCESS_ANS'][`${input["ITEMs"]}_point`] = { "x": graph_ans_X, "y": core };
 
-                let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedback[0]['FINAL_ANS'] } });
+                let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'INPROCESS_ANS': feedback[0]['INPROCESS_ANS'] } });
               }
               catch (err) {
                 SURTHI002db[`INTERSEC_ERR`] = 1;
@@ -760,10 +760,10 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
                 let graph_ans_X = parseFloat(Xans.toFixed(2));
                 let graph_ans_Y = parseFloat(Yans.toFixed(2));
 
-                feedback[0]['FINAL_ANS'][input["ITEMs"]] = graph_ans_X;
-                feedback[0]['FINAL_ANS'][`${input["ITEMs"]}_point`] = { "x": graph_ans_X, "y": graph_ans_Y };
+                feedback[0]['INPROCESS_ANS'][input["ITEMs"]] = graph_ans_X;
+                feedback[0]['INPROCESS_ANS'][`${input["ITEMs"]}_point`] = { "x": graph_ans_X, "y": graph_ans_Y };
 
-                let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedback[0]['FINAL_ANS'] } });
+                let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'INPROCESS_ANS': feedback[0]['INPROCESS_ANS'] } });
 
               }
               catch (err) {
@@ -793,8 +793,8 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
         }
 
         if (CHECKlistdataFINISH.length === feedback[0]['CHECKlist'].length) {
-          // feedback[0]['FINAL_ANS']["ALL_DONE"] = "DONE";
-          // feedback[0]['FINAL_ANS']["PO_judgment"] ="pass";
+          // feedback[0]['INPROCESS_ANS']["ALL_DONE"] = "DONE";
+          // feedback[0]['INPROCESS_ANS']["PO_judgment"] ="pass";
           let feedbackupdateFINISH = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { "ALL_DONE": "DONE", "PO_judgment": "pass", } });
         }
 
@@ -810,7 +810,7 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/SURTHI002-SETZERO', async (req, res) => {
+router.post('/INPROCESS/SURTHI002-SETZERO', async (req, res) => {
   //-------------------------------------
   console.log('--SURTHI002fromINS--');
   console.log(req.body);
@@ -865,7 +865,7 @@ router.post('/FINAL/SURTHI002-SETZERO', async (req, res) => {
       "ITEMleftUNIT": [],
       "ITEMleftVALUE": [],
       //
-      "MeasurmentFOR": "FINAL",
+      "MeasurmentFOR": "INPROCESS",
       "inspectionItem": "", //ITEMpice
       "inspectionItemNAME": "",
       "tool": NAME_INS,
@@ -882,7 +882,7 @@ router.post('/FINAL/SURTHI002-SETZERO', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/SURTHI002-CLEAR', async (req, res) => {
+router.post('/INPROCESS/SURTHI002-CLEAR', async (req, res) => {
   //-------------------------------------
   console.log('--SURTHI002fromINS--');
   console.log(req.body);
@@ -904,7 +904,7 @@ router.post('/FINAL/SURTHI002-CLEAR', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/SURTHI002-RESETVALUE', async (req, res) => {
+router.post('/INPROCESS/SURTHI002-RESETVALUE', async (req, res) => {
   //-------------------------------------
   console.log('--SURTHI002fromINS--');
   console.log(req.body);
@@ -931,7 +931,7 @@ router.post('/FINAL/SURTHI002-RESETVALUE', async (req, res) => {
 //"value":[],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
 
 
-router.post('/FINAL/SURTHI002-FINISH', async (req, res) => {
+router.post('/INPROCESS/SURTHI002-FINISH', async (req, res) => {
   //-------------------------------------
   console.log('--SURTHI002-FINISH--');
   console.log(req.body);
@@ -1022,7 +1022,7 @@ router.post('/FINAL/SURTHI002-FINISH', async (req, res) => {
     SURTHI002db['RESULTFORMAT'] === 'OCR' ||
     SURTHI002db['RESULTFORMAT'] === 'Picture' || SURTHI002db['RESULTFORMAT'] === 'Graph') {
     request.post(
-      'http://127.0.0.1:16070/FINAL/FINISHtoDB',
+      'http://127.0.0.1:16070/FINISHtoDB',
       { json: SURTHI002db },
       function (error, response, body) {
         if (!error && response.statusCode == 200) {
@@ -1033,7 +1033,7 @@ router.post('/FINAL/SURTHI002-FINISH', async (req, res) => {
           //------------------------------------------------------------------------------------
 
           request.post(
-            'http://127.0.0.1:16070/FINAL/SURTHI002-feedback',
+            'http://127.0.0.1:16070/INPROCESS/SURTHI002-feedback',
             { json: { "PO": SURTHI002db['PO'], "ITEMs": SURTHI002db['inspectionItem'] } },
             function (error, response, body2) {
               if (!error && response.statusCode == 200) {

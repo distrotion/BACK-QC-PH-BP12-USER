@@ -91,7 +91,7 @@ let SURMIC001db = {
 
 
 
-router.get('/CHECK-SURMIC001', async (req, res) => {
+router.get('/FINAL/CHECK-SURMIC001', async (req, res) => {
 
   return res.json(SURMIC001db['PO']);
 });
@@ -1022,7 +1022,7 @@ router.post('/FINAL/SURMIC001-FINISH', async (req, res) => {
     SURMIC001db['RESULTFORMAT'] === 'OCR' ||
     SURMIC001db['RESULTFORMAT'] === 'Picture' || SURMIC001db['RESULTFORMAT'] === 'Graph') {
     request.post(
-      'http://127.0.0.1:16070/FINISHtoDB',
+      'http://127.0.0.1:16070/FINAL/FINISHtoDB',
       { json: SURMIC001db },
       function (error, response, body) {
         if (!error && response.statusCode == 200) {

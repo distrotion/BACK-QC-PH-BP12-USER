@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 var mongodb = require('../../function/mongodb');
-var mssql = require('./../../function/mssql');
+var mssql = require('../../function/mssql');
 
 
 //----------------- DATABASE
@@ -31,12 +31,12 @@ Number.prototype.pad = function (n) {
 //-----------------
 
 
-router.get('/report01', async (req, res) => {
+router.get('/INPROCESS/report01', async (req, res) => {
   res.json("report01");
 });
 
 
-router.post('/FINAL/ReportListACT', async (req, res) => {
+router.post('/ReportListACT', async (req, res) => {
   console.log('--ReportList--');
   console.log(req.body);
   let input = req.body;
@@ -178,13 +178,13 @@ router.post('/FINAL/ReportListACT', async (req, res) => {
    
     for (i = 0; i < find.length; i++) {
       //
-      // console.log(Object.getOwnPropertyNames(find[i]["FINAL"]));
-      let INS = Object.getOwnPropertyNames(find[i]["FINAL"]);
+      // console.log(Object.getOwnPropertyNames(find[i]["INPROCESS"]));
+      let INS = Object.getOwnPropertyNames(find[i]["INPROCESS"]);
       console.log("-------------------" + i)
       let depDATAlist = [];
       for (j = 0; j < INS.length; j++) {
-        let Item = find[i]["FINAL"][INS[j]];
-        let Itemlist = Object.getOwnPropertyNames(find[i]["FINAL"][INS[j]]);
+        let Item = find[i]["INPROCESS"][INS[j]];
+        let Itemlist = Object.getOwnPropertyNames(find[i]["INPROCESS"][INS[j]]);
         // console.log(Itemlist);
         for (k = 0; k < Itemlist.length; k++) {
   
@@ -285,7 +285,7 @@ router.post('/FINAL/ReportListACT', async (req, res) => {
 });
 
 
-router.post('/FINAL/CopyReport', async (req, res) => {
+router.post('/INPROCESS/CopyReport', async (req, res) => {
   //-------------------------------------
   console.log('--CopyReport--');
   console.log(req.body);
@@ -347,9 +347,9 @@ router.post('/FINAL/CopyReport', async (req, res) => {
               "GRAPHTYPE": origianlDBdata[`GRAPHTYPE`],
               "GAP": origianlDBdata[`GAP`],
               "dateupdatevalue": origianlDBdata[`dateupdatevalue`],
-              "FINAL": origianlDBdata[`FINAL`],
+              "INPROCESS": origianlDBdata[`INPROCESS`],
               "CHECKlist": origianlDBdata[`CHECKlist`],
-              "FINAL_ANS": origianlDBdata[`FINAL_ANS`],
+              "INPROCESS_ANS": origianlDBdata[`INPROCESS_ANS`],
               "ALL_DONE": "DONE",
               "PO_judgment": "DONE",
               //

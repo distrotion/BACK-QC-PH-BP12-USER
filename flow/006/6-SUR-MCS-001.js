@@ -73,7 +73,7 @@ let SURMCS001db = {
   "ITEMleftUNIT": [],
   "ITEMleftVALUE": [],
   //
-  "MeasurmentFOR": "FINAL",
+  "MeasurmentFOR": "INPROCESS",
   "inspectionItem": "", //ITEMpice
   "inspectionItemNAME": "",
   "tool": NAME_INS,
@@ -84,13 +84,13 @@ let SURMCS001db = {
    "USERID": '',
 }
 
-router.get('/FINAL/CHECK-SURMCS001', async (req, res) => {
+router.get('/INPROCESS/CHECK-SURMCS001', async (req, res) => {
 
   return res.json(SURMCS001db['PO']);
 });
 
 
-router.post('/FINAL/SURMCS001db', async (req, res) => {
+router.post('/INPROCESS/SURMCS001db', async (req, res) => {
   //-------------------------------------
   // console.log('--SURMCS001db--');
   // console.log(req.body);
@@ -108,7 +108,7 @@ router.post('/FINAL/SURMCS001db', async (req, res) => {
   return res.json(finddb);
 });
 
-router.post('/FINAL/GETINtoSURMCS001', async (req, res) => {
+router.post('/INPROCESS/GETINtoSURMCS001', async (req, res) => {
   //-------------------------------------
   console.log('--GETINtoSURMCS001--');
   console.log(req.body);
@@ -143,11 +143,11 @@ router.post('/FINAL/GETINtoSURMCS001', async (req, res) => {
         let ItemPickout = [];
         let ItemPickcodeout = [];
 
-        for (i = 0; i < findcp[0]['FINAL'].length; i++) {
+        for (i = 0; i < findcp[0]['INPROCESS'].length; i++) {
           for (j = 0; j < masterITEMs.length; j++) {
-            if (findcp[0]['FINAL'][i]['ITEMs'] === masterITEMs[j]['masterID']) {
+            if (findcp[0]['INPROCESS'][i]['ITEMs'] === masterITEMs[j]['masterID']) {
               ItemPickout.push(masterITEMs[j]['ITEMs']);
-              ItemPickcodeout.push({ "key": masterITEMs[j]['masterID'], "value": masterITEMs[j]['ITEMs'], "METHOD": findcp[0]['FINAL'][i]['METHOD'] });
+              ItemPickcodeout.push({ "key": masterITEMs[j]['masterID'], "value": masterITEMs[j]['ITEMs'], "METHOD": findcp[0]['INPROCESS'][i]['METHOD'] });
             }
           }
         }
@@ -213,7 +213,7 @@ router.post('/FINAL/GETINtoSURMCS001', async (req, res) => {
           "ITEMleftUNIT": [],
           "ITEMleftVALUE": [],
           //
-          "MeasurmentFOR": "FINAL",
+          "MeasurmentFOR": "INPROCESS",
           "inspectionItem": "", //ITEMpice
           "inspectionItemNAME": "",
           "tool": NAME_INS,
@@ -242,7 +242,7 @@ router.post('/FINAL/GETINtoSURMCS001', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/SURMCS001-geteachITEM', async (req, res) => {
+router.post('/INPROCESS/SURMCS001-geteachITEM', async (req, res) => {
   //-------------------------------------
   console.log('--SURMCS001-geteachITEM--');
   console.log(req.body);
@@ -270,23 +270,23 @@ router.post('/FINAL/SURMCS001-geteachITEM', async (req, res) => {
       let UNITdata = await mongodb.find(master_FN, UNIT, {});
       let masterITEMs = await mongodb.find(master_FN, ITEMs, { "masterID": SURMCS001db['inspectionItem'] });
 
-      for (i = 0; i < findcp[0]['FINAL'].length; i++) {
-        if (findcp[0]['FINAL'][i]['ITEMs'] === input['ITEMs']) {
+      for (i = 0; i < findcp[0]['INPROCESS'].length; i++) {
+        if (findcp[0]['INPROCESS'][i]['ITEMs'] === input['ITEMs']) {
 
           // output = [{
-          //   "RESULTFORMAT": findcp[0]['FINAL'][i]['RESULTFORMAT'],
-          //   "GRAPHTYPE": findcp[0]['FINAL'][i]['GRAPHTYPE'],
-          //   "INTERSECTION": findcp[0]['FINAL'][i]['INTERSECTION'],
-          //   "DOCUMENT": findcp[0]['FINAL'][i]['DOCUMENT'],
-          //   "SPECIFICATION": findcp[0]['FINAL'][i]['SPECIFICATION'],
-          //   "POINTPCS": findcp[0]['FINAL'][i]['POINTPCS'],
-          //   "POINT": findcp[0]['FINAL'][i]['POINT'],
-          //   "PCS": findcp[0]['FINAL'][i]['PCS'],
-          //   "FREQUENCY": findcp[0]['FINAL'][i]['FREQUENCY'],
-          //   "MODE": findcp[0]['FINAL'][i]['MODE'],
-          //   "REMARK": findcp[0]['FINAL'][i]['REMARK'],
-          //   "LOAD": findcp[0]['FINAL'][i]['LOAD'],
-          //   "CONVERSE": findcp[0]['FINAL'][i]['CONVERSE'],
+          //   "RESULTFORMAT": findcp[0]['INPROCESS'][i]['RESULTFORMAT'],
+          //   "GRAPHTYPE": findcp[0]['INPROCESS'][i]['GRAPHTYPE'],
+          //   "INTERSECTION": findcp[0]['INPROCESS'][i]['INTERSECTION'],
+          //   "DOCUMENT": findcp[0]['INPROCESS'][i]['DOCUMENT'],
+          //   "SPECIFICATION": findcp[0]['INPROCESS'][i]['SPECIFICATION'],
+          //   "POINTPCS": findcp[0]['INPROCESS'][i]['POINTPCS'],
+          //   "POINT": findcp[0]['INPROCESS'][i]['POINT'],
+          //   "PCS": findcp[0]['INPROCESS'][i]['PCS'],
+          //   "FREQUENCY": findcp[0]['INPROCESS'][i]['FREQUENCY'],
+          //   "MODE": findcp[0]['INPROCESS'][i]['MODE'],
+          //   "REMARK": findcp[0]['INPROCESS'][i]['REMARK'],
+          //   "LOAD": findcp[0]['INPROCESS'][i]['LOAD'],
+          //   "CONVERSE": findcp[0]['INPROCESS'][i]['CONVERSE'],
           // }]
 
           if (masterITEMs.length > 0) {
@@ -296,25 +296,25 @@ router.post('/FINAL/SURMCS001-geteachITEM', async (req, res) => {
           }
 
           for (j = 0; j < UNITdata.length; j++) {
-            if (findcp[0]['FINAL'][i]['UNIT'] == UNITdata[j]['masterID']) {
+            if (findcp[0]['INPROCESS'][i]['UNIT'] == UNITdata[j]['masterID']) {
               SURMCS001db["UNIT"] = UNITdata[j]['UNIT'];
             }
           }
 
-          SURMCS001db["POINTs"] = findcp[0]['FINAL'][i]['POINT'];
-          SURMCS001db["PCS"] = findcp[0]['FINAL'][i]['PCS'];
+          SURMCS001db["POINTs"] = findcp[0]['INPROCESS'][i]['POINT'];
+          SURMCS001db["PCS"] = findcp[0]['INPROCESS'][i]['PCS'];
           if (SURMCS001db["PCSleft"] === '') {
-            SURMCS001db["PCSleft"] = findcp[0]['FINAL'][i]['PCS'];
+            SURMCS001db["PCSleft"] = findcp[0]['INPROCESS'][i]['PCS'];
           }
           SURMCS001db["SPEC"]='';
-          if (findcp[0]['FINAL'][i]['SPECIFICATIONve'] !== undefined) {
-            if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'BTW') {
-              SURMCS001db["SPEC"] =  `${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_LOW']}-${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_HI']}`;
-            } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'HIM(>)') {
-              SURMCS001db["SPEC"] =  `>${findcp[0]['FINAL'][i]['SPECIFICATIONve']['HIM_L']}`;
-            } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'LOL(<)') {
-              SURMCS001db["SPEC"] =  `<${findcp[0]['FINAL'][i]['SPECIFICATIONve']['LOL_H']}`;
-            }else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'Actual'){
+          if (findcp[0]['INPROCESS'][i]['SPECIFICATIONve'] !== undefined) {
+            if (findcp[0]['INPROCESS'][i]['SPECIFICATIONve']['condition'] === 'BTW') {
+              SURMCS001db["SPEC"] =  `${findcp[0]['INPROCESS'][i]['SPECIFICATIONve']['BTW_LOW']}-${findcp[0]['INPROCESS'][i]['SPECIFICATIONve']['BTW_HI']}`;
+            } else if (findcp[0]['INPROCESS'][i]['SPECIFICATIONve']['condition'] === 'HIM(>)') {
+              SURMCS001db["SPEC"] =  `>${findcp[0]['INPROCESS'][i]['SPECIFICATIONve']['HIM_L']}`;
+            } else if (findcp[0]['INPROCESS'][i]['SPECIFICATIONve']['condition'] === 'LOL(<)') {
+              SURMCS001db["SPEC"] =  `<${findcp[0]['INPROCESS'][i]['SPECIFICATIONve']['LOL_H']}`;
+            }else if (findcp[0]['INPROCESS'][i]['SPECIFICATIONve']['condition'] === 'Actual'){
               SURMCS001db["SPEC"] =  'Actual';
             }
           }
@@ -324,7 +324,7 @@ router.post('/FINAL/SURMCS001-geteachITEM', async (req, res) => {
           let findpo = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
           if (findpo.length > 0) {
             request.post(
-              'http://127.0.0.1:16070/FINAL/SURMCS001-feedback',
+              'http://127.0.0.1:16070/SURMCS001-feedback',
               { json: { "PO": SURMCS001db['PO'], "ITEMs": SURMCS001db['inspectionItem'] } },
               function (error, response, body2) {
                 if (!error && response.statusCode == 200) {
@@ -355,7 +355,7 @@ router.post('/FINAL/SURMCS001-geteachITEM', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/SURMCS001-preview', async (req, res) => {
+router.post('/INPROCESS/SURMCS001-preview', async (req, res) => {
   //-------------------------------------
   console.log('--SURMCS001-preview--');
   console.log(req.body);
@@ -387,7 +387,7 @@ router.post('/FINAL/SURMCS001-preview', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/SURMCS001-confirmdata', async (req, res) => {
+router.post('/INPROCESS/SURMCS001-confirmdata', async (req, res) => {
   //-------------------------------------
   console.log('--SURMCS001-confirmdata--');
   console.log(req.body);
@@ -421,7 +421,7 @@ router.post('/FINAL/SURMCS001-confirmdata', async (req, res) => {
 
 
 
-router.post('/FINAL/SURMCS001-feedback', async (req, res) => {
+router.post('/INPROCESS/SURMCS001-feedback', async (req, res) => {
   //-------------------------------------
   console.log('--SURMCS001-feedback--');
   console.log(req.body);
@@ -432,10 +432,10 @@ router.post('/FINAL/SURMCS001-feedback', async (req, res) => {
   //-------------------------------------
   if (input["PO"] !== undefined && input["ITEMs"] !== undefined) {
     let feedback = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
-    if (feedback.length > 0 && feedback[0]['FINAL'] != undefined && feedback[0]['FINAL'][NAME_INS] != undefined && feedback[0]['FINAL'][NAME_INS][input["ITEMs"]] != undefined) {
-      // console.log(Object.keys(feedback[0]['FINAL'][NAME_INS][input["ITEMs"]]));
-      let oblist = Object.keys(feedback[0]['FINAL'][NAME_INS][input["ITEMs"]]);
-      let ob = feedback[0]['FINAL'][NAME_INS][input["ITEMs"]];
+    if (feedback.length > 0 && feedback[0]['INPROCESS'] != undefined && feedback[0]['INPROCESS'][NAME_INS] != undefined && feedback[0]['INPROCESS'][NAME_INS][input["ITEMs"]] != undefined) {
+      // console.log(Object.keys(feedback[0]['INPROCESS'][NAME_INS][input["ITEMs"]]));
+      let oblist = Object.keys(feedback[0]['INPROCESS'][NAME_INS][input["ITEMs"]]);
+      let ob = feedback[0]['INPROCESS'][NAME_INS][input["ITEMs"]];
 
 
       let LISTbuffer = [];
@@ -454,7 +454,7 @@ router.post('/FINAL/SURMCS001-feedback', async (req, res) => {
 
         }
 
-        SURMCS001db["ITEMleftUNIT"] = [{ "V1": "FINAL", "V2": `${oblist.length}` }];
+        SURMCS001db["ITEMleftUNIT"] = [{ "V1": "INPROCESS", "V2": `${oblist.length}` }];
         SURMCS001db["ITEMleftVALUE"] = ITEMleftVALUEout;
 
       } else if (SURMCS001db['RESULTFORMAT'] === 'Text') { //add
@@ -463,7 +463,7 @@ router.post('/FINAL/SURMCS001-feedback', async (req, res) => {
           ITEMleftVALUEout.push({ "V1": `${LISTbuffer[i]['PO1']}`, "V2": `${LISTbuffer[i]['PO2']}` })
         }
 
-        SURMCS001db["ITEMleftUNIT"] = [{ "V1": "FINAL", "V2": `${oblist.length}` }];
+        SURMCS001db["ITEMleftUNIT"] = [{ "V1": "INPROCESS", "V2": `${oblist.length}` }];
         SURMCS001db["ITEMleftVALUE"] = ITEMleftVALUEout;
 
       }
@@ -482,8 +482,8 @@ router.post('/FINAL/SURMCS001-feedback', async (req, res) => {
         let masterITEMs = await mongodb.find(master_FN, ITEMs, { "masterID": input["ITEMs"] });
 
 
-        if (feedback[0]['FINAL_ANS'] === undefined) {
-          feedback[0]['FINAL_ANS'] = {}
+        if (feedback[0]['INPROCESS_ANS'] === undefined) {
+          feedback[0]['INPROCESS_ANS'] = {}
         }
         if (masterITEMs.length > 0) {
           let anslist = [];
@@ -503,27 +503,27 @@ router.post('/FINAL/SURMCS001-feedback', async (req, res) => {
             let sum2 = anslist_con.reduce((a, b) => a + b, 0);
             let avg2 = (sum2 / anslist_con.length) || 0;
 
-            feedback[0]['FINAL_ANS'][input["ITEMs"]] = avg1;
-            feedback[0]['FINAL_ANS'][`${input["ITEMs"]}_c`] = avg2;
+            feedback[0]['INPROCESS_ANS'][input["ITEMs"]] = avg1;
+            feedback[0]['INPROCESS_ANS'][`${input["ITEMs"]}_c`] = avg2;
 
-            let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedback[0]['FINAL_ANS'] } });
+            let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'INPROCESS_ANS': feedback[0]['INPROCESS_ANS'] } });
 
 
           } else if (masterITEMs[0]['RESULTFORMAT'] === 'Text') {
 
-            feedback[0]['FINAL_ANS'][input["ITEMs"]] = LISTbuffer[0]['PO2'];
-            let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedback[0]['FINAL_ANS'] } });
+            feedback[0]['INPROCESS_ANS'][input["ITEMs"]] = LISTbuffer[0]['PO2'];
+            let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'INPROCESS_ANS': feedback[0]['INPROCESS_ANS'] } });
 
 
           } else if (masterITEMs[0]['RESULTFORMAT'] === 'Graph') {
 
           } else if (masterITEMs[0]['RESULTFORMAT'] === 'Picture') {
-            feedback[0]['FINAL_ANS'][input["ITEMs"]] = 'Good';
-            let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedback[0]['FINAL_ANS'] } });
+            feedback[0]['INPROCESS_ANS'][input["ITEMs"]] = 'Good';
+            let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'INPROCESS_ANS': feedback[0]['INPROCESS_ANS'] } });
 
           } else if (masterITEMs[0]['RESULTFORMAT'] === 'OCR') {
-            feedback[0]['FINAL_ANS'][input["ITEMs"]] = LISTbuffer[0]['PIC1data'];
-            let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedback[0]['FINAL_ANS'] } });
+            feedback[0]['INPROCESS_ANS'][input["ITEMs"]] = LISTbuffer[0]['PIC1data'];
+            let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'INPROCESS_ANS': feedback[0]['INPROCESS_ANS'] } });
 
           } else {
 
@@ -542,8 +542,8 @@ router.post('/FINAL/SURMCS001-feedback', async (req, res) => {
         }
 
         if (CHECKlistdataFINISH.length === feedback[0]['CHECKlist'].length) {
-          // feedback[0]['FINAL_ANS']["ALL_DONE"] = "DONE";
-          // feedback[0]['FINAL_ANS']["PO_judgment"] ="pass";
+          // feedback[0]['INPROCESS_ANS']["ALL_DONE"] = "DONE";
+          // feedback[0]['INPROCESS_ANS']["PO_judgment"] ="pass";
           let feedbackupdateFINISH = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { "ALL_DONE": "DONE", "PO_judgment": "pass", } });
         }
 
@@ -559,7 +559,7 @@ router.post('/FINAL/SURMCS001-feedback', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/SURMCS001-SETZERO', async (req, res) => {
+router.post('/INPROCESS/SURMCS001-SETZERO', async (req, res) => {
   //-------------------------------------
   console.log('--SURMCS001fromINS--');
   console.log(req.body);
@@ -611,7 +611,7 @@ router.post('/FINAL/SURMCS001-SETZERO', async (req, res) => {
       "ITEMleftUNIT": [],
       "ITEMleftVALUE": [],
       //
-      "MeasurmentFOR": "FINAL",
+      "MeasurmentFOR": "INPROCESS",
       "inspectionItem": "", //ITEMpice
       "inspectionItemNAME": "",
       "tool": NAME_INS,
@@ -627,7 +627,7 @@ router.post('/FINAL/SURMCS001-SETZERO', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/SURMCS001-CLEAR', async (req, res) => {
+router.post('/INPROCESS/SURMCS001-CLEAR', async (req, res) => {
   //-------------------------------------
   console.log('--SURMCS001fromINS--');
   console.log(req.body);
@@ -649,7 +649,7 @@ router.post('/FINAL/SURMCS001-CLEAR', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/SURMCS001-RESETVALUE', async (req, res) => {
+router.post('/INPROCESS/SURMCS001-RESETVALUE', async (req, res) => {
   //-------------------------------------
   console.log('--SURMCS001fromINS--');
   console.log(req.body);
@@ -676,7 +676,7 @@ router.post('/FINAL/SURMCS001-RESETVALUE', async (req, res) => {
 //"value":[],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
 
 
-router.post('/FINAL/SURMCS001-FINISH', async (req, res) => {
+router.post('/INPROCESS/SURMCS001-FINISH', async (req, res) => {
   //-------------------------------------
   console.log('--SURMCS001-FINISH--');
   console.log(req.body);
@@ -729,7 +729,7 @@ router.post('/FINAL/SURMCS001-FINISH', async (req, res) => {
 
   if (SURMCS001db['RESULTFORMAT'] === 'Number') {
     request.post(
-      'http://127.0.0.1:16070/FINAL/FINISHtoDB',
+      'http://127.0.0.1:16070/FINISHtoDB',
       { json: SURMCS001db },
       function (error, response, body) {
         if (!error && response.statusCode == 200) {
@@ -740,7 +740,7 @@ router.post('/FINAL/SURMCS001-FINISH', async (req, res) => {
           //------------------------------------------------------------------------------------
 
           request.post(
-            'http://127.0.0.1:16070/FINAL/SURMCS001-feedback',
+            'http://127.0.0.1:16070/SURMCS001-feedback',
             { json: { "PO": SURMCS001db['PO'], "ITEMs": SURMCS001db['inspectionItem'] } },
             function (error, response, body2) {
               if (!error && response.statusCode == 200) {
@@ -766,7 +766,7 @@ router.post('/FINAL/SURMCS001-FINISH', async (req, res) => {
 });
 
 
-router.post('/FINAL/SURMCS001-FINISH-APR', async (req, res) => {
+router.post('/INPROCESS/SURMCS001-FINISH-APR', async (req, res) => {
   //-------------------------------------
   console.log('--SURMCS001-FINISH--');
   console.log(req.body);
@@ -798,7 +798,7 @@ router.post('/FINAL/SURMCS001-FINISH-APR', async (req, res) => {
 
   if (SURMCS001db['RESULTFORMAT'] === 'Text') {
     request.post(
-      'http://127.0.0.1:16070/FINAL/FINISHtoDB',
+      'http://127.0.0.1:16070/FINISHtoDB',
       { json: SURMCS001db },
       function (error, response, body) {
         if (!error && response.statusCode == 200) {
@@ -808,7 +808,7 @@ router.post('/FINAL/SURMCS001-FINISH-APR', async (req, res) => {
           SURMCS001db["value"] = [];
           //------------------------------------------------------------------------------------
           request.post(
-            'http://127.0.0.1:16070/FINAL/SURMCS001-feedback',
+            'http://127.0.0.1:16070/SURMCS001-feedback',
             { json: { "PO": SURMCS001db['PO'], "ITEMs": SURMCS001db['inspectionItem'] } },
             function (error, response, body2) {
               if (!error && response.statusCode == 200) {
@@ -834,7 +834,7 @@ router.post('/FINAL/SURMCS001-FINISH-APR', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/FINAL/SURMCS001-FINISH-APR', async (req, res) => {
+router.post('/INPROCESS/SURMCS001-FINISH-APR', async (req, res) => {
   //-------------------------------------
   console.log('--SURMCS001-FINISH--');
   console.log(req.body);
@@ -866,7 +866,7 @@ router.post('/FINAL/SURMCS001-FINISH-APR', async (req, res) => {
 
   if (SURMCS001db['RESULTFORMAT'] === 'Text') {
     request.post(
-      'http://127.0.0.1:16070/FINAL/FINISHtoDB',
+      'http://127.0.0.1:16070/FINISHtoDB',
       { json: SURMCS001db },
       function (error, response, body) {
         if (!error && response.statusCode == 200) {
@@ -876,7 +876,7 @@ router.post('/FINAL/SURMCS001-FINISH-APR', async (req, res) => {
           SURMCS001db["value"] = [];
           //------------------------------------------------------------------------------------
           request.post(
-            'http://127.0.0.1:16070/FINAL/SURMCS001-feedback',
+            'http://127.0.0.1:16070/SURMCS001-feedback',
             { json: { "PO": SURMCS001db['PO'], "ITEMs": SURMCS001db['inspectionItem'] } },
             function (error, response, body2) {
               if (!error && response.statusCode == 200) {
@@ -905,7 +905,7 @@ router.post('/FINAL/SURMCS001-FINISH-APR', async (req, res) => {
 });
 
 
-router.post('/FINAL/SURMCS001-FINISH-IMG', async (req, res) => {
+router.post('/INPROCESS/SURMCS001-FINISH-IMG', async (req, res) => {
   //-------------------------------------
   console.log('--SURMCS001-FINISH--');
   // console.log(req.body);
@@ -936,7 +936,7 @@ router.post('/FINAL/SURMCS001-FINISH-IMG', async (req, res) => {
   if (SURMCS001db['RESULTFORMAT'] === 'OCR' ||
     SURMCS001db['RESULTFORMAT'] === 'Picture') {
     request.post(
-      'http://127.0.0.1:16070/FINAL/FINISHtoDB',
+      'http://127.0.0.1:16070/FINISHtoDB',
       { json: SURMCS001db },
       function (error, response, body) {
         if (!error && response.statusCode == 200) {
@@ -946,7 +946,7 @@ router.post('/FINAL/SURMCS001-FINISH-IMG', async (req, res) => {
           SURMCS001db["value"] = [];
           //------------------------------------------------------------------------------------
           request.post(
-            'http://127.0.0.1:16070/FINAL/SURMCS001-feedback',
+            'http://127.0.0.1:16070/SURMCS001-feedback',
             { json: { "PO": SURMCS001db['PO'], "ITEMs": SURMCS001db['inspectionItem'] } },
             function (error, response, body2) {
               if (!error && response.statusCode == 200) {
@@ -984,7 +984,7 @@ router.post('/FINAL/SURMCS001-FINISH-IMG', async (req, res) => {
 
     if (SURMCS001db['RESULTFORMAT'] === 'Number' ) {
     request.post(
-      'http://127.0.0.1:16070/FINAL/FINISHtoDB',
+      'http://127.0.0.1:16070/FINISHtoDB',
       { json: SURMCS001db },
       function (error, response, body) {
         if (!error && response.statusCode == 200) {
@@ -994,7 +994,7 @@ router.post('/FINAL/SURMCS001-FINISH-IMG', async (req, res) => {
           SURMCS001db["value"] = [];
           //------------------------------------------------------------------------------------
           request.post(
-            'http://127.0.0.1:16070/FINAL/SURMCS001-feedback',
+            'http://127.0.0.1:16070/SURMCS001-feedback',
             { json: { "PO": SURMCS001db['PO'], "ITEMs": SURMCS001db['inspectionItem'] } },
             function (error, response, body2) {
               if (!error && response.statusCode == 200) {

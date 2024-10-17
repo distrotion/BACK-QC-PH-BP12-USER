@@ -7,11 +7,11 @@ let mongodb = require('../../function/mongodb');
 
 // let TGPHRC004 = require('./001/cleardata');
 
-router.get('/FINAL/checklist', async (req, res) => {
+// router.get('/checklist', async (req, res) => {
 
-  let output = [];
-  return  res.json(output);
+//   let output = [];
+//   return  res.json(output);
 
-});
+// });
 
 module.exports = router;
