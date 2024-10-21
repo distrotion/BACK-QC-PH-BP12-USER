@@ -397,7 +397,7 @@ router.post('/FINAL/CTCSEM001-geteachITEM', async (req, res) => {
           let findpo = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
           if (findpo.length > 0) {
             request.post(
-              'http://127.0.0.1:16070/CTCSEM001-feedback',
+              'http://127.0.0.1:16070/FINAL/CTCSEM001-feedback',
               { json: { "PO": CTCSEM001db['PO'], "ITEMs": CTCSEM001db['inspectionItem'] } },
               function (error, response, body2) {
                 if (!error && response.statusCode == 200) {
@@ -1079,7 +1079,7 @@ router.post('/FINAL/CTCSEM001-FINISH', async (req, res) => {
           //------------------------------------------------------------------------------------
 
           request.post(
-            'http://127.0.0.1:16070/CTCSEM001-feedback',
+            'http://127.0.0.1:16070/FINAL/CTCSEM001-feedback',
             { json: { "PO": CTCSEM001db['PO'], "ITEMs": CTCSEM001db['inspectionItem'] } },
             function (error, response, body2) {
               if (!error && response.statusCode == 200) {
