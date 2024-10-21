@@ -140,6 +140,52 @@ router.post('/FINAL/GETINtoSURMIC001', async (req, res) => {
         }
       }
 
+      if(dbsap === ''){
+        try {
+          let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', {
+            "BAPI_NAME": "ZPPIN011_OUT",
+            "IMP_TEXT02": input['PO'] ,
+            "TABLE_NAME": "PPORDER"
+          });
+          // if (resp.status == 200) {
+            let returnDATA = resp;
+            // output = returnDATA["Records"] || []
+             console.log(returnDATA["Records"])
+             if(returnDATA["Records"].length>0){
+
+
+              dataout = {
+              'PO':`${parseInt(returnDATA["Records"][0]['PO'])}`,
+              'SEQUENCE':returnDATA["Records"][0]['SEQ'],
+              'CP':`${parseInt(returnDATA["Records"][0]['CPMAT'])}`,
+              'FG': `${parseInt(returnDATA["Records"][0]['FGMAT'])}`,
+              'STATUS': returnDATA["Records"][0]['STA'],
+              'QUANTITY': returnDATA["Records"][0]['QTYT'],
+              'UNIT': returnDATA["Records"][0]['UNIT'],
+              'COSTCENTER': returnDATA["Records"][0]['CUSTNA'],
+              
+              'PART': returnDATA["Records"][0]['PARTNO'],
+              'PARTNAME': returnDATA["Records"][0]['PARTNA'],
+              'MATERIAL': returnDATA["Records"][0]['MATNA'],
+              'CUSTOMER': returnDATA["Records"][0]['CUSLOTNO'],
+              'PROCESS': returnDATA["Records"][0]['PROC'],
+              'WGT_PC':returnDATA["Records"][0]['WEIGHT_PC'],
+              'WGT_JIG': returnDATA["Records"][0]['WEIGHT_JIG'],
+              'ACTQTY': returnDATA["Records"][0]['ACT_QTY'],
+              'CUSLOTNO': returnDATA["Records"][0]['CUSLOTNO'],
+              'FG_CHARG': returnDATA["Records"][0]['FG_CHARG'],
+              'CUSTNAME':returnDATA["Records"][0]['CUST_FULLNM'],
+            };
+
+
+              dbsap = dataout
+             }
+          // }
+        } catch (err) {
+          output = [];
+        }
+      }
+
 
       if (dbsap !== '') {
 

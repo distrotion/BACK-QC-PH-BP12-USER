@@ -246,7 +246,10 @@ router.post('/FINAL/FINISHtoDB-apr', async (req, res) => {
   //-------------------------------------
   console.log(output)
   let outputs = '';
+
   let findpo = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
+
+  console.log(findpo)
   if (findpo.length === 0) {
     let nameFOR = input['MeasurmentFOR'];
     let nameTool = input['tool'];
@@ -330,6 +333,8 @@ router.post('/FINAL/FINISHtoDB-apr', async (req, res) => {
         findMF = true;
       }
     }
+   
+    console.log(findMF);
     if (findMF === false) {
       let nameFOR = input_S2_2['MeasurmentFOR'];
       let nameTool = input_S2_2['tool'];
@@ -374,6 +379,9 @@ router.post('/FINAL/FINISHtoDB-apr', async (req, res) => {
           nameTool = objectB[j];
         }
       }
+
+
+
       if (nameTool !== input_S3_2.tool) {
         let nameFOR = input_S3_2['MeasurmentFOR'];
         let nameTool = input_S3_2['tool'];
@@ -449,6 +457,10 @@ router.post('/FINAL/FINISHtoDB-apr', async (req, res) => {
           let out_S4_2 = { $set: input_S4_1 }
 
           outputs = 'OK'
+
+
+ 
+
           let upd = await mongodb.update(MAIN_DATA, MAIN, out_S4_1, out_S4_2);
 
         } else {
@@ -461,6 +473,8 @@ router.post('/FINAL/FINISHtoDB-apr', async (req, res) => {
           let FOR = input_S4_1[nameFOR];
           let Tool = FOR[nameTool];
           let Item = Tool
+
+
 
           let nItem = Object.getOwnPropertyNames(Item[nameItem]).length
           let timeStamp = `PSC${nItem + 1}`
