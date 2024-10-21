@@ -111,6 +111,7 @@ let SURBAL013db = {
   //----------------------
   "USER": '',
   "USERID": '',
+  "FREQUENCY":"",
 }
 
 
@@ -135,25 +136,49 @@ router.post('/FINAL/SURBAL013db', async (req, res) => {
 
 
     // console.log(SURBAL013db['inspectionItem'])
-    if (SURBAL013db['RESULTFORMAT'] === 'CAL1' || SURBAL013db['RESULTFORMAT'] === 'CAL2') {
-      let feedbackLast = await mongodb.find("BUFFERCAL", SURBAL013, { "PO": SURBAL013db['PO'],"CP": SURBAL013db['CP'] });
-      if (feedbackLast.length > 0) {
-        SURBAL013db['confirmdataCW'][0]['VAL1'] = feedbackLast[0]['VAL1'];
-        SURBAL013db['confirmdataCW'][0]['VAL2'] = feedbackLast[0]['VAL2'];
-        SURBAL013db['confirmdataCW'][0]['VAL3'] = feedbackLast[0]['VAL3'];
-        SURBAL013db['confirmdataCW'][0]['VAL4'] = feedbackLast[0]['VAL4'];
-        SURBAL013db['confirmdataCW'][0]['Area'] = feedbackLast[0]['Area'];
-        SURBAL013db['confirmdataCW'][0]['FORMULA'] = feedbackLast[0]['FORMULA'];
 
+    if(SURBAL013db['FREQUENCY'].includes('/6M')){
+      if (SURBAL013db['RESULTFORMAT'] === 'CAL1' || SURBAL013db['RESULTFORMAT'] === 'CAL2') {
+        let feedbackLast = await mongodb.find("BUFFERCAL", SURBAL013, { "CP": SURBAL013db['CP'] });
+        if (feedbackLast.length > 0) {
+          SURBAL013db['confirmdataCW'][0]['VAL1'] = feedbackLast[0]['VAL1'];
+          SURBAL013db['confirmdataCW'][0]['VAL2'] = feedbackLast[0]['VAL2'];
+          SURBAL013db['confirmdataCW'][0]['VAL3'] = feedbackLast[0]['VAL3'];
+          SURBAL013db['confirmdataCW'][0]['VAL4'] = feedbackLast[0]['VAL4'];
+          SURBAL013db['confirmdataCW'][0]['Area'] = feedbackLast[0]['Area'];
+          SURBAL013db['confirmdataCW'][0]['FORMULA'] = feedbackLast[0]['FORMULA'];
+  
+        }
+      } else {
+        SURBAL013db['confirmdataCW'][0]['VAL1'] = "";
+        SURBAL013db['confirmdataCW'][0]['VAL2'] = "";
+        SURBAL013db['confirmdataCW'][0]['VAL3'] = "";
+        SURBAL013db['confirmdataCW'][0]['VAL4'] = "";
+        SURBAL013db['confirmdataCW'][0]['Area'] = "";
+        SURBAL013db['confirmdataCW'][0]['FORMULA'] = "";
       }
-    } else {
-      SURBAL013db['confirmdataCW'][0]['VAL1'] = "";
-      SURBAL013db['confirmdataCW'][0]['VAL2'] = "";
-      SURBAL013db['confirmdataCW'][0]['VAL3'] = "";
-      SURBAL013db['confirmdataCW'][0]['VAL4'] = "";
-      SURBAL013db['confirmdataCW'][0]['Area'] = "";
-      SURBAL013db['confirmdataCW'][0]['FORMULA'] = "";
+    }else{
+      if (SURBAL013db['RESULTFORMAT'] === 'CAL1' || SURBAL013db['RESULTFORMAT'] === 'CAL2') {
+        let feedbackLast = await mongodb.find("BUFFERCAL", SURBAL013, { "PO": SURBAL013db['PO'],"CP": SURBAL013db['CP'] });
+        if (feedbackLast.length > 0) {
+          SURBAL013db['confirmdataCW'][0]['VAL1'] = feedbackLast[0]['VAL1'];
+          SURBAL013db['confirmdataCW'][0]['VAL2'] = feedbackLast[0]['VAL2'];
+          SURBAL013db['confirmdataCW'][0]['VAL3'] = feedbackLast[0]['VAL3'];
+          SURBAL013db['confirmdataCW'][0]['VAL4'] = feedbackLast[0]['VAL4'];
+          SURBAL013db['confirmdataCW'][0]['Area'] = feedbackLast[0]['Area'];
+          SURBAL013db['confirmdataCW'][0]['FORMULA'] = feedbackLast[0]['FORMULA'];
+  
+        }
+      } else {
+        SURBAL013db['confirmdataCW'][0]['VAL1'] = "";
+        SURBAL013db['confirmdataCW'][0]['VAL2'] = "";
+        SURBAL013db['confirmdataCW'][0]['VAL3'] = "";
+        SURBAL013db['confirmdataCW'][0]['VAL4'] = "";
+        SURBAL013db['confirmdataCW'][0]['Area'] = "";
+        SURBAL013db['confirmdataCW'][0]['FORMULA'] = "";
+      }
     }
+    
 
 
     finddb = SURBAL013db;
@@ -295,6 +320,9 @@ router.post('/FINAL/GETINtoSURBAL013', async (req, res) => {
           //----------------------
           "USER": input['USER'],
           "USERID": input['USERID'],
+          "FREQUENCY":"",
+
+ 
         }
 
         output = 'OK';
@@ -414,6 +442,9 @@ router.post('/FINAL/SURBAL013-geteachITEM', async (req, res) => {
 
           SURBAL013db["K1b"] = findcp[0]['FINAL'][i]['K1b'];
           SURBAL013db["K1v"] = findcp[0]['FINAL'][i]['K1v'];
+          // "FREQUENCY":"",
+          SURBAL013db["FREQUENCY"] = findcp[0]['FINAL'][i]['FREQUENCY'];
+          console.log(SURBAL013db["FREQUENCY"])
 
           SURBAL013db["INTERSEC"] = masterITEMs[0]['INTERSECTION'];
 
@@ -433,6 +464,8 @@ router.post('/FINAL/SURBAL013-geteachITEM', async (req, res) => {
           }
 
           SURBAL013db["ANSCAL2"] = '';
+
+     
 
        
 
@@ -475,6 +508,7 @@ router.post('/FINAL/SURBAL013-geteachITEM', async (req, res) => {
     SURBAL013db["K1v"] = "";
     SURBAL013db["FORMULA"] = "";
     output = 'NOK';
+    SURBAL013db["FREQUENCY"] = '';
   }
 
   //-------------------------------------
@@ -1232,6 +1266,7 @@ router.post('/FINAL/SURBAL013-SETZERO', async (req, res) => {
         "var": "",
         "ANSCAL2" : '',
       }],
+      "FREQUENCY":"",
     }
     output = 'OK';
   }
