@@ -248,8 +248,8 @@ router.post('/FINAL/FINISHtoDB-apr', async (req, res) => {
   let outputs = '';
 
   let findpo = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
-
-  console.log(findpo)
+  console.log("findpo.length")
+  console.log(findpo.length)
   if (findpo.length === 0) {
     let nameFOR = input['MeasurmentFOR'];
     let nameTool = input['tool'];
