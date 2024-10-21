@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 var mongodb = require('../../function/mongodb');
 var mssql = require('./../../function/mssql');
+const axios = require("../../function/axios");
 
 
 //----------------- DATABASE
@@ -143,27 +144,27 @@ router.post('/FINAL/ReportListACT', async (req, res) => {
     }
 
 
-  // var d = new Date();
-  // d.setFullYear(d.getFullYear(), d.getMonth(), 1);
+    // var d = new Date();
+    // d.setFullYear(d.getFullYear(), d.getMonth(), 1);
 
-  // var dc = new Date();
-  // dc.setFullYear(dc.getFullYear(), dc.getMonth(), 7);
-  
+    // var dc = new Date();
+    // dc.setFullYear(dc.getFullYear(), dc.getMonth(), 7);
+
     var d = new Date();
     d.setFullYear(startY, startM, startD);
     d.setDate(d.getDate() - 1);
     var dc = new Date();
     dc.setFullYear(stoptY, stoptM, stoptD);
     dc.setDate(dc.getDate() + 1);
-    
+
 
     console.log(d)
     console.log(dc)
-  
+
     // day = `${d.getFullYear()}-${(d.getMonth() + 1).pad(2)}-${(d.getDate()).pad(2)}`
     // dayC = `${dc.getFullYear()}-${(dc.getMonth() + 1).pad(2)}-${(dc.getDate()).pad(2)}`
     // tim = `${(d.getHours()).pad(2)}:${(d.getMinutes()).pad(2)}:${(d.getSeconds()).pad(2)}`
-  
+
     out = {
       "ALL_DONE": 'DONE',
       "dateG":
@@ -175,7 +176,7 @@ router.post('/FINAL/ReportListACT', async (req, res) => {
     // console.log(out)
     let find = await mongodb.find(MAIN_DATA, MAIN, out);
     let masterITEMs = await mongodb.find(master_FN, ITEMs, {});
-   
+
     for (i = 0; i < find.length; i++) {
       //
       // console.log(Object.getOwnPropertyNames(find[i]["FINAL"]));
@@ -187,28 +188,28 @@ router.post('/FINAL/ReportListACT', async (req, res) => {
         let Itemlist = Object.getOwnPropertyNames(find[i]["FINAL"][INS[j]]);
         // console.log(Itemlist);
         for (k = 0; k < Itemlist.length; k++) {
-  
+
           if (Item[Itemlist[k]]["PSC1"] != undefined) {
-  
+
             if (Item[Itemlist[k]]["PSC1"].length === undefined) {
               // console.log(Item[Itemlist[k]]["PSC1"]["PO1"]);
               let name = "";
-                    for (s = 0; s < masterITEMs.length; s++) {
-                      if (masterITEMs[s]["masterID"] === Itemlist[k]) {
-                        // console.log(masterITEMs[s]["ITEMs"]);
-                        name = masterITEMs[s]["ITEMs"];
-                        let data = {}
-                        data[name] = Item[Itemlist[k]]["PSC1"]["PO2"];
-                        if (data[name].length > 0) {
-                          depDATAlist.push(data)
-                        }
-                        break;
-                      }
-                    }
+              for (s = 0; s < masterITEMs.length; s++) {
+                if (masterITEMs[s]["masterID"] === Itemlist[k]) {
+                  // console.log(masterITEMs[s]["ITEMs"]);
+                  name = masterITEMs[s]["ITEMs"];
+                  let data = {}
+                  data[name] = Item[Itemlist[k]]["PSC1"]["PO2"];
+                  if (data[name].length > 0) {
+                    depDATAlist.push(data)
+                  }
+                  break;
+                }
+              }
             } else {
               // console.log(Item[Itemlist[k]]["PSC1"].length);
               let deppdata = Item[Itemlist[k]]["PSC1"];
-  
+
               // console.log(deppdata);
               for (l = 0; l < deppdata.length; l++) {
                 if (deppdata[l]["PO1"] === undefined) {
@@ -227,10 +228,10 @@ router.post('/FINAL/ReportListACT', async (req, res) => {
                     }
                   }
                   // console.log([deppdata[l]["PIC1data"],deppdata[l]["PIC2data"],deppdata[l]["PIC3data"],deppdata[l]["PIC4data"]]);
-  
-  
+
+
                 } else {
-  
+
                   if (deppdata[l]["PO1"] !== "Mean") {
                     // console.log(deppdata[l]["PO1"]);
                     // console.log(deppdata[l]["PO3"]);
@@ -248,36 +249,36 @@ router.post('/FINAL/ReportListACT', async (req, res) => {
                         break;
                       }
                     }
-  
+
                   }
                 }
-  
+
               }
-  
+
             }
           }
         }
-  
+
       }
       // console.log(depDATAlist)
       DATAlist.push({
-         "STATUS":"OK",
-        "PO":find[i]['PO'],
-        "CP":find[i]['CP'],
-        "CUSTNAME":find[i]['CUSTNAME'],
-        "CUSLOTNO":find[i]['CUSLOTNO'],
-        "PART":find[i]['PART'],
-        "PARTNAME":find[i]['PARTNAME'],
-        "MATERIAL":find[i]['MATERIAL'],
-        "QUANTITY":find[i]['QUANTITY'],
-        "dateG":find[i]['dateG'],
-        "FG_CHARG":find[i]['FG_CHARG'],
-        "DATA":depDATAlist
+        "STATUS": "OK",
+        "PO": find[i]['PO'],
+        "CP": find[i]['CP'],
+        "CUSTNAME": find[i]['CUSTNAME'],
+        "CUSLOTNO": find[i]['CUSLOTNO'],
+        "PART": find[i]['PART'],
+        "PARTNAME": find[i]['PARTNAME'],
+        "MATERIAL": find[i]['MATERIAL'],
+        "QUANTITY": find[i]['QUANTITY'],
+        "dateG": find[i]['dateG'],
+        "FG_CHARG": find[i]['FG_CHARG'],
+        "DATA": depDATAlist
       })
     }
-  
-  
-  
+
+
+
 
   }
 
@@ -294,7 +295,7 @@ router.post('/FINAL/CopyReport', async (req, res) => {
   let output = "NOK";
   //-------------------------------------
 
-  if (input[`original`] !== undefined && input[`new`] !== undefined) {
+  if (input[`original`] !== undefined && input[`new`] !== undefined)  {
 
     let newdataHEAD = {};
 
@@ -305,12 +306,60 @@ router.post('/FINAL/CopyReport', async (req, res) => {
       for (i = 0; i < sapdata.length; i++) {
         if (input[`new`] === sapdata[i][`PO`]) {
           newdataHEAD = sapdata[i];
-          CUSLOTNOd = CUSLOTNOd+ sapdata[i][`CUSLOTNO`]+`,`
+          CUSLOTNOd = CUSLOTNOd + sapdata[i][`CUSLOTNO`] + `,`
           // break;
         }
       }
 
+      if (newdataHEAD[`PO`]  === undefined) {
+
+        try {
+          let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', {
+            "BAPI_NAME": "ZPPIN011_OUT",
+            "IMP_TEXT02": input[`new`],
+            "TABLE_NAME": "PPORDER"
+          });
+          // if (resp.status == 200) {
+          let returnDATA = resp;
+          // output = returnDATA["Records"] || []
+          // console.log(returnDATA["Records"])
+          if (returnDATA["Records"].length > 0) {
+
+
+            newdataHEAD = {
+              'PO': `${parseInt(returnDATA["Records"][0]['PO'])}`,
+              'SEQUENCE': returnDATA["Records"][0]['SEQ'],
+              'CP': `${parseInt(returnDATA["Records"][0]['CPMAT'])}`,
+              'FG': `${parseInt(returnDATA["Records"][0]['FGMAT'])}`,
+              'STATUS': returnDATA["Records"][0]['STA'],
+              'QUANTITY': returnDATA["Records"][0]['QTYT'],
+              'UNIT': returnDATA["Records"][0]['UNIT'],
+              'COSTCENTER': returnDATA["Records"][0]['CUSTNA'],
+
+              'PART': returnDATA["Records"][0]['PARTNO'],
+              'PARTNAME': returnDATA["Records"][0]['PARTNA'],
+              'MATERIAL': returnDATA["Records"][0]['MATNA'],
+              'CUSTOMER': returnDATA["Records"][0]['CUSLOTNO'],
+              'PROCESS': returnDATA["Records"][0]['PROC'],
+              'WGT_PC': returnDATA["Records"][0]['WEIGHT_PC'],
+              'WGT_JIG': returnDATA["Records"][0]['WEIGHT_JIG'],
+              'ACTQTY': returnDATA["Records"][0]['ACT_QTY'],
+              'CUSLOTNO': returnDATA["Records"][0]['CUSLOTNO'],
+              'FG_CHARG': returnDATA["Records"][0]['FG_CHARG'],
+              'CUSTNAME': returnDATA["Records"][0]['CUST_FULLNM'],
+            };
+
+          }
+
+        } catch (err) {
+
+        }
+      }
+
+  
+
       if (newdataHEAD[`CP`] != undefined) {
+        console.log(">>>><<<<<")
         let testDB = await mongodb.find(MAIN_DATA, MAIN, { "PO": input[`new`] });
         if (testDB.length === 0) {
           let origianlDB = await mongodb.find(MAIN_DATA, MAIN, { "PO": input[`original`] });
@@ -370,6 +419,55 @@ router.post('/FINAL/CopyReport', async (req, res) => {
       }
 
     }
+
+    // else {
+    //   console.log("=======>")
+    //   try {
+    //     let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', {
+    //       "BAPI_NAME": "ZPPIN011_OUT",
+    //       "IMP_TEXT02": input['PO'],
+    //       "TABLE_NAME": "PPORDER"
+    //     });
+    //     // if (resp.status == 200) {
+    //     let returnDATA = resp;
+    //     // output = returnDATA["Records"] || []
+    //     console.log(returnDATA["Records"])
+    //     if (returnDATA["Records"].length > 0) {
+
+
+    //       NewMATCPdata = {
+    //         'PO': `${parseInt(returnDATA["Records"][0]['PO'])}`,
+    //         'SEQUENCE': returnDATA["Records"][0]['SEQ'],
+    //         'CP': `${parseInt(returnDATA["Records"][0]['CPMAT'])}`,
+    //         'FG': `${parseInt(returnDATA["Records"][0]['FGMAT'])}`,
+    //         'STATUS': returnDATA["Records"][0]['STA'],
+    //         'QUANTITY': returnDATA["Records"][0]['QTYT'],
+    //         'UNIT': returnDATA["Records"][0]['UNIT'],
+    //         'COSTCENTER': returnDATA["Records"][0]['CUSTNA'],
+
+    //         'PART': returnDATA["Records"][0]['PARTNO'],
+    //         'PARTNAME': returnDATA["Records"][0]['PARTNA'],
+    //         'MATERIAL': returnDATA["Records"][0]['MATNA'],
+    //         'CUSTOMER': returnDATA["Records"][0]['CUSLOTNO'],
+    //         'PROCESS': returnDATA["Records"][0]['PROC'],
+    //         'WGT_PC': returnDATA["Records"][0]['WEIGHT_PC'],
+    //         'WGT_JIG': returnDATA["Records"][0]['WEIGHT_JIG'],
+    //         'ACTQTY': returnDATA["Records"][0]['ACT_QTY'],
+    //         'CUSLOTNO': returnDATA["Records"][0]['CUSLOTNO'],
+    //         'FG_CHARG': returnDATA["Records"][0]['FG_CHARG'],
+    //         'CUSTNAME': returnDATA["Records"][0]['CUST_FULLNM'],
+    //       };
+
+
+
+
+
+    //     }
+    //     // }
+    //   } catch (err) {
+    //     output = [];
+    //   }
+    // }
 
   }
 
