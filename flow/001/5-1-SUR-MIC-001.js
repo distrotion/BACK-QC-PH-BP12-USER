@@ -395,7 +395,7 @@ router.post('/FINAL/SURMIC001-geteachITEM', async (req, res) => {
           let findpo = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
           if (findpo.length > 0) {
             request.post(
-              'http://127.0.0.1:16070/SURMIC001-feedback',
+              'http://127.0.0.1:16070/FINAL/SURMIC001-feedback',
               { json: { "PO": SURMIC001db['PO'], "ITEMs": SURMIC001db['inspectionItem'] } },
               function (error, response, body2) {
                 if (!error && response.statusCode == 200) {
@@ -1080,7 +1080,7 @@ router.post('/FINAL/SURMIC001-FINISH', async (req, res) => {
           //------------------------------------------------------------------------------------
 
           request.post(
-            'http://127.0.0.1:16070/SURMIC001-feedback',
+            'http://127.0.0.1:16070/FINAL/SURMIC001-feedback',
             { json: { "PO": SURMIC001db['PO'], "ITEMs": SURMIC001db['inspectionItem'] } },
             function (error, response, body2) {
               if (!error && response.statusCode == 200) {
