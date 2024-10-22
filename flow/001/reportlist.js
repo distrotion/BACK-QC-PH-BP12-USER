@@ -378,7 +378,7 @@ router.post('/FINAL/CopyReport', async (req, res) => {
               "CUSTOMER": NewMATCPdata[`CUSTOMER`],
               "PART": NewMATCPdata[`PART`],
               "PARTNAME": NewMATCPdata[`PARTNAME`],
-              "MATERIAL": NewMATCPdata[`MATERIAL`],
+              "MATERIAL": newdataHEAD[`MATERIAL`],
 
               //
               "QTY": newdataHEAD[`QUANTITY`],
