@@ -83,6 +83,7 @@ let SURMCS001db = {
    //----------------------
    "USER": '',
    "USERID": '',
+   "REFLOT": "",
 }
 
 router.get('/FINAL/CHECK-SURMCS001', async (req, res) => {
@@ -269,6 +270,7 @@ router.post('/FINAL/GETINtoSURMCS001', async (req, res) => {
            //----------------------
            "USER":input['USER'],
            "USERID":input['USERID'],
+           "REFLOT": "",
         }
 
         output = 'OK';
@@ -366,6 +368,14 @@ router.post('/FINAL/SURMCS001-geteachITEM', async (req, res) => {
             }
           }
 
+          let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": SURMCS001db['MATCP'], "ITEMS": ITEMSS, });
+
+          console.log(REFLOT)
+
+          if (REFLOT.length > 0) {
+            SURMCS001db["REFLOT"] = REFLOT[0]['TPKLOT'];
+          }
+
           SURMCS001db["INTERSEC"] = "";
           output = 'OK';
           let findpo = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
@@ -391,7 +401,7 @@ router.post('/FINAL/SURMCS001-geteachITEM', async (req, res) => {
   } else {
     SURMCS001db["POINTs"] = '',
       SURMCS001db["PCS"] = '',
-      SURBAL013db["SPEC"] = '';
+      SURMCS001db["SPEC"] = '';
       SURMCS001db["PCSleft"] = '',
       SURMCS001db["UNIT"] = "",
       SURMCS001db["INTERSEC"] = "",
@@ -664,6 +674,7 @@ router.post('/FINAL/SURMCS001-SETZERO', async (req, res) => {
       "tool": NAME_INS,
       "value": [],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
       "dateupdatevalue": day,
+      "REFLOT": "",
     }
     output = 'OK';
   }
@@ -1064,6 +1075,49 @@ router.post('/FINAL/SURMCS001-FINISH-IMG', async (req, res) => {
 
   }
 
+  //-------------------------------------
+  return res.json(output);
+});
+
+router.post('/FINAL/SURMCS001-REFLOT', async (req, res) => {
+  //-------------------------------------
+  console.log('--SURMCS001-REFLOT--');
+  console.log(req.body);
+  let input = req.body;
+  //-------------------------------------
+  let output = 'NOK';
+  //-------------------------------------
+//FINAL/REFLOT
+if (SURMCS001db['REFLOT'] != '') {
+  request.post(
+    'http://127.0.0.1:16070/FINAL/REFLOT',
+    { json: SURMCS001db },
+    function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        // console.log(body);
+        // if (body === 'OK') {
+        // SURMCS001db['confirmdata'] = [];
+        // SURMCS001db["value"] = [];
+        //------------------------------------------------------------------------------------
+        request.post(
+          'http://127.0.0.1:16070/FINAL/SURMCS001-feedback',
+          { json: { "PO": SURMCS001db['PO'], "ITEMs": SURMCS001db['inspectionItem'] } },
+          function (error, response, body2) {
+            if (!error && response.statusCode == 200) {
+              // console.log(body2);
+              // if (body2 === 'OK') {
+              output = 'OK';
+              // }
+            }
+          }
+        );
+        //------------------------------------------------------------------------------------
+        // }
+
+      }
+    }
+  );
+}
   //-------------------------------------
   return res.json(output);
 });

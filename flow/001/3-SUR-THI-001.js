@@ -88,6 +88,7 @@ let SURTHI002db = {
   //----------------------
   "USER": '',
   "USERID": '',
+  "REFLOT": "",
 }
 
 
@@ -278,6 +279,7 @@ router.post('/FINAL/GETINtoSURTHI002', async (req, res) => {
           //----------------------
           "USER": input['USER'],
           "USERID": input['USERID'],
+          "REFLOT": "",
         }
 
         output = 'OK';
@@ -391,6 +393,16 @@ router.post('/FINAL/SURTHI002-geteachITEM', async (req, res) => {
             }
           }
 
+          SURTHI002db["ANSCAL2"] = '';
+
+          let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": SURTHI002db['MATCP'], "ITEMS": ITEMSS, });
+
+          console.log(REFLOT)
+
+          if (REFLOT.length > 0) {
+            SURTHI002db["REFLOT"] = REFLOT[0]['TPKLOT'];
+          }
+
 
 
           SURTHI002db["INTERSEC"] = masterITEMs[0]['INTERSECTION'];
@@ -418,7 +430,7 @@ router.post('/FINAL/SURTHI002-geteachITEM', async (req, res) => {
   } else {
     SURTHI002db["POINTs"] = '';
     SURTHI002db["PCS"] = '';
-    SURBAL013db["SPEC"] = '';
+    SURTHI002db["SPEC"] = '';
     SURTHI002db["PCSleft"] = '';
     SURTHI002db["UNIT"] = "";
     SURTHI002db["INTERSEC"] = "";
@@ -919,6 +931,7 @@ router.post('/FINAL/SURTHI002-SETZERO', async (req, res) => {
       "value": [],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
       "dateupdatevalue": day,
       "INTERSEC_ERR": 0,
+      "REFLOT": "",
     }
     output = 'OK';
   }
@@ -1101,6 +1114,49 @@ router.post('/FINAL/SURTHI002-FINISH', async (req, res) => {
   }
   //-------------------------------------
   return res.json(SURTHI002db);
+});
+
+router.post('/FINAL/SURTHI002-REFLOT', async (req, res) => {
+  //-------------------------------------
+  console.log('--SURTHI002-REFLOT--');
+  console.log(req.body);
+  let input = req.body;
+  //-------------------------------------
+  let output = 'NOK';
+  //-------------------------------------
+//FINAL/REFLOT
+if (SURTHI002db['REFLOT'] != '') {
+  request.post(
+    'http://127.0.0.1:16070/FINAL/REFLOT',
+    { json: SURTHI002db },
+    function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        // console.log(body);
+        // if (body === 'OK') {
+        // SURTHI002db['confirmdata'] = [];
+        // SURTHI002db["value"] = [];
+        //------------------------------------------------------------------------------------
+        request.post(
+          'http://127.0.0.1:16070/FINAL/SURTHI002-feedback',
+          { json: { "PO": SURTHI002db['PO'], "ITEMs": SURTHI002db['inspectionItem'] } },
+          function (error, response, body2) {
+            if (!error && response.statusCode == 200) {
+              // console.log(body2);
+              // if (body2 === 'OK') {
+              output = 'OK';
+              // }
+            }
+          }
+        );
+        //------------------------------------------------------------------------------------
+        // }
+
+      }
+    }
+  );
+}
+  //-------------------------------------
+  return res.json(output);
 });
 
 

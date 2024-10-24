@@ -88,6 +88,7 @@ let SURRGH001db = {
    //----------------------
    "USER": '',
    "USERID": '',
+   "REFLOT": "",
 }
 
 
@@ -278,6 +279,7 @@ router.post('/FINAL/GETINtoSURRGH001', async (req, res) => {
            //----------------------
            "USER":input['USER'],
            "USERID":input['USERID'],
+           "REFLOT": "",
         }
 
         output = 'OK';
@@ -390,6 +392,14 @@ router.post('/FINAL/SURRGH001-geteachITEM', async (req, res) => {
             }
           }
 
+          let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": SURRGH001db['MATCP'], "ITEMS": ITEMSS, });
+
+          console.log(REFLOT)
+
+          if (REFLOT.length > 0) {
+            SURRGH001db["REFLOT"] = REFLOT[0]['TPKLOT'];
+          }
+
           
 
           SURRGH001db["INTERSEC"] = masterITEMs[0]['INTERSECTION'];
@@ -417,7 +427,7 @@ router.post('/FINAL/SURRGH001-geteachITEM', async (req, res) => {
   } else {
     SURRGH001db["POINTs"] = '',
       SURRGH001db["PCS"] = '',
-      SURBAL013db["SPEC"] = '';
+      SURRGH001db["SPEC"] = '';
       SURRGH001db["PCSleft"] = '',
       SURRGH001db["UNIT"] = "",
       SURRGH001db["INTERSEC"] = "",
@@ -918,6 +928,7 @@ router.post('/FINAL/SURRGH001-SETZERO', async (req, res) => {
       "value": [],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
       "dateupdatevalue": day,
       "INTERSEC_ERR": 0,
+      "REFLOT": "",
     }
     output = 'OK';
   }
@@ -1102,6 +1113,49 @@ router.post('/FINAL/SURRGH001-FINISH', async (req, res) => {
   return res.json(SURRGH001db);
 });
 
+
+router.post('/FINAL/SURRGH001-REFLOT', async (req, res) => {
+  //-------------------------------------
+  console.log('--SURRGH001-REFLOT--');
+  console.log(req.body);
+  let input = req.body;
+  //-------------------------------------
+  let output = 'NOK';
+  //-------------------------------------
+//FINAL/REFLOT
+if (SURRGH001db['REFLOT'] != '') {
+  request.post(
+    'http://127.0.0.1:16070/FINAL/REFLOT',
+    { json: SURRGH001db },
+    function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        // console.log(body);
+        // if (body === 'OK') {
+        // SURRGH001db['confirmdata'] = [];
+        // SURRGH001db["value"] = [];
+        //------------------------------------------------------------------------------------
+        request.post(
+          'http://127.0.0.1:16070/FINAL/SURRGH001-feedback',
+          { json: { "PO": SURRGH001db['PO'], "ITEMs": SURRGH001db['inspectionItem'] } },
+          function (error, response, body2) {
+            if (!error && response.statusCode == 200) {
+              // console.log(body2);
+              // if (body2 === 'OK') {
+              output = 'OK';
+              // }
+            }
+          }
+        );
+        //------------------------------------------------------------------------------------
+        // }
+
+      }
+    }
+  );
+}
+  //-------------------------------------
+  return res.json(output);
+});
 
 
 module.exports = router;

@@ -88,6 +88,7 @@ let SURMIC001db = {
    //----------------------
    "USER": '',
    "USERID": '',
+   "REFLOT": "",
 }
 
 
@@ -278,6 +279,7 @@ router.post('/FINAL/GETINtoSURMIC001', async (req, res) => {
            //----------------------
            "USER":input['USER'],
            "USERID":input['USERID'],
+           "REFLOT": "",
         }
 
         output = 'OK';
@@ -390,6 +392,14 @@ router.post('/FINAL/SURMIC001-geteachITEM', async (req, res) => {
             }
           }
 
+          let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": SURMIC001db['MATCP'], "ITEMS": ITEMSS, });
+
+          console.log(REFLOT)
+
+          if (REFLOT.length > 0) {
+            SURMIC001db["REFLOT"] = REFLOT[0]['TPKLOT'];
+          }
+
           SURMIC001db["INTERSEC"] = masterITEMs[0]['INTERSECTION'];
           output = 'OK';
           let findpo = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
@@ -415,7 +425,7 @@ router.post('/FINAL/SURMIC001-geteachITEM', async (req, res) => {
   } else {
     SURMIC001db["POINTs"] = '',
       SURMIC001db["PCS"] = '',
-      SURBAL013db["SPEC"] = '';
+      SURMIC001db["SPEC"] = '';
       SURMIC001db["PCSleft"] = '',
       SURMIC001db["UNIT"] = "",
       SURMIC001db["INTERSEC"] = "",
@@ -919,6 +929,7 @@ router.post('/FINAL/SURMIC001-SETZERO', async (req, res) => {
       "value": [],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
       "dateupdatevalue": day,
       "INTERSEC_ERR": 0,
+      "REFLOT": "",
     }
     output = 'OK';
   }
@@ -1103,7 +1114,48 @@ router.post('/FINAL/SURMIC001-FINISH', async (req, res) => {
   return res.json(SURMIC001db);
 });
 
+router.post('/FINAL/SURMIC001-REFLOT', async (req, res) => {
+  //-------------------------------------
+  console.log('--SURMIC001-REFLOT--');
+  console.log(req.body);
+  let input = req.body;
+  //-------------------------------------
+  let output = 'NOK';
+  //-------------------------------------
+//FINAL/REFLOT
+if (SURMIC001db['REFLOT'] != '') {
+  request.post(
+    'http://127.0.0.1:16070/FINAL/REFLOT',
+    { json: SURMIC001db },
+    function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        // console.log(body);
+        // if (body === 'OK') {
+        // SURMIC001db['confirmdata'] = [];
+        // SURMIC001db["value"] = [];
+        //------------------------------------------------------------------------------------
+        request.post(
+          'http://127.0.0.1:16070/FINAL/SURMIC001-feedback',
+          { json: { "PO": SURMIC001db['PO'], "ITEMs": SURMIC001db['inspectionItem'] } },
+          function (error, response, body2) {
+            if (!error && response.statusCode == 200) {
+              // console.log(body2);
+              // if (body2 === 'OK') {
+              output = 'OK';
+              // }
+            }
+          }
+        );
+        //------------------------------------------------------------------------------------
+        // }
 
+      }
+    }
+  );
+}
+  //-------------------------------------
+  return res.json(output);
+});
 
 module.exports = router;
 

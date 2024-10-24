@@ -88,6 +88,7 @@ let CTCSEM001db = {
   //----------------------
   "USER": '',
   "USERID": '',
+  "REFLOT": "",
 }
 
 
@@ -278,6 +279,7 @@ router.post('/FINAL/GETINtoCTCSEM001', async (req, res) => {
           //----------------------
           "USER": input['USER'],
           "USERID": input['USERID'],
+          "REFLOT": "",
         }
 
         output = 'OK';
@@ -390,7 +392,14 @@ router.post('/FINAL/CTCSEM001-geteachITEM', async (req, res) => {
             }
           }
 
-          console.log(`>>>>>>${CTCSEM001db["SPEC"]}`);
+          // console.log(`>>>>>>${CTCSEM001db["SPEC"]}`);
+          let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": CTCSEM001db['MATCP'], "ITEMS": ITEMSS, });
+
+          console.log(REFLOT)
+
+          if (REFLOT.length > 0) {
+            CTCSEM001db["REFLOT"] = REFLOT[0]['TPKLOT'];
+          }
 
           CTCSEM001db["INTERSEC"] = masterITEMs[0]['INTERSECTION'];
           output = 'OK';
@@ -417,7 +426,7 @@ router.post('/FINAL/CTCSEM001-geteachITEM', async (req, res) => {
   } else {
     CTCSEM001db["POINTs"] = '';
     CTCSEM001db["PCS"] = '';
-    SURBAL013db["SPEC"] = '';
+    CTCSEM001db["SPEC"] = '';
     CTCSEM001db["PCSleft"] = '';
     CTCSEM001db["UNIT"] = "";
     CTCSEM001db["INTERSEC"] = "";
@@ -918,6 +927,7 @@ router.post('/FINAL/CTCSEM001-SETZERO', async (req, res) => {
       "value": [],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
       "dateupdatevalue": day,
       "INTERSEC_ERR": 0,
+      "REFLOT": "",
     }
     output = 'OK';
   }
@@ -1102,7 +1112,48 @@ router.post('/FINAL/CTCSEM001-FINISH', async (req, res) => {
   return res.json(CTCSEM001db);
 });
 
+router.post('/FINAL/CTCSEM001-REFLOT', async (req, res) => {
+  //-------------------------------------
+  console.log('--CTCSEM001-REFLOT--');
+  console.log(req.body);
+  let input = req.body;
+  //-------------------------------------
+  let output = 'NOK';
+  //-------------------------------------
+//FINAL/REFLOT
+if (CTCSEM001db['REFLOT'] != '') {
+  request.post(
+    'http://127.0.0.1:16070/FINAL/REFLOT',
+    { json: CTCSEM001db },
+    function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        // console.log(body);
+        // if (body === 'OK') {
+        // CTCSEM001db['confirmdata'] = [];
+        // CTCSEM001db["value"] = [];
+        //------------------------------------------------------------------------------------
+        request.post(
+          'http://127.0.0.1:16070/FINAL/CTCSEM001-feedback',
+          { json: { "PO": CTCSEM001db['PO'], "ITEMs": CTCSEM001db['inspectionItem'] } },
+          function (error, response, body2) {
+            if (!error && response.statusCode == 200) {
+              // console.log(body2);
+              // if (body2 === 'OK') {
+              output = 'OK';
+              // }
+            }
+          }
+        );
+        //------------------------------------------------------------------------------------
+        // }
 
+      }
+    }
+  );
+}
+  //-------------------------------------
+  return res.json(output);
+});
 
 module.exports = router;
 

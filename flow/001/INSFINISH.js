@@ -788,6 +788,7 @@ router.post('/FINAL/REFLOT', async (req, res) => {
         // console.log(REFLOT[0]['LISTANS'][lsf])
 
       }
+      output['REFLOT'] = REFLOT[0]['TPKLOT']
 
     }
 
@@ -830,6 +831,8 @@ router.post('/FINAL/REFLOT', async (req, res) => {
         }
       }
       output['CHECKlist'] = ItemPickcodeout;
+
+      //TPKLOT
 
       let insertdb = await mongodb.insertMany(MAIN_DATA, MAIN, [output]);
 
@@ -943,7 +946,9 @@ router.post('/FINAL/REFLOT', async (req, res) => {
 
       }
 
-      let out_S2_2 = { $set: { "FINAL": output['FINAL'], 'FINAL_ANS': output['FINAL_ANS'] } }
+      output['REFLOT'] = REFLOT[0]['TPKLOT']
+
+      let out_S2_2 = { $set: { "FINAL": output['FINAL'], 'FINAL_ANS': output['FINAL_ANS'], 'REFLOT': output['REFLOT'] } }
 
 
 
