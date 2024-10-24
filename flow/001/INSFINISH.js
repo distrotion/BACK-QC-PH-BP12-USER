@@ -781,8 +781,13 @@ router.post('/FINAL/REFLOT', async (req, res) => {
       output['FINAL'][`${output['INS']}`][`${output['inspectionItem']}`] = REFLOT[0]['DATA']
 
       // output['FINAL_ANS'][]
+      output['FINAL_ANS'] = {}
 
+      for (let lsf = 0; lsf < REFLOT[0]['LISTANS'].length; lsf++) {
+        output['FINAL_ANS'][`${REFLOT[0]['LISTANS'][lsf]['FINAL_ANS']}`] = REFLOT[0]['LISTANS'][lsf]['ANS']
+        // console.log(REFLOT[0]['LISTANS'][lsf])
 
+      }
 
     }
 
@@ -845,78 +850,111 @@ router.post('/FINAL/REFLOT', async (req, res) => {
         findMF = true;
       }
     }
-    if (findMF === false) {
+    // if (findMF === false) {
 
 
-      let nameFOR = input_S2_2['MeasurmentFOR'];
-      let nameTool = input_S2_2['tool'];
-      let nameItem = input_S2_2['inspectionItem'];
-      let value = input_S2_2['value'];
-      let Item = {};
-      let Tool = {};
-      let FOR = {};
-      Tool[nameTool] = Item;
-      FOR[nameFOR] = Tool;
-      let out_S2_1 = { "PO": input_S2_2.PO };
-      let out_S2_2 = { $set: FOR }
-      let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": output['MATCP'], "ITEMS": output['inspectionItem'] });
+    //   let nameFOR = input_S2_2['MeasurmentFOR'];
+    //   let nameTool = input_S2_2['tool'];
+    //   let nameItem = input_S2_2['inspectionItem'];
+    //   let value = input_S2_2['value'];
+    //   let Item = {};
+    //   let Tool = {};
+    //   let FOR = {};
+    //   Tool[nameTool] = Item;
+    //   FOR[nameFOR] = Tool;
+    //   let out_S2_1 = { "PO": input_S2_2.PO };
+    //   let out_S2_2 = { $set: FOR }
+    //   let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": output['MATCP'], "ITEMS": output['inspectionItem'] });
 
-      console.log(REFLOT)
+    //   console.log(REFLOT)
 
-      if (REFLOT.length > 0) {
+    //   if (REFLOT.length > 0) {
 
-        output['FINAL'] = {}
+    //     output['FINAL'] = input_S2_1['FINAL']
+    //     output['FINAL'][`${output['INS']}`] = {}
+    //     output['FINAL'][`${output['INS']}`][`${output['inspectionItem']}`] = REFLOT[0]['DATA']
+
+    //     output['FINAL_ANS'] = input_S2_1['FINAL_ANS'] ?? {}
+
+    //     for (let lsf = 0; lsf < REFLOT[0]['LISTANS'].length; lsf++) {
+    //       output['FINAL_ANS'][`${REFLOT[0]['LISTANS'][lsf]['FINAL_ANS']}`]= REFLOT[0]['LISTANS'][lsf]['ANS']
+    //       // console.log(REFLOT[0]['LISTANS'][lsf])
+
+    //     }
+
+    //     output['FINAL_ANS'] = input_S2_1['FINAL_ANS'] ??[]
+
+    //     for (let lsf = 0; lsf < REFLOT[0]['LISTANS'].length; lsf++) {
+    //       output['FINAL_ANS'][`${REFLOT[0]['LISTANS'][lsf]['FINAL_ANS']}`]= REFLOT[0]['LISTANS'][lsf]['ANS']
+    //       // console.log(REFLOT[0]['LISTANS'][lsf])
+
+    //     }
+
+    //     let out_S2_2 = { $set: {"FINAL":output['FINAL'],  'FINAL_ANS': output['FINAL_ANS']} }
+
+    //     // output['FINAL_ANS'][]
+    //     Item[nameItem] = REFLOT[0]['DATA'];
+    //     outputs = 'OK'
+    //     let upd = await mongodb.update(MAIN_DATA, MAIN, out_S2_1, out_S2_2);
+
+    //   }
+
+
+
+    //   // outputs=[out_S2_1,out_S2_2]
+
+
+    //   //no use
+    // } else {
+    let nameFOR = input_S2_2['MeasurmentFOR'];
+    let nameTool = input_S2_2['tool'];
+    let nameItem = input_S2_2['inspectionItem'];
+    let value = input_S2_2['value'];
+    let Item = {};
+    let Tool = {};
+    let FOR = {};
+    Tool[nameTool] = Item;
+    FOR[nameFOR] = Tool;
+    let out_S2_1 = { "PO": input_S2_2.PO };
+
+    let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": output['MATCP'], "ITEMS": output['inspectionItem'] });
+
+    console.log(REFLOT)
+
+    if (REFLOT.length > 0) {
+
+      output['FINAL'] = input_S2_1['FINAL']
+
+      //
+      if (output['FINAL'][`${output['INS']}`] != undefined) {
+        output['FINAL'][`${output['INS']}`][`${output['inspectionItem']}`] = REFLOT[0]['DATA']
+      } else {
         output['FINAL'][`${output['INS']}`] = {}
         output['FINAL'][`${output['INS']}`][`${output['inspectionItem']}`] = REFLOT[0]['DATA']
 
-        // output['FINAL_ANS'][]
-        Item[nameItem] = REFLOT[0]['DATA'];
-        outputs = 'OK'
-        let upd = await mongodb.update(MAIN_DATA, MAIN, out_S2_1, out_S2_2);
-
       }
 
 
+      output['FINAL_ANS'] = input_S2_1['FINAL_ANS'] ?? []
 
-      // outputs=[out_S2_1,out_S2_2]
-     
-
-      //no use
-    } else {
-      let nameFOR = input_S2_2['MeasurmentFOR'];
-      let nameTool = input_S2_2['tool'];
-      let nameItem = input_S2_2['inspectionItem'];
-      let value = input_S2_2['value'];
-      let Item = {};
-      let Tool = {};
-      let FOR = {};
-      Tool[nameTool] = Item;
-      FOR[nameFOR] = Tool;
-      let out_S2_1 = { "PO": input_S2_2.PO };
-    
-      let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": output['MATCP'], "ITEMS": output['inspectionItem'] });
-
-      console.log(REFLOT)
-
-      if (REFLOT.length > 0) {
-
-        output['FINAL'] = input_S2_1['FINAL']
-        console.log( `-----------------FINAL` )
-        console.log( output['FINAL'] )
-        console.log( `-----------------FINAL` )
-        // output['FINAL'][`${output['INS']}`] = {}
-        output['FINAL'][`${output['INS']}`][`${output['inspectionItem']}`] = REFLOT[0]['DATA']
-
-        let out_S2_2 = { $set: {"FINAL":output['FINAL']} }
-
-
-        Item[nameItem] = REFLOT[0]['DATA'];
-        outputs = 'OK'
-        let upd = await mongodb.update(MAIN_DATA, MAIN, out_S2_1, out_S2_2);
+      for (let lsf = 0; lsf < REFLOT[0]['LISTANS'].length; lsf++) {
+        output['FINAL_ANS'][`${REFLOT[0]['LISTANS'][lsf]['FINAL_ANS']}`] = REFLOT[0]['LISTANS'][lsf]['ANS']
+        // console.log(REFLOT[0]['LISTANS'][lsf])
 
       }
+
+      let out_S2_2 = { $set: { "FINAL": output['FINAL'], 'FINAL_ANS': output['FINAL_ANS'] } }
+
+
+
+
+      Item[nameItem] = REFLOT[0]['DATA'];
+      outputs = 'OK'
+      let upd = await mongodb.update(MAIN_DATA, MAIN, out_S2_1, out_S2_2);
 
     }
+
+    // }
 
   }
   //-------------------------------------

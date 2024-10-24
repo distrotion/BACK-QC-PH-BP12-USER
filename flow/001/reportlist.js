@@ -375,7 +375,7 @@ router.post('/FINAL/CopyReport', async (req, res) => {
               "PO": input[`new`],
               "CP": NewMATCPdata[`CP`],
               "MATCP": NewMATCPdata[`CP`],
-              "CUSTOMER": NewMATCPdata[`CUSTOMER`],
+              "CUSTOMER": newdataHEAD[`CUSTOMER`],
               "PART": NewMATCPdata[`PART`],
               "PARTNAME": NewMATCPdata[`PARTNAME`],
               "MATERIAL": newdataHEAD[`MATERIAL`],
@@ -383,10 +383,10 @@ router.post('/FINAL/CopyReport', async (req, res) => {
               //
               "QTY": newdataHEAD[`QUANTITY`],
               "PROCESS": newdataHEAD[`PROCESS`],
-              "CUSLOT": CUSLOTNOd,
+              "CUSLOT": CUSLOTNOd===''? newdataHEAD[`CUSTOMER`]:CUSLOTNOd,
               "TPKLOT": newdataHEAD[`FG_CHARG`],
               "QUANTITY": newdataHEAD[`QUANTITY`],
-              "CUSLOTNO": CUSLOTNOd,
+              "CUSLOTNO":CUSLOTNOd===''? newdataHEAD[`CUSTOMER`]:CUSLOTNOd,
               "FG_CHARG": newdataHEAD[`FG_CHARG`],
               "CUSTNAME": newdataHEAD[`CUSTNAME`],
               //
