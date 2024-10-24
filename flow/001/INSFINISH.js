@@ -255,22 +255,22 @@ router.post('/FINAL/FINISHtoDB-apr', async (req, res) => {
     let nameTool = input['tool'];
     let nameItem = input['inspectionItem'];
     let value = input['value'];
-  
+
     let Item = {};
     let Tool = {};
 
 
     let PIC = parseInt(input['PCS']);
     let PICs = 1;
-    if(PIC != NaN || PIC != "NaN"){
+    if (PIC != NaN || PIC != "NaN") {
       PICs = PIC;
     }
 
     // Item[nameItem] = { "PSC1": value, "PSC2": value, "PSC3": value, "PSC4": value, "PSC5": value, "PSC6": value, "PSC7": value, "PSC8": value, "PSC9": value, "PSC10": value };
-    Item[nameItem] = { };
+    Item[nameItem] = {};
     for (let l = 0; l < PICs; l++) {
-      Item[nameItem][`PSC${l+1}`] = value
-      
+      Item[nameItem][`PSC${l + 1}`] = value
+
     }
 
     console.log(Item[nameItem])
@@ -333,7 +333,7 @@ router.post('/FINAL/FINISHtoDB-apr', async (req, res) => {
         findMF = true;
       }
     }
-   
+
     console.log(findMF);
     if (findMF === false) {
       let nameFOR = input_S2_2['MeasurmentFOR'];
@@ -349,15 +349,15 @@ router.post('/FINAL/FINISHtoDB-apr', async (req, res) => {
       let out_S2_2 = { $set: FOR }
       let PIC = parseInt(input_S2_2['PCS']);
       let PICs = 1;
-      if(PIC != NaN || PIC != "NaN"){
+      if (PIC != NaN || PIC != "NaN") {
         PICs = PIC;
       }
-  
+
       // Item[nameItem] = { "PSC1": value, "PSC2": value, "PSC3": value, "PSC4": value, "PSC5": value, "PSC6": value, "PSC7": value, "PSC8": value, "PSC9": value, "PSC10": value };
-      Item[nameItem] = { };
+      Item[nameItem] = {};
       for (let l = 0; l < PICs; l++) {
-        Item[nameItem][`PSC${l+1}`] = value
-        
+        Item[nameItem][`PSC${l + 1}`] = value
+
       }
       // outputs=[out_S2_1,out_S2_2]
       outputs = 'OK'
@@ -393,15 +393,15 @@ router.post('/FINAL/FINISHtoDB-apr', async (req, res) => {
 
         let PIC = parseInt(input_S3_2['PCS']);
         let PICs = 1;
-        if(PIC != NaN || PIC != "NaN"){
+        if (PIC != NaN || PIC != "NaN") {
           PICs = PIC;
         }
-    
+
         // Item[nameItem] = { "PSC1": value, "PSC2": value, "PSC3": value, "PSC4": value, "PSC5": value, "PSC6": value, "PSC7": value, "PSC8": value, "PSC9": value, "PSC10": value };
-        Item[nameItem] = { };
+        Item[nameItem] = {};
         for (let l = 0; l < PICs; l++) {
-          Item[nameItem][`PSC${l+1}`] = value
-          
+          Item[nameItem][`PSC${l + 1}`] = value
+
         }
         input_S3_1[nameFOR][nameTool] = Item;
         let out_S3_1 = { PO: input_S3_2.PO };
@@ -443,15 +443,15 @@ router.post('/FINAL/FINISHtoDB-apr', async (req, res) => {
           let Item = Tool
           let PIC = parseInt(input_S4_2['PCS']);
           let PICs = 1;
-          if(PIC != NaN || PIC != "NaN"){
+          if (PIC != NaN || PIC != "NaN") {
             PICs = PIC;
           }
-      
+
           // Item[nameItem] = { "PSC1": value, "PSC2": value, "PSC3": value, "PSC4": value, "PSC5": value, "PSC6": value, "PSC7": value, "PSC8": value, "PSC9": value, "PSC10": value };
-          Item[nameItem] = { };
+          Item[nameItem] = {};
           for (let l = 0; l < PICs; l++) {
-            Item[nameItem][`PSC${l+1}`] = value
-            
+            Item[nameItem][`PSC${l + 1}`] = value
+
           }
           let out_S4_1 = { PO: input_S4_2.PO };
           let out_S4_2 = { $set: input_S4_1 }
@@ -459,7 +459,7 @@ router.post('/FINAL/FINISHtoDB-apr', async (req, res) => {
           outputs = 'OK'
 
 
- 
+
 
           let upd = await mongodb.update(MAIN_DATA, MAIN, out_S4_1, out_S4_2);
 
@@ -679,15 +679,15 @@ router.post('/FINAL/CAL1-recal', async (req, res) => {
 
         let feedbackres = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
         console.log(feedbackres)
-        if(feedbackres[0]['FINAL_ANS'] === undefined){
-        feedbackres[0]['FINAL_ANS']={}
-        feedbackres[0]['FINAL_ANS'][input["ITEMs"]] = finalresult;
-        console.log(feedbackres)
-        let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedbackres[0]['FINAL_ANS'] } });
-        }else{
-        feedbackres[0]['FINAL_ANS'][input["ITEMs"]] = finalresult;
-        console.log(feedbackres)
-        let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedbackres[0]['FINAL_ANS'] } });
+        if (feedbackres[0]['FINAL_ANS'] === undefined) {
+          feedbackres[0]['FINAL_ANS'] = {}
+          feedbackres[0]['FINAL_ANS'][input["ITEMs"]] = finalresult;
+          console.log(feedbackres)
+          let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedbackres[0]['FINAL_ANS'] } });
+        } else {
+          feedbackres[0]['FINAL_ANS'][input["ITEMs"]] = finalresult;
+          console.log(feedbackres)
+          let feedbackupdateRESULTFORMAT = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'FINAL_ANS': feedbackres[0]['FINAL_ANS'] } });
         }
 
 
@@ -731,11 +731,196 @@ router.post('/FINAL/PHBP12report', async (req, res) => {
   }
 
   // output = await mongodb.find(MAIN_DATA, MAIN, out);
-  output = await mongodb.findproject(MAIN_DATA, MAIN, out,{"PO":1,"CP":1,"MATCP":1,"CUSTOMER":1,"PART":1,"PARTNAME":1,"MATERIAL":1,"CUSLOTNO":1});
+  output = await mongodb.findproject(MAIN_DATA, MAIN, out, { "PO": 1, "CP": 1, "MATCP": 1, "CUSTOMER": 1, "PART": 1, "PARTNAME": 1, "MATERIAL": 1, "CUSLOTNO": 1 });
 
 
   //-------------------------------------
   return res.json(output);
+});
+
+
+router.post('/FINAL/REFLOT', async (req, res) => {
+  //-------------------------------------
+  console.log('--SURBAL013-REFLOT--');
+  console.log(req.body);
+  let input = req.body;
+  const d = new Date().toLocaleString('en-US', { timeZone: 'Asia/Jakarta' });;
+  let day = d;
+  //-------------------------------------
+  // let input = SURBAL013db;
+  let output = input;
+
+  //-------------------------------------
+  let outputs = '';
+  let findpo = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
+  if (findpo.length === 0) {
+
+
+    // let nameFOR = input['MeasurmentFOR'];
+    // let nameTool = input['tool'];
+    // let nameItem = input['inspectionItem'];
+    // let value = input['value'];
+    // let Item = {};
+    // let Tool = {};
+    // Item[nameItem] = { "PSC1": value };
+    // Tool[nameTool] = Item;
+    // output[nameFOR] = Tool;
+
+
+    output['dateG'] = new Date();
+    output['dateGSTR'] = day;
+
+    let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": output['MATCP'], "ITEMS": output['inspectionItem'] });
+
+    console.log(REFLOT)
+
+    if (REFLOT.length > 0) {
+
+      output['FINAL'] = {}
+      output['FINAL'][`${output['INS']}`] = {}
+      output['FINAL'][`${output['INS']}`][`${output['inspectionItem']}`] = REFLOT[0]['DATA']
+
+      // output['FINAL_ANS'][]
+
+
+
+    }
+
+    delete output['MeasurmentFOR'];
+    delete output['tool'];
+    delete output['inspectionItem'];
+    delete output['value'];
+    delete output['pieces'];
+    //----new
+    delete output['INS'];
+    delete output['inspectionItemNAME'];
+    delete output['ItemPick'];
+    delete output['ItemPickcode'];
+    delete output['POINTs'];
+    delete output['PCS'];
+    delete output['PCSleft'];
+    delete output['UNIT'];
+    delete output['INTERSEC'];
+    delete output['preview'];
+    delete output['confirmdata'];
+    delete output['ITEMleftUNIT'];
+    delete output['ITEMleftVALUE'];
+
+
+
+
+
+    let findcp = await mongodb.find(PATTERN, PATTERN_01, { "CP": input['CP'] });
+    let masterITEMs = await mongodb.find(master_FN, ITEMs, {});
+    let MACHINEmaster = await mongodb.find(master_FN, MACHINE, {});
+
+    let ItemPickcodeout = [];
+
+    if (findcp.length > 0) {
+      for (i = 0; i < findcp[0]['FINAL'].length; i++) {
+        for (j = 0; j < masterITEMs.length; j++) {
+          if (findcp[0]['FINAL'][i]['ITEMs'] === masterITEMs[j]['masterID']) {
+            ItemPickcodeout.push({ "key": masterITEMs[j]['masterID'], "value": masterITEMs[j]['ITEMs'], "METHOD": findcp[0]['FINAL'][i]['METHOD'] });
+          }
+        }
+      }
+      output['CHECKlist'] = ItemPickcodeout;
+
+      let insertdb = await mongodb.insertMany(MAIN_DATA, MAIN, [output]);
+
+      outputs = 'OK';
+    }
+
+
+  } else {
+
+
+    let input_S2_1 = findpo[0]; //input1
+    let input_S2_2 = output;     //input2
+    let objectR = Object.getOwnPropertyNames(input_S2_1)
+    let findMF = false;
+
+    for (i = 0; i < objectR.length; i++) {
+      if (objectR[i] === input_S2_2['MeasurmentFOR']) {
+        findMF = true;
+      }
+    }
+    if (findMF === false) {
+
+
+      let nameFOR = input_S2_2['MeasurmentFOR'];
+      let nameTool = input_S2_2['tool'];
+      let nameItem = input_S2_2['inspectionItem'];
+      let value = input_S2_2['value'];
+      let Item = {};
+      let Tool = {};
+      let FOR = {};
+      Tool[nameTool] = Item;
+      FOR[nameFOR] = Tool;
+      let out_S2_1 = { "PO": input_S2_2.PO };
+      let out_S2_2 = { $set: FOR }
+      let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": output['MATCP'], "ITEMS": output['inspectionItem'] });
+
+      console.log(REFLOT)
+
+      if (REFLOT.length > 0) {
+
+        output['FINAL'] = {}
+        output['FINAL'][`${output['INS']}`] = {}
+        output['FINAL'][`${output['INS']}`][`${output['inspectionItem']}`] = REFLOT[0]['DATA']
+
+        // output['FINAL_ANS'][]
+        Item[nameItem] = REFLOT[0]['DATA'];
+        outputs = 'OK'
+        let upd = await mongodb.update(MAIN_DATA, MAIN, out_S2_1, out_S2_2);
+
+      }
+
+
+
+      // outputs=[out_S2_1,out_S2_2]
+     
+
+      //no use
+    } else {
+      let nameFOR = input_S2_2['MeasurmentFOR'];
+      let nameTool = input_S2_2['tool'];
+      let nameItem = input_S2_2['inspectionItem'];
+      let value = input_S2_2['value'];
+      let Item = {};
+      let Tool = {};
+      let FOR = {};
+      Tool[nameTool] = Item;
+      FOR[nameFOR] = Tool;
+      let out_S2_1 = { "PO": input_S2_2.PO };
+    
+      let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": output['MATCP'], "ITEMS": output['inspectionItem'] });
+
+      console.log(REFLOT)
+
+      if (REFLOT.length > 0) {
+
+        output['FINAL'] = input_S2_1['FINAL']
+        console.log( `-----------------FINAL` )
+        console.log( output['FINAL'] )
+        console.log( `-----------------FINAL` )
+        // output['FINAL'][`${output['INS']}`] = {}
+        output['FINAL'][`${output['INS']}`][`${output['inspectionItem']}`] = REFLOT[0]['DATA']
+
+        let out_S2_2 = { $set: {"FINAL":output['FINAL']} }
+
+
+        Item[nameItem] = REFLOT[0]['DATA'];
+        outputs = 'OK'
+        let upd = await mongodb.update(MAIN_DATA, MAIN, out_S2_1, out_S2_2);
+
+      }
+
+    }
+
+  }
+  //-------------------------------------
+  return res.json(outputs);
 });
 
 
