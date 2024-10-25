@@ -60,8 +60,8 @@ let SURMCS001db = {
   "POINTs": "",
   "PCS": "",
   "PCSleft": "",
-      
-  "SPEC":"",
+
+  "SPEC": "",
 
   "UNIT": "",
   "INTERSEC": "",
@@ -80,10 +80,11 @@ let SURMCS001db = {
   "tool": NAME_INS,
   "value": [],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
   "dateupdatevalue": day,
-   //----------------------
-   "USER": '',
-   "USERID": '',
-   "REFLOT": "",
+  //----------------------
+  "USER": '',
+  "USERID": '',
+  "REFLOT": "",
+  "FREQUENCY": "",
 }
 
 router.get('/FINAL/CHECK-SURMCS001', async (req, res) => {
@@ -118,7 +119,7 @@ router.post('/FINAL/GETINtoSURMCS001', async (req, res) => {
   //-------------------------------------
   let output = 'NOK';
   check = SURMCS001db;
-  if (input['PO'] !== undefined && input['CP'] !== undefined && check['PO'] === ''&& input['USER'] !== undefined && input['USERID'] !== undefined) {
+  if (input['PO'] !== undefined && input['CP'] !== undefined && check['PO'] === '' && input['USER'] !== undefined && input['USERID'] !== undefined) {
     // let dbsap = await mssql.qurey(`select * FROM [SAPData_GW_GAS].[dbo].[tblSAPDetail] where [PO] = ${input['PO']}`);
 
     let findPO = await mongodb.findSAP('mongodb://172.23.10.75:27017', "ORDER", "ORDER", {});
@@ -131,50 +132,50 @@ router.post('/FINAL/GETINtoSURMCS001', async (req, res) => {
         if (findPO[0][`DATA`][i][`PO`] === input['PO']) {
           dbsap = findPO[0][`DATA`][i];
           // break;
-          cuslot = cuslot+ findPO[0][`DATA`][i][`CUSLOTNO`]+ ','
+          cuslot = cuslot + findPO[0][`DATA`][i][`CUSLOTNO`] + ','
         }
       }
 
-      if(dbsap === ''){
+      if (dbsap === '') {
         try {
           let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', {
             "BAPI_NAME": "ZPPIN011_OUT",
-            "IMP_TEXT02": input['PO'] ,
+            "IMP_TEXT02": input['PO'],
             "TABLE_NAME": "PPORDER"
           });
           // if (resp.status == 200) {
-            let returnDATA = resp;
-            // output = returnDATA["Records"] || []
-             console.log(returnDATA["Records"])
-             if(returnDATA["Records"].length>0){
+          let returnDATA = resp;
+          // output = returnDATA["Records"] || []
+          console.log(returnDATA["Records"])
+          if (returnDATA["Records"].length > 0) {
 
 
-              dataout = {
-              'PO':`${parseInt(returnDATA["Records"][0]['PO'])}`,
-              'SEQUENCE':returnDATA["Records"][0]['SEQ'],
-              'CP':`${parseInt(returnDATA["Records"][0]['CPMAT'])}`,
+            dataout = {
+              'PO': `${parseInt(returnDATA["Records"][0]['PO'])}`,
+              'SEQUENCE': returnDATA["Records"][0]['SEQ'],
+              'CP': `${parseInt(returnDATA["Records"][0]['CPMAT'])}`,
               'FG': `${parseInt(returnDATA["Records"][0]['FGMAT'])}`,
               'STATUS': returnDATA["Records"][0]['STA'],
               'QUANTITY': returnDATA["Records"][0]['QTYT'],
               'UNIT': returnDATA["Records"][0]['UNIT'],
               'COSTCENTER': returnDATA["Records"][0]['CUSTNA'],
-              
+
               'PART': returnDATA["Records"][0]['PARTNO'],
               'PARTNAME': returnDATA["Records"][0]['PARTNA'],
               'MATERIAL': returnDATA["Records"][0]['MATNA'],
               'CUSTOMER': returnDATA["Records"][0]['CUSLOTNO'],
               'PROCESS': returnDATA["Records"][0]['PROC'],
-              'WGT_PC':returnDATA["Records"][0]['WEIGHT_PC'],
+              'WGT_PC': returnDATA["Records"][0]['WEIGHT_PC'],
               'WGT_JIG': returnDATA["Records"][0]['WEIGHT_JIG'],
               'ACTQTY': returnDATA["Records"][0]['ACT_QTY'],
               'CUSLOTNO': returnDATA["Records"][0]['CUSLOTNO'],
               'FG_CHARG': returnDATA["Records"][0]['FG_CHARG'],
-              'CUSTNAME':returnDATA["Records"][0]['CUST_FULLNM'],
+              'CUSTNAME': returnDATA["Records"][0]['CUST_FULLNM'],
             };
 
 
-              dbsap = dataout
-             }
+            dbsap = dataout
+          }
           // }
         } catch (err) {
           output = [];
@@ -222,34 +223,34 @@ router.post('/FINAL/GETINtoSURMCS001', async (req, res) => {
           "PO": input['PO'] || '',
           "CP": input['CP'] || '',
           "MATCP": input['CP'] || '',
-          "QTY": dbsap ['QUANTITY'] || '',
-          "PROCESS": dbsap ['PROCESS'] || '',
+          "QTY": dbsap['QUANTITY'] || '',
+          "PROCESS": dbsap['PROCESS'] || '',
           // "CUSLOT": dbsap ['CUSLOTNO'] || '',
           "CUSLOT": cuslot,
-          "TPKLOT": dbsap ['FG_CHARG'] || '',
-          "FG": dbsap ['FG'] || '',
-          "CUSTOMER": dbsap ['CUSTOMER'] || '',
-          "PART": dbsap ['PART'] || '',
-          "PARTNAME": dbsap ['PARTNAME'] || '',
-          "MATERIAL": dbsap ['MATERIAL'] || '',
+          "TPKLOT": dbsap['FG_CHARG'] || '',
+          "FG": dbsap['FG'] || '',
+          "CUSTOMER": dbsap['CUSTOMER'] || '',
+          "PART": dbsap['PART'] || '',
+          "PARTNAME": dbsap['PARTNAME'] || '',
+          "MATERIAL": dbsap['MATERIAL'] || '',
           //---new
-          "QUANTITY": dbsap ['QUANTITY'] || '',
+          "QUANTITY": dbsap['QUANTITY'] || '',
           // "PROCESS":dbsap ['PROCESS'] || '',
           // "CUSLOTNO": dbsap ['CUSLOTNO'] || '',
-          "CUSLOTNO":  cuslot,
-          "FG_CHARG": dbsap ['FG_CHARG'] || '',
-          "PARTNAME_PO": dbsap ['PARTNAME_PO'] || '',
-          "PART_PO": dbsap ['PART_PO'] || '',
-          "CUSTNAME": dbsap ['CUSTNAME'] || '',
+          "CUSLOTNO": cuslot,
+          "FG_CHARG": dbsap['FG_CHARG'] || '',
+          "PARTNAME_PO": dbsap['PARTNAME_PO'] || '',
+          "PART_PO": dbsap['PART_PO'] || '',
+          "CUSTNAME": dbsap['CUSTNAME'] || '',
           //----------------------
           "ItemPick": ItemPickoutP2, //---->
           "ItemPickcode": ItemPickcodeoutP2, //---->
           "POINTs": "",
           "PCS": "",
           "PCSleft": "",
-      
-          "SPEC":"",
-        
+
+          "SPEC": "",
+
           "UNIT": "",
           "INTERSEC": "",
           "RESULTFORMAT": "",
@@ -267,10 +268,11 @@ router.post('/FINAL/GETINtoSURMCS001', async (req, res) => {
           "tool": NAME_INS,
           "value": [],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
           "dateupdatevalue": day,
-           //----------------------
-           "USER":input['USER'],
-           "USERID":input['USERID'],
-           "REFLOT": "",
+          //----------------------
+          "USER": input['USER'],
+          "USERID": input['USERID'],
+          "REFLOT": "",
+          "FREQUENCY": "",
         }
 
         output = 'OK';
@@ -355,16 +357,16 @@ router.post('/FINAL/SURMCS001-geteachITEM', async (req, res) => {
           if (SURMCS001db["PCSleft"] === '') {
             SURMCS001db["PCSleft"] = findcp[0]['FINAL'][i]['PCS'];
           }
-          SURMCS001db["SPEC"]='';
+          SURMCS001db["SPEC"] = '';
           if (findcp[0]['FINAL'][i]['SPECIFICATIONve'] !== undefined) {
             if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'BTW') {
-              SURMCS001db["SPEC"] =  `${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_LOW']}-${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_HI']}`;
+              SURMCS001db["SPEC"] = `${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_LOW']}-${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_HI']}`;
             } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'HIM(>)') {
-              SURMCS001db["SPEC"] =  `>${findcp[0]['FINAL'][i]['SPECIFICATIONve']['HIM_L']}`;
+              SURMCS001db["SPEC"] = `>${findcp[0]['FINAL'][i]['SPECIFICATIONve']['HIM_L']}`;
             } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'LOL(<)') {
-              SURMCS001db["SPEC"] =  `<${findcp[0]['FINAL'][i]['SPECIFICATIONve']['LOL_H']}`;
-            }else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'Actual'){
-              SURMCS001db["SPEC"] =  'Actual';
+              SURMCS001db["SPEC"] = `<${findcp[0]['FINAL'][i]['SPECIFICATIONve']['LOL_H']}`;
+            } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'Actual') {
+              SURMCS001db["SPEC"] = 'Actual';
             }
           }
 
@@ -375,6 +377,8 @@ router.post('/FINAL/SURMCS001-geteachITEM', async (req, res) => {
           if (REFLOT.length > 0) {
             SURMCS001db["REFLOT"] = REFLOT[0]['TPKLOT'];
           }
+
+          SURMCS001db["FREQUENCY"] = findcp[0]['FINAL'][i]['FREQUENCY'];
 
           SURMCS001db["INTERSEC"] = "";
           output = 'OK';
@@ -402,10 +406,13 @@ router.post('/FINAL/SURMCS001-geteachITEM', async (req, res) => {
     SURMCS001db["POINTs"] = '',
       SURMCS001db["PCS"] = '',
       SURMCS001db["SPEC"] = '';
-      SURMCS001db["PCSleft"] = '',
+    SURMCS001db["PCSleft"] = '',
       SURMCS001db["UNIT"] = "",
       SURMCS001db["INTERSEC"] = "",
       output = 'NOK';
+
+    SURMCS001db["FREQUENCY"] = '';
+    SURMCS001db["REFLOT"] = '';
   }
 
   //-------------------------------------
@@ -531,7 +538,18 @@ router.post('/FINAL/SURMCS001-feedback', async (req, res) => {
           if (input["ITEMs"] === feedback[0]['CHECKlist'][i]['key']) {
             feedback[0]['CHECKlist'][i]['FINISH'] = 'OK';
             // console.log(feedback[0]['CHECKlist']);
+            if (SURMCS001db['FREQUENCY'] === 'time/6M') {
+              let resp = await axios.post('http://127.0.0.1:16070/FINAL/REFLOTSET', {
+                "PO": SURMCS001db['PO'],
+                "MATCP": SURMCS001db['CP'],
+                "FREQUENCY": SURMCS001db['FREQUENCY'],
+                "ITEMs": SURMCS001db['inspectionItem'],
+                "TPKLOT": SURMCS001db['TPKLOT'],
+                "INS": SURMCS001db['INS']
+              });
+            }
             let feedbackupdate = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'CHECKlist': feedback[0]['CHECKlist'] } });
+
             break;
           }
         }
@@ -654,9 +672,9 @@ router.post('/FINAL/SURMCS001-SETZERO', async (req, res) => {
       "ItemPickcode": [],
       "PCS": "",
       "PCSleft": "",
-      
-      "SPEC":"",
-    
+
+      "SPEC": "",
+
       "UNIT": "",
       "INTERSEC": "",
       "RESULTFORMAT": "",
@@ -675,6 +693,7 @@ router.post('/FINAL/SURMCS001-SETZERO', async (req, res) => {
       "value": [],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
       "dateupdatevalue": day,
       "REFLOT": "",
+      "FREQUENCY": "",
     }
     output = 'OK';
   }
@@ -1025,7 +1044,7 @@ router.post('/FINAL/SURMCS001-FINISH-IMG', async (req, res) => {
   }
 
 
-  if ((SURMCS001db['RESULTFORMAT'] === 'Number' ) && input["IMG01"] !== undefined && input["IMG02"] !== undefined && input["IMG03"] !== undefined && input["IMG04"] !== undefined) {
+  if ((SURMCS001db['RESULTFORMAT'] === 'Number') && input["IMG01"] !== undefined && input["IMG02"] !== undefined && input["IMG03"] !== undefined && input["IMG04"] !== undefined) {
 
     SURMCS001db["value"] = [];
 
@@ -1040,16 +1059,64 @@ router.post('/FINAL/SURMCS001-FINISH-IMG', async (req, res) => {
       "PIC4data": input["IMG04data"] || 0,
     });
 
-    if (SURMCS001db['RESULTFORMAT'] === 'Number' ) {
+    if (SURMCS001db['RESULTFORMAT'] === 'Number') {
+      request.post(
+        'http://127.0.0.1:16070/FINAL/FINISHtoDB',
+        { json: SURMCS001db },
+        function (error, response, body) {
+          if (!error && response.statusCode == 200) {
+            // console.log(body);
+            // if (body === 'OK') {
+            SURMCS001db['confirmdata'] = [];
+            SURMCS001db["value"] = [];
+            //------------------------------------------------------------------------------------
+            request.post(
+              'http://127.0.0.1:16070/FINAL/SURMCS001-feedback',
+              { json: { "PO": SURMCS001db['PO'], "ITEMs": SURMCS001db['inspectionItem'] } },
+              function (error, response, body2) {
+                if (!error && response.statusCode == 200) {
+                  // console.log(body2);
+                  // if (body2 === 'OK') {
+                  output = 'OK';
+                  // }
+                }
+              }
+            );
+            //------------------------------------------------------------------------------------
+            // }
+
+          }
+        }
+      );
+
+    }
+
+
+  }
+
+  //-------------------------------------
+  return res.json(output);
+});
+
+router.post('/FINAL/SURMCS001-REFLOT', async (req, res) => {
+  //-------------------------------------
+  console.log('--SURMCS001-REFLOT--');
+  console.log(req.body);
+  let input = req.body;
+  //-------------------------------------
+  let output = 'NOK';
+  //-------------------------------------
+  //FINAL/REFLOT
+  if (SURMCS001db['REFLOT'] != '') {
     request.post(
-      'http://127.0.0.1:16070/FINAL/FINISHtoDB',
+      'http://127.0.0.1:16070/FINAL/REFLOT',
       { json: SURMCS001db },
       function (error, response, body) {
         if (!error && response.statusCode == 200) {
           // console.log(body);
           // if (body === 'OK') {
-          SURMCS001db['confirmdata'] = [];
-          SURMCS001db["value"] = [];
+          // SURMCS001db['confirmdata'] = [];
+          // SURMCS001db["value"] = [];
           //------------------------------------------------------------------------------------
           request.post(
             'http://127.0.0.1:16070/FINAL/SURMCS001-feedback',
@@ -1069,55 +1136,7 @@ router.post('/FINAL/SURMCS001-FINISH-IMG', async (req, res) => {
         }
       }
     );
-
   }
-
-
-  }
-
-  //-------------------------------------
-  return res.json(output);
-});
-
-router.post('/FINAL/SURMCS001-REFLOT', async (req, res) => {
-  //-------------------------------------
-  console.log('--SURMCS001-REFLOT--');
-  console.log(req.body);
-  let input = req.body;
-  //-------------------------------------
-  let output = 'NOK';
-  //-------------------------------------
-//FINAL/REFLOT
-if (SURMCS001db['REFLOT'] != '') {
-  request.post(
-    'http://127.0.0.1:16070/FINAL/REFLOT',
-    { json: SURMCS001db },
-    function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        // console.log(body);
-        // if (body === 'OK') {
-        // SURMCS001db['confirmdata'] = [];
-        // SURMCS001db["value"] = [];
-        //------------------------------------------------------------------------------------
-        request.post(
-          'http://127.0.0.1:16070/FINAL/SURMCS001-feedback',
-          { json: { "PO": SURMCS001db['PO'], "ITEMs": SURMCS001db['inspectionItem'] } },
-          function (error, response, body2) {
-            if (!error && response.statusCode == 200) {
-              // console.log(body2);
-              // if (body2 === 'OK') {
-              output = 'OK';
-              // }
-            }
-          }
-        );
-        //------------------------------------------------------------------------------------
-        // }
-
-      }
-    }
-  );
-}
   //-------------------------------------
   return res.json(output);
 });

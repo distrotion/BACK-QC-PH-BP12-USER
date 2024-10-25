@@ -61,8 +61,8 @@ let SURMIC001db = {
   "POINTs": "",
   "PCS": "",
   "PCSleft": "",
-      
-  "SPEC":"",
+
+  "SPEC": "",
 
   "UNIT": "",
   "INTERSEC": "",
@@ -85,10 +85,11 @@ let SURMIC001db = {
   "value": [],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
   "dateupdatevalue": day,
   "INTERSEC_ERR": 0,
-   //----------------------
-   "USER": '',
-   "USERID": '',
-   "REFLOT": "",
+  //----------------------
+  "USER": '',
+  "USERID": '',
+  "REFLOT": "",
+  "FREQUENCY": "",
 }
 
 
@@ -125,7 +126,7 @@ router.post('/FINAL/GETINtoSURMIC001', async (req, res) => {
   //-------------------------------------
   let output = 'NOK';
   check = SURMIC001db;
-  if (input['PO'] !== undefined && input['CP'] !== undefined && check['PO'] === ''&& input['USER'] !== undefined && input['USERID'] !== undefined) {
+  if (input['PO'] !== undefined && input['CP'] !== undefined && check['PO'] === '' && input['USER'] !== undefined && input['USERID'] !== undefined) {
     // let dbsap = await mssql.qurey(`select * FROM [SAPData_GW_GAS].[dbo].[tblSAPDetail] where [PO] = ${input['PO']}`);
 
     let findPO = await mongodb.findSAP('mongodb://172.23.10.75:27017', "ORDER", "ORDER", {});
@@ -138,50 +139,50 @@ router.post('/FINAL/GETINtoSURMIC001', async (req, res) => {
         if (findPO[0][`DATA`][i][`PO`] === input['PO']) {
           dbsap = findPO[0][`DATA`][i];
           // break;
-          cuslot = cuslot+ findPO[0][`DATA`][i][`CUSLOTNO`]+ ','
+          cuslot = cuslot + findPO[0][`DATA`][i][`CUSLOTNO`] + ','
         }
       }
 
-      if(dbsap === ''){
+      if (dbsap === '') {
         try {
           let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', {
             "BAPI_NAME": "ZPPIN011_OUT",
-            "IMP_TEXT02": input['PO'] ,
+            "IMP_TEXT02": input['PO'],
             "TABLE_NAME": "PPORDER"
           });
           // if (resp.status == 200) {
-            let returnDATA = resp;
-            // output = returnDATA["Records"] || []
-             console.log(returnDATA["Records"])
-             if(returnDATA["Records"].length>0){
+          let returnDATA = resp;
+          // output = returnDATA["Records"] || []
+          console.log(returnDATA["Records"])
+          if (returnDATA["Records"].length > 0) {
 
 
-              dataout = {
-              'PO':`${parseInt(returnDATA["Records"][0]['PO'])}`,
-              'SEQUENCE':returnDATA["Records"][0]['SEQ'],
-              'CP':`${parseInt(returnDATA["Records"][0]['CPMAT'])}`,
+            dataout = {
+              'PO': `${parseInt(returnDATA["Records"][0]['PO'])}`,
+              'SEQUENCE': returnDATA["Records"][0]['SEQ'],
+              'CP': `${parseInt(returnDATA["Records"][0]['CPMAT'])}`,
               'FG': `${parseInt(returnDATA["Records"][0]['FGMAT'])}`,
               'STATUS': returnDATA["Records"][0]['STA'],
               'QUANTITY': returnDATA["Records"][0]['QTYT'],
               'UNIT': returnDATA["Records"][0]['UNIT'],
               'COSTCENTER': returnDATA["Records"][0]['CUSTNA'],
-              
+
               'PART': returnDATA["Records"][0]['PARTNO'],
               'PARTNAME': returnDATA["Records"][0]['PARTNA'],
               'MATERIAL': returnDATA["Records"][0]['MATNA'],
               'CUSTOMER': returnDATA["Records"][0]['CUSLOTNO'],
               'PROCESS': returnDATA["Records"][0]['PROC'],
-              'WGT_PC':returnDATA["Records"][0]['WEIGHT_PC'],
+              'WGT_PC': returnDATA["Records"][0]['WEIGHT_PC'],
               'WGT_JIG': returnDATA["Records"][0]['WEIGHT_JIG'],
               'ACTQTY': returnDATA["Records"][0]['ACT_QTY'],
               'CUSLOTNO': returnDATA["Records"][0]['CUSLOTNO'],
               'FG_CHARG': returnDATA["Records"][0]['FG_CHARG'],
-              'CUSTNAME':returnDATA["Records"][0]['CUST_FULLNM'],
+              'CUSTNAME': returnDATA["Records"][0]['CUST_FULLNM'],
             };
 
 
-              dbsap = dataout
-             }
+            dbsap = dataout
+          }
           // }
         } catch (err) {
           output = [];
@@ -241,7 +242,7 @@ router.post('/FINAL/GETINtoSURMIC001', async (req, res) => {
           "QUANTITY": dbsap['QUANTITY'] || '',
           // "PROCESS":dbsap ['PROCESS'] || '',
           // "CUSLOTNO": dbsap['CUSLOTNO'] || '',
-          "CUSLOTNO":  cuslot,
+          "CUSLOTNO": cuslot,
           "FG_CHARG": dbsap['FG_CHARG'] || '',
           "PARTNAME_PO": dbsap['PARTNAME_PO'] || '',
           "PART_PO": dbsap['PART_PO'] || '',
@@ -252,9 +253,9 @@ router.post('/FINAL/GETINtoSURMIC001', async (req, res) => {
           "POINTs": "",
           "PCS": "",
           "PCSleft": "",
-      
-          "SPEC":"",
-        
+
+          "SPEC": "",
+
           "UNIT": "",
           "INTERSEC": "",
           "RESULTFORMAT": "",
@@ -276,10 +277,11 @@ router.post('/FINAL/GETINtoSURMIC001', async (req, res) => {
           "value": [],  //key: PO1: itemname ,PO2:V01,PO3: V02,PO4: V03,PO5:V04,P06:INS,P9:NO.,P10:TYPE, last alway mean P01:"MEAN",PO2:V01,PO3:V02-MEAN,PO4: V03,PO5:V04-MEAN
           "dateupdatevalue": day,
           "INTERSEC_ERR": 0,
-           //----------------------
-           "USER":input['USER'],
-           "USERID":input['USERID'],
-           "REFLOT": "",
+          //----------------------
+          "USER": input['USER'],
+          "USERID": input['USERID'],
+          "REFLOT": "",
+          "FREQUENCY": "",
         }
 
         output = 'OK';
@@ -379,16 +381,16 @@ router.post('/FINAL/SURMIC001-geteachITEM', async (req, res) => {
           SURMIC001db["POINTs"] = findcp[0]['FINAL'][i]['POINT'];
           SURMIC001db["PCS"] = findcp[0]['FINAL'][i]['PCS'];
           SURMIC001db["PCSleft"] = findcp[0]['FINAL'][i]['PCS'];
-          SURMIC001db["SPEC"]='';
+          SURMIC001db["SPEC"] = '';
           if (findcp[0]['FINAL'][i]['SPECIFICATIONve'] !== undefined) {
             if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'BTW') {
-              SURMIC001db["SPEC"] =  `${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_LOW']}-${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_HI']}`;
+              SURMIC001db["SPEC"] = `${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_LOW']}-${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_HI']}`;
             } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'HIM(>)') {
-              SURMIC001db["SPEC"] =  `>${findcp[0]['FINAL'][i]['SPECIFICATIONve']['HIM_L']}`;
+              SURMIC001db["SPEC"] = `>${findcp[0]['FINAL'][i]['SPECIFICATIONve']['HIM_L']}`;
             } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'LOL(<)') {
-              SURMIC001db["SPEC"] =  `<${findcp[0]['FINAL'][i]['SPECIFICATIONve']['LOL_H']}`;
-            }else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'Actual'){
-              SURMIC001db["SPEC"] =  'Actual';
+              SURMIC001db["SPEC"] = `<${findcp[0]['FINAL'][i]['SPECIFICATIONve']['LOL_H']}`;
+            } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'Actual') {
+              SURMIC001db["SPEC"] = 'Actual';
             }
           }
 
@@ -399,6 +401,8 @@ router.post('/FINAL/SURMIC001-geteachITEM', async (req, res) => {
           if (REFLOT.length > 0) {
             SURMIC001db["REFLOT"] = REFLOT[0]['TPKLOT'];
           }
+
+          SURMIC001db["FREQUENCY"] = findcp[0]['FINAL'][i]['FREQUENCY'];
 
           SURMIC001db["INTERSEC"] = masterITEMs[0]['INTERSECTION'];
           output = 'OK';
@@ -426,10 +430,13 @@ router.post('/FINAL/SURMIC001-geteachITEM', async (req, res) => {
     SURMIC001db["POINTs"] = '',
       SURMIC001db["PCS"] = '',
       SURMIC001db["SPEC"] = '';
-      SURMIC001db["PCSleft"] = '',
+    SURMIC001db["PCSleft"] = '',
       SURMIC001db["UNIT"] = "",
       SURMIC001db["INTERSEC"] = "",
       output = 'NOK';
+
+    SURMIC001db["FREQUENCY"] = '';
+    SURMIC001db["REFLOT"] = '';
   }
 
   //-------------------------------------
@@ -501,13 +508,13 @@ router.post('/FINAL/SURMIC001-confirmdata', async (req, res) => {
       pushdata['V5'] = SURMIC001db['GAP'];
       pushdata['V1'] = `${SURMIC001db['confirmdata'].length + 1}:${pushdata['V1']}`;
 
-      if(SURMIC001db['GAP'] !=''){
+      if (SURMIC001db['GAP'] != '') {
 
         SURMIC001db['confirmdata'].push(pushdata);
         SURMIC001db['preview'] = [];
         output = 'OK';
         SURMIC001db['GAP'] = SURMIC001db['GAPnameListdata'][`GT${SURMIC001db['confirmdata'].length + 1}`]
-      }else{
+      } else {
         output = 'NOK';
       }
 
@@ -583,7 +590,18 @@ router.post('/FINAL/SURMIC001-feedback', async (req, res) => {
           if (input["ITEMs"] === feedback[0]['CHECKlist'][i]['key']) {
             feedback[0]['CHECKlist'][i]['FINISH'] = 'OK';
             // console.log(feedback[0]['CHECKlist']);
+            if (SURMIC001db['FREQUENCY'] === 'time/6M') {
+              let resp = await axios.post('http://127.0.0.1:16070/FINAL/REFLOTSET', {
+                "PO": SURMIC001db['PO'],
+                "MATCP": SURMIC001db['CP'],
+                "FREQUENCY": SURMIC001db['FREQUENCY'],
+                "ITEMs": SURMIC001db['inspectionItem'],
+                "TPKLOT": SURMIC001db['TPKLOT'],
+                "INS": SURMIC001db['INS']
+              });
+            }
             let feedbackupdate = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'CHECKlist': feedback[0]['CHECKlist'] } });
+
             break;
           }
         }
@@ -622,7 +640,7 @@ router.post('/FINAL/SURMIC001-feedback', async (req, res) => {
 
           } else if (masterITEMs[0]['RESULTFORMAT'] === 'Graph') {
 
-            if (SURMIC001db['GRAPHTYPE'] == 'CDE' ) {
+            if (SURMIC001db['GRAPHTYPE'] == 'CDE') {
 
               //
               let axis_data = [];
@@ -637,7 +655,7 @@ router.post('/FINAL/SURMIC001-feedback', async (req, res) => {
               if (SURMIC001db['INTERSEC'] !== '') {
                 core = parseFloat(SURMIC001db['INTERSEC'])
               } else {
-                core = parseFloat(axis_data[axis_data.length - 1]['y']) 
+                core = parseFloat(axis_data[axis_data.length - 1]['y'])
               }
 
               //-----------------core
@@ -667,7 +685,7 @@ router.post('/FINAL/SURMIC001-feedback', async (req, res) => {
               }
 
               //
-            } else if (SURMIC001db['GRAPHTYPE'] == 'CDT' ) {
+            } else if (SURMIC001db['GRAPHTYPE'] == 'CDT') {
 
               //
               let axis_data = [];
@@ -683,7 +701,7 @@ router.post('/FINAL/SURMIC001-feedback', async (req, res) => {
                 core = parseFloat(SURMIC001db['INTERSEC'])
               } else {
                 // core = parseFloat(axis_data[axis_data.length - 1]['y']) 
-                core = parseFloat(axis_data[axis_data.length - 1]['y']) +50
+                core = parseFloat(axis_data[axis_data.length - 1]['y']) + 50
               }
 
               //-----------------core
@@ -713,7 +731,7 @@ router.post('/FINAL/SURMIC001-feedback', async (req, res) => {
               }
 
               //
-            } else if (SURMIC001db['GRAPHTYPE'] == 'CDT(S)' ) {
+            } else if (SURMIC001db['GRAPHTYPE'] == 'CDT(S)') {
 
               //
               let axis_data = [];
@@ -728,7 +746,7 @@ router.post('/FINAL/SURMIC001-feedback', async (req, res) => {
               if (SURMIC001db['INTERSEC'] !== '') {
                 core = parseFloat(SURMIC001db['INTERSEC'])
               } else {
-                core = parseFloat(axis_data[axis_data.length - 1]['y']) +50
+                core = parseFloat(axis_data[axis_data.length - 1]['y']) + 50
               }
 
               //-----------------core
@@ -758,7 +776,7 @@ router.post('/FINAL/SURMIC001-feedback', async (req, res) => {
               }
 
               //
-            } else  {
+            } else {
               try {
                 let axis_data = [];
                 for (i = 0; i < LISTbuffer.length; i++) {
@@ -823,7 +841,7 @@ router.post('/FINAL/SURMIC001-feedback', async (req, res) => {
               catch (err) {
                 SURMIC001db[`INTERSEC_ERR`] = 1;
               }
-            } 
+            }
 
           } else if (masterITEMs[0]['RESULTFORMAT'] === 'Picture') {
             feedback[0]['FINAL_ANS'][input["ITEMs"]] = 'Good';
@@ -905,9 +923,9 @@ router.post('/FINAL/SURMIC001-SETZERO', async (req, res) => {
       "ItemPickcode": [],
       "PCS": "",
       "PCSleft": "",
-      
-      "SPEC":"",
-    
+
+      "SPEC": "",
+
       "UNIT": "",
       "INTERSEC": "",
       "RESULTFORMAT": "",
@@ -930,6 +948,7 @@ router.post('/FINAL/SURMIC001-SETZERO', async (req, res) => {
       "dateupdatevalue": day,
       "INTERSEC_ERR": 0,
       "REFLOT": "",
+      "FREQUENCY": "",
     }
     output = 'OK';
   }
@@ -1122,37 +1141,37 @@ router.post('/FINAL/SURMIC001-REFLOT', async (req, res) => {
   //-------------------------------------
   let output = 'NOK';
   //-------------------------------------
-//FINAL/REFLOT
-if (SURMIC001db['REFLOT'] != '') {
-  request.post(
-    'http://127.0.0.1:16070/FINAL/REFLOT',
-    { json: SURMIC001db },
-    function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        // console.log(body);
-        // if (body === 'OK') {
-        // SURMIC001db['confirmdata'] = [];
-        // SURMIC001db["value"] = [];
-        //------------------------------------------------------------------------------------
-        request.post(
-          'http://127.0.0.1:16070/FINAL/SURMIC001-feedback',
-          { json: { "PO": SURMIC001db['PO'], "ITEMs": SURMIC001db['inspectionItem'] } },
-          function (error, response, body2) {
-            if (!error && response.statusCode == 200) {
-              // console.log(body2);
-              // if (body2 === 'OK') {
-              output = 'OK';
-              // }
+  //FINAL/REFLOT
+  if (SURMIC001db['REFLOT'] != '') {
+    request.post(
+      'http://127.0.0.1:16070/FINAL/REFLOT',
+      { json: SURMIC001db },
+      function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          // console.log(body);
+          // if (body === 'OK') {
+          // SURMIC001db['confirmdata'] = [];
+          // SURMIC001db["value"] = [];
+          //------------------------------------------------------------------------------------
+          request.post(
+            'http://127.0.0.1:16070/FINAL/SURMIC001-feedback',
+            { json: { "PO": SURMIC001db['PO'], "ITEMs": SURMIC001db['inspectionItem'] } },
+            function (error, response, body2) {
+              if (!error && response.statusCode == 200) {
+                // console.log(body2);
+                // if (body2 === 'OK') {
+                output = 'OK';
+                // }
+              }
             }
-          }
-        );
-        //------------------------------------------------------------------------------------
-        // }
+          );
+          //------------------------------------------------------------------------------------
+          // }
 
+        }
       }
-    }
-  );
-}
+    );
+  }
   //-------------------------------------
   return res.json(output);
 });

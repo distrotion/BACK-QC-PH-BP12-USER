@@ -879,7 +879,19 @@ router.post('/FINAL/SURBAL013-feedback', async (req, res) => {
           if (input["ITEMs"] === feedback[0]['CHECKlist'][i]['key']) {
             feedback[0]['CHECKlist'][i]['FINISH'] = 'OK';
             // console.log(feedback[0]['CHECKlist']);
+            if (SURBAL013db['FREQUENCY'] === 'time/6M') {
+              let resp = await axios.post('http://127.0.0.1:16070/FINAL/REFLOTSET', {
+                "PO": SURBAL013db['PO'],
+                "MATCP": SURBAL013db['CP'],
+                "FREQUENCY": SURBAL013db['FREQUENCY'],
+                "ITEMs": SURBAL013db['inspectionItem'],
+                "TPKLOT": SURBAL013db['TPKLOT'],
+                "INS": SURBAL013db['INS']
+              });
+            }
             let feedbackupdate = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'CHECKlist': feedback[0]['CHECKlist'] } });
+
+
             break;
           }
         }
@@ -1688,37 +1700,37 @@ router.post('/FINAL/SURBAL013-REFLOT', async (req, res) => {
   //-------------------------------------
   let output = 'NOK';
   //-------------------------------------
-//FINAL/REFLOT
-if (SURBAL013db['REFLOT'] != '') {
-  request.post(
-    'http://127.0.0.1:16070/FINAL/REFLOT',
-    { json: SURBAL013db },
-    function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        // console.log(body);
-        // if (body === 'OK') {
-        // SURBAL013db['confirmdata'] = [];
-        // SURBAL013db["value"] = [];
-        //------------------------------------------------------------------------------------
-        request.post(
-          'http://127.0.0.1:16070/FINAL/SURBAL013-feedback',
-          { json: { "PO": SURBAL013db['PO'], "ITEMs": SURBAL013db['inspectionItem'] } },
-          function (error, response, body2) {
-            if (!error && response.statusCode == 200) {
-              // console.log(body2);
-              // if (body2 === 'OK') {
-              output = 'OK';
-              // }
+  //FINAL/REFLOT
+  if (SURBAL013db['REFLOT'] != '') {
+    request.post(
+      'http://127.0.0.1:16070/FINAL/REFLOT',
+      { json: SURBAL013db },
+      function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          // console.log(body);
+          // if (body === 'OK') {
+          // SURBAL013db['confirmdata'] = [];
+          // SURBAL013db["value"] = [];
+          //------------------------------------------------------------------------------------
+          request.post(
+            'http://127.0.0.1:16070/FINAL/SURBAL013-feedback',
+            { json: { "PO": SURBAL013db['PO'], "ITEMs": SURBAL013db['inspectionItem'] } },
+            function (error, response, body2) {
+              if (!error && response.statusCode == 200) {
+                // console.log(body2);
+                // if (body2 === 'OK') {
+                output = 'OK';
+                // }
+              }
             }
-          }
-        );
-        //------------------------------------------------------------------------------------
-        // }
+          );
+          //------------------------------------------------------------------------------------
+          // }
 
+        }
       }
-    }
-  );
-}
+    );
+  }
   //-------------------------------------
   return res.json(output);
 });

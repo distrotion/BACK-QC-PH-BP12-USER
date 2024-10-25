@@ -967,6 +967,83 @@ router.post('/FINAL/REFLOT', async (req, res) => {
 });
 
 
+router.post('/FINAL/REFLOTSET', async (req, res) => {
+  //-------------------------------------
+  console.log('--SURBAL013-REFLOTSET--');
+  console.log(req.body);
+  let input = req.body;
+  const d = new Date().toLocaleString('en-US', { timeZone: 'Asia/Jakarta' });;
+  let day = d;
+  //-------------------------------------
+  // let input = SURBAL013db;
+  // let output = input;
+
+  //-------------------------------------
+  let outputs = 'NOK';
+
+  if (input['PO'] != undefined && input['FREQUENCY'] != undefined && input['MATCP'] != undefined && input['ITEMs'] != undefined && input['TPKLOT'] != undefined && input['INS'] != undefined) {
+    let findpo = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
+    if (findpo.length > 0) {
+      let PO = `${input['PO']}`
+      let MATCP = `${input['MATCP']}`
+      let FREQUENCY = `${input['FREQUENCY']}`
+      let ITEMs = `${input['ITEMs']}`
+      let TPKLOT = `${input['TPKLOT']}`
+      let INS = `${input['INS']}`
+      let EXP = 1735670491000
+
+      try{
+
+      if (findpo[0]['FINAL'][INS][ITEMs] != undefined) {
+
+        let DATA = findpo[0]['FINAL'][INS][ITEMs]
+        let LISTANS = []
+        if (findpo[0]['FINAL_ANS'][ITEMs] != undefined) {
+          LISTANS = [{
+            "FINAL_ANS": ITEMs,
+            "ANS": findpo[0]['FINAL_ANS'][ITEMs],
+          }]
+        }
+
+        let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": MATCP, "ITEMS": ITEMs });
+
+        if (REFLOT.length === 0) {
+          let UPLOAD = {
+            "FREQ":FREQUENCY,
+            "MATCP":MATCP,
+            "ITEMS":ITEMs,
+            "TPKLOT":TPKLOT,
+            "REFPO":PO,
+            "EXP":EXP,
+            "DATA":DATA,
+            "LISTANS":LISTANS,
+          }
+          let insertdb = await mongodb.insertMany(PATTERN, "referdata", [UPLOAD]);
+          outputs = 'OK'
+        }
+
+        
+
+
+      }
+
+
+    }catch (err) {
+
+      }
+  }
+
+
+
+
+  }
+
+
+
+  //-------------------------------------
+  return res.json(outputs);
+});
+
 //let objectR = Object.getOwnPropertyNames(input_S2_1)
 
 module.exports = router;

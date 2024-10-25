@@ -89,6 +89,7 @@ let SURTHI002db = {
   "USER": '',
   "USERID": '',
   "REFLOT": "",
+  "FREQUENCY": "",
 }
 
 
@@ -142,46 +143,46 @@ router.post('/FINAL/GETINtoSURTHI002', async (req, res) => {
         }
       }
 
-      if(dbsap === ''){
+      if (dbsap === '') {
         try {
           let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', {
             "BAPI_NAME": "ZPPIN011_OUT",
-            "IMP_TEXT02": input['PO'] ,
+            "IMP_TEXT02": input['PO'],
             "TABLE_NAME": "PPORDER"
           });
           // if (resp.status == 200) {
-            let returnDATA = resp;
-            // output = returnDATA["Records"] || []
-             console.log(returnDATA["Records"])
-             if(returnDATA["Records"].length>0){
+          let returnDATA = resp;
+          // output = returnDATA["Records"] || []
+          console.log(returnDATA["Records"])
+          if (returnDATA["Records"].length > 0) {
 
 
-              dataout = {
-              'PO':`${parseInt(returnDATA["Records"][0]['PO'])}`,
-              'SEQUENCE':returnDATA["Records"][0]['SEQ'],
-              'CP':`${parseInt(returnDATA["Records"][0]['CPMAT'])}`,
+            dataout = {
+              'PO': `${parseInt(returnDATA["Records"][0]['PO'])}`,
+              'SEQUENCE': returnDATA["Records"][0]['SEQ'],
+              'CP': `${parseInt(returnDATA["Records"][0]['CPMAT'])}`,
               'FG': `${parseInt(returnDATA["Records"][0]['FGMAT'])}`,
               'STATUS': returnDATA["Records"][0]['STA'],
               'QUANTITY': returnDATA["Records"][0]['QTYT'],
               'UNIT': returnDATA["Records"][0]['UNIT'],
               'COSTCENTER': returnDATA["Records"][0]['CUSTNA'],
-              
+
               'PART': returnDATA["Records"][0]['PARTNO'],
               'PARTNAME': returnDATA["Records"][0]['PARTNA'],
               'MATERIAL': returnDATA["Records"][0]['MATNA'],
               'CUSTOMER': returnDATA["Records"][0]['CUSLOTNO'],
               'PROCESS': returnDATA["Records"][0]['PROC'],
-              'WGT_PC':returnDATA["Records"][0]['WEIGHT_PC'],
+              'WGT_PC': returnDATA["Records"][0]['WEIGHT_PC'],
               'WGT_JIG': returnDATA["Records"][0]['WEIGHT_JIG'],
               'ACTQTY': returnDATA["Records"][0]['ACT_QTY'],
               'CUSLOTNO': returnDATA["Records"][0]['CUSLOTNO'],
               'FG_CHARG': returnDATA["Records"][0]['FG_CHARG'],
-              'CUSTNAME':returnDATA["Records"][0]['CUST_FULLNM'],
+              'CUSTNAME': returnDATA["Records"][0]['CUST_FULLNM'],
             };
 
 
-              dbsap = dataout
-             }
+            dbsap = dataout
+          }
           // }
         } catch (err) {
           output = [];
@@ -280,6 +281,7 @@ router.post('/FINAL/GETINtoSURTHI002', async (req, res) => {
           "USER": input['USER'],
           "USERID": input['USERID'],
           "REFLOT": "",
+          "FREQUENCY": "",
         }
 
         output = 'OK';
@@ -380,16 +382,16 @@ router.post('/FINAL/SURTHI002-geteachITEM', async (req, res) => {
           SURTHI002db["PCS"] = findcp[0]['FINAL'][i]['PCS'];
           SURTHI002db["PCSleft"] = findcp[0]['FINAL'][i]['PCS'];
 
-          SURTHI002db["SPEC"]='';
+          SURTHI002db["SPEC"] = '';
           if (findcp[0]['FINAL'][i]['SPECIFICATIONve'] !== undefined) {
             if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'BTW') {
-              SURTHI002db["SPEC"] =  `${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_LOW']}-${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_HI']}`;
+              SURTHI002db["SPEC"] = `${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_LOW']}-${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_HI']}`;
             } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'HIM(>)') {
-              SURTHI002db["SPEC"] =  `>${findcp[0]['FINAL'][i]['SPECIFICATIONve']['HIM_L']}`;
+              SURTHI002db["SPEC"] = `>${findcp[0]['FINAL'][i]['SPECIFICATIONve']['HIM_L']}`;
             } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'LOL(<)') {
-              SURTHI002db["SPEC"] =  `<${findcp[0]['FINAL'][i]['SPECIFICATIONve']['LOL_H']}`;
-            }else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'Actual'){
-              SURTHI002db["SPEC"] =  'Actual';
+              SURTHI002db["SPEC"] = `<${findcp[0]['FINAL'][i]['SPECIFICATIONve']['LOL_H']}`;
+            } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'Actual') {
+              SURTHI002db["SPEC"] = 'Actual';
             }
           }
 
@@ -402,6 +404,8 @@ router.post('/FINAL/SURTHI002-geteachITEM', async (req, res) => {
           if (REFLOT.length > 0) {
             SURTHI002db["REFLOT"] = REFLOT[0]['TPKLOT'];
           }
+
+          SURTHI002db["FREQUENCY"] = findcp[0]['FINAL'][i]['FREQUENCY'];
 
 
 
@@ -435,6 +439,9 @@ router.post('/FINAL/SURTHI002-geteachITEM', async (req, res) => {
     SURTHI002db["UNIT"] = "";
     SURTHI002db["INTERSEC"] = "";
     output = 'NOK';
+
+    SURTHI002db["FREQUENCY"] = '';
+    SURTHI002db["REFLOT"] = '';
   }
 
   //-------------------------------------
@@ -588,7 +595,18 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
           if (input["ITEMs"] === feedback[0]['CHECKlist'][i]['key']) {
             feedback[0]['CHECKlist'][i]['FINISH'] = 'OK';
             // console.log(feedback[0]['CHECKlist']);
+            if (SURTHI002db['FREQUENCY'] === 'time/6M') {
+              let resp = await axios.post('http://127.0.0.1:16070/FINAL/REFLOTSET', {
+                "PO": SURTHI002db['PO'],
+                "MATCP": SURTHI002db['CP'],
+                "FREQUENCY": SURTHI002db['FREQUENCY'],
+                "ITEMs": SURTHI002db['inspectionItem'],
+                "TPKLOT": SURTHI002db['TPKLOT'],
+                "INS": SURTHI002db['INS']
+              });
+            }
             let feedbackupdate = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'CHECKlist': feedback[0]['CHECKlist'] } });
+
             break;
           }
         }
@@ -932,6 +950,8 @@ router.post('/FINAL/SURTHI002-SETZERO', async (req, res) => {
       "dateupdatevalue": day,
       "INTERSEC_ERR": 0,
       "REFLOT": "",
+      "FREQUENCY": "",
+
     }
     output = 'OK';
   }
@@ -1124,37 +1144,37 @@ router.post('/FINAL/SURTHI002-REFLOT', async (req, res) => {
   //-------------------------------------
   let output = 'NOK';
   //-------------------------------------
-//FINAL/REFLOT
-if (SURTHI002db['REFLOT'] != '') {
-  request.post(
-    'http://127.0.0.1:16070/FINAL/REFLOT',
-    { json: SURTHI002db },
-    function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        // console.log(body);
-        // if (body === 'OK') {
-        // SURTHI002db['confirmdata'] = [];
-        // SURTHI002db["value"] = [];
-        //------------------------------------------------------------------------------------
-        request.post(
-          'http://127.0.0.1:16070/FINAL/SURTHI002-feedback',
-          { json: { "PO": SURTHI002db['PO'], "ITEMs": SURTHI002db['inspectionItem'] } },
-          function (error, response, body2) {
-            if (!error && response.statusCode == 200) {
-              // console.log(body2);
-              // if (body2 === 'OK') {
-              output = 'OK';
-              // }
+  //FINAL/REFLOT
+  if (SURTHI002db['REFLOT'] != '') {
+    request.post(
+      'http://127.0.0.1:16070/FINAL/REFLOT',
+      { json: SURTHI002db },
+      function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          // console.log(body);
+          // if (body === 'OK') {
+          // SURTHI002db['confirmdata'] = [];
+          // SURTHI002db["value"] = [];
+          //------------------------------------------------------------------------------------
+          request.post(
+            'http://127.0.0.1:16070/FINAL/SURTHI002-feedback',
+            { json: { "PO": SURTHI002db['PO'], "ITEMs": SURTHI002db['inspectionItem'] } },
+            function (error, response, body2) {
+              if (!error && response.statusCode == 200) {
+                // console.log(body2);
+                // if (body2 === 'OK') {
+                output = 'OK';
+                // }
+              }
             }
-          }
-        );
-        //------------------------------------------------------------------------------------
-        // }
+          );
+          //------------------------------------------------------------------------------------
+          // }
 
+        }
       }
-    }
-  );
-}
+    );
+  }
   //-------------------------------------
   return res.json(output);
 });

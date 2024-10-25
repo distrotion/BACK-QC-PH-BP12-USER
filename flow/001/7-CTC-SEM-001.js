@@ -89,6 +89,7 @@ let CTCSEM001db = {
   "USER": '',
   "USERID": '',
   "REFLOT": "",
+  "FREQUENCY": "",
 }
 
 
@@ -161,46 +162,46 @@ router.post('/FINAL/GETINtoCTCSEM001', async (req, res) => {
           }
         }
 
-        if(dbsap === ''){
+        if (dbsap === '') {
           try {
             let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', {
               "BAPI_NAME": "ZPPIN011_OUT",
-              "IMP_TEXT02": input['PO'] ,
+              "IMP_TEXT02": input['PO'],
               "TABLE_NAME": "PPORDER"
             });
             // if (resp.status == 200) {
-              let returnDATA = resp;
-              // output = returnDATA["Records"] || []
-               console.log(returnDATA["Records"])
-               if(returnDATA["Records"].length>0){
-  
-  
-                dataout = {
-                'PO':`${parseInt(returnDATA["Records"][0]['PO'])}`,
-                'SEQUENCE':returnDATA["Records"][0]['SEQ'],
-                'CP':`${parseInt(returnDATA["Records"][0]['CPMAT'])}`,
+            let returnDATA = resp;
+            // output = returnDATA["Records"] || []
+            console.log(returnDATA["Records"])
+            if (returnDATA["Records"].length > 0) {
+
+
+              dataout = {
+                'PO': `${parseInt(returnDATA["Records"][0]['PO'])}`,
+                'SEQUENCE': returnDATA["Records"][0]['SEQ'],
+                'CP': `${parseInt(returnDATA["Records"][0]['CPMAT'])}`,
                 'FG': `${parseInt(returnDATA["Records"][0]['FGMAT'])}`,
                 'STATUS': returnDATA["Records"][0]['STA'],
                 'QUANTITY': returnDATA["Records"][0]['QTYT'],
                 'UNIT': returnDATA["Records"][0]['UNIT'],
                 'COSTCENTER': returnDATA["Records"][0]['CUSTNA'],
-                
+
                 'PART': returnDATA["Records"][0]['PARTNO'],
                 'PARTNAME': returnDATA["Records"][0]['PARTNA'],
                 'MATERIAL': returnDATA["Records"][0]['MATNA'],
                 'CUSTOMER': returnDATA["Records"][0]['CUSLOTNO'],
                 'PROCESS': returnDATA["Records"][0]['PROC'],
-                'WGT_PC':returnDATA["Records"][0]['WEIGHT_PC'],
+                'WGT_PC': returnDATA["Records"][0]['WEIGHT_PC'],
                 'WGT_JIG': returnDATA["Records"][0]['WEIGHT_JIG'],
                 'ACTQTY': returnDATA["Records"][0]['ACT_QTY'],
                 'CUSLOTNO': returnDATA["Records"][0]['CUSLOTNO'],
                 'FG_CHARG': returnDATA["Records"][0]['FG_CHARG'],
-                'CUSTNAME':returnDATA["Records"][0]['CUST_FULLNM'],
+                'CUSTNAME': returnDATA["Records"][0]['CUST_FULLNM'],
               };
-  
-  
-                dbsap = dataout
-               }
+
+
+              dbsap = dataout
+            }
             // }
           } catch (err) {
             output = [];
@@ -280,6 +281,7 @@ router.post('/FINAL/GETINtoCTCSEM001', async (req, res) => {
           "USER": input['USER'],
           "USERID": input['USERID'],
           "REFLOT": "",
+          "FREQUENCY": "",
         }
 
         output = 'OK';
@@ -379,16 +381,16 @@ router.post('/FINAL/CTCSEM001-geteachITEM', async (req, res) => {
           CTCSEM001db["POINTs"] = findcp[0]['FINAL'][i]['POINT'];
           CTCSEM001db["PCS"] = findcp[0]['FINAL'][i]['PCS'];
           CTCSEM001db["PCSleft"] = findcp[0]['FINAL'][i]['PCS'];
-          CTCSEM001db["SPEC"]='';
+          CTCSEM001db["SPEC"] = '';
           if (findcp[0]['FINAL'][i]['SPECIFICATIONve'] !== undefined) {
             if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'BTW') {
-              CTCSEM001db["SPEC"] =  `${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_LOW']}-${findcp[0]['FINAL']['SPECIFICATIONve'][i]['BTW_HI']}`;
+              CTCSEM001db["SPEC"] = `${findcp[0]['FINAL'][i]['SPECIFICATIONve']['BTW_LOW']}-${findcp[0]['FINAL']['SPECIFICATIONve'][i]['BTW_HI']}`;
             } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'HIM(>)') {
-              CTCSEM001db["SPEC"] =  `>${findcp[0]['FINAL'][i]['SPECIFICATIONve']['HIM_L']}`;
+              CTCSEM001db["SPEC"] = `>${findcp[0]['FINAL'][i]['SPECIFICATIONve']['HIM_L']}`;
             } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'LOL(<)') {
-              CTCSEM001db["SPEC"] =  `<${findcp[0]['FINAL'][i]['SPECIFICATIONve']['LOL_H']}`;
-            }else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'Actual'){
-              CTCSEM001db["SPEC"] =  'Actual';
+              CTCSEM001db["SPEC"] = `<${findcp[0]['FINAL'][i]['SPECIFICATIONve']['LOL_H']}`;
+            } else if (findcp[0]['FINAL'][i]['SPECIFICATIONve']['condition'] === 'Actual') {
+              CTCSEM001db["SPEC"] = 'Actual';
             }
           }
 
@@ -400,6 +402,8 @@ router.post('/FINAL/CTCSEM001-geteachITEM', async (req, res) => {
           if (REFLOT.length > 0) {
             CTCSEM001db["REFLOT"] = REFLOT[0]['TPKLOT'];
           }
+
+          SURMCS001db["FREQUENCY"] = findcp[0]['FINAL'][i]['FREQUENCY'];
 
           CTCSEM001db["INTERSEC"] = masterITEMs[0]['INTERSECTION'];
           output = 'OK';
@@ -431,6 +435,9 @@ router.post('/FINAL/CTCSEM001-geteachITEM', async (req, res) => {
     CTCSEM001db["UNIT"] = "";
     CTCSEM001db["INTERSEC"] = "";
     output = 'NOK';
+
+    CTCSEM001db["FREQUENCY"] = '';
+    CTCSEM001db["REFLOT"] = '';
   }
 
   //-------------------------------------
@@ -584,7 +591,18 @@ router.post('/FINAL/CTCSEM001-feedback', async (req, res) => {
           if (input["ITEMs"] === feedback[0]['CHECKlist'][i]['key']) {
             feedback[0]['CHECKlist'][i]['FINISH'] = 'OK';
             // console.log(feedback[0]['CHECKlist']);
-            let feedbackupdate = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'CHECKlist': feedback[0]['CHECKlist'] } });
+            if (CTCSEM001db['FREQUENCY'] === 'time/6M') {
+              let resp = await axios.post('http://127.0.0.1:16070/FINAL/REFLOTSET', {
+                "PO": CTCSEM001db['PO'],
+                "MATCP": CTCSEM001db['CP'],
+                "FREQUENCY": CTCSEM001db['FREQUENCY'],
+                "ITEMs": CTCSEM001db['inspectionItem'],
+                "TPKLOT": CTCSEM001db['TPKLOT'],
+                "INS": CTCSEM001db['INS']
+              });
+              let feedbackupdate = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'CHECKlist': feedback[0]['CHECKlist'] } });
+
+            }
             break;
           }
         }
@@ -928,7 +946,9 @@ router.post('/FINAL/CTCSEM001-SETZERO', async (req, res) => {
       "dateupdatevalue": day,
       "INTERSEC_ERR": 0,
       "REFLOT": "",
+      "FREQUENCY": "",
     }
+
     output = 'OK';
   }
   catch (err) {
@@ -1120,37 +1140,37 @@ router.post('/FINAL/CTCSEM001-REFLOT', async (req, res) => {
   //-------------------------------------
   let output = 'NOK';
   //-------------------------------------
-//FINAL/REFLOT
-if (CTCSEM001db['REFLOT'] != '') {
-  request.post(
-    'http://127.0.0.1:16070/FINAL/REFLOT',
-    { json: CTCSEM001db },
-    function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        // console.log(body);
-        // if (body === 'OK') {
-        // CTCSEM001db['confirmdata'] = [];
-        // CTCSEM001db["value"] = [];
-        //------------------------------------------------------------------------------------
-        request.post(
-          'http://127.0.0.1:16070/FINAL/CTCSEM001-feedback',
-          { json: { "PO": CTCSEM001db['PO'], "ITEMs": CTCSEM001db['inspectionItem'] } },
-          function (error, response, body2) {
-            if (!error && response.statusCode == 200) {
-              // console.log(body2);
-              // if (body2 === 'OK') {
-              output = 'OK';
-              // }
+  //FINAL/REFLOT
+  if (CTCSEM001db['REFLOT'] != '') {
+    request.post(
+      'http://127.0.0.1:16070/FINAL/REFLOT',
+      { json: CTCSEM001db },
+      function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          // console.log(body);
+          // if (body === 'OK') {
+          // CTCSEM001db['confirmdata'] = [];
+          // CTCSEM001db["value"] = [];
+          //------------------------------------------------------------------------------------
+          request.post(
+            'http://127.0.0.1:16070/FINAL/CTCSEM001-feedback',
+            { json: { "PO": CTCSEM001db['PO'], "ITEMs": CTCSEM001db['inspectionItem'] } },
+            function (error, response, body2) {
+              if (!error && response.statusCode == 200) {
+                // console.log(body2);
+                // if (body2 === 'OK') {
+                output = 'OK';
+                // }
+              }
             }
-          }
-        );
-        //------------------------------------------------------------------------------------
-        // }
+          );
+          //------------------------------------------------------------------------------------
+          // }
 
+        }
       }
-    }
-  );
-}
+    );
+  }
   //-------------------------------------
   return res.json(output);
 });
