@@ -875,26 +875,7 @@ router.post('/FINAL/SURBAL013-feedback', async (req, res) => {
       // output = 'OK';
       if ((parseInt(SURBAL013db["PCS"]) - oblist.length) == 0) {
         //CHECKlist
-        for (i = 0; i < feedback[0]['CHECKlist'].length; i++) {
-          if (input["ITEMs"] === feedback[0]['CHECKlist'][i]['key']) {
-            feedback[0]['CHECKlist'][i]['FINISH'] = 'OK';
-            // console.log(feedback[0]['CHECKlist']);
-            if (SURBAL013db['FREQUENCY'] === 'time/6M') {
-              let resp = await axios.post('http://127.0.0.1:16070/FINAL/REFLOTSET', {
-                "PO": SURBAL013db['PO'],
-                "MATCP": SURBAL013db['CP'],
-                "FREQUENCY": SURBAL013db['FREQUENCY'],
-                "ITEMs": SURBAL013db['inspectionItem'],
-                "TPKLOT": SURBAL013db['TPKLOT'],
-                "INS": SURBAL013db['INS']
-              });
-            }
-            let feedbackupdate = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'CHECKlist': feedback[0]['CHECKlist'] } });
-
-
-            break;
-          }
-        }
+        
         //input["ITEMs"] 
         let masterITEMs = await mongodb.find(master_FN, ITEMs, { "masterID": input["ITEMs"] });
 
@@ -1279,11 +1260,35 @@ router.post('/FINAL/SURBAL013-feedback', async (req, res) => {
           }
         }
 
+        for (i = 0; i < feedback[0]['CHECKlist'].length; i++) {
+          if (input["ITEMs"] === feedback[0]['CHECKlist'][i]['key']) {
+            feedback[0]['CHECKlist'][i]['FINISH'] = 'OK';
+            // console.log(feedback[0]['CHECKlist']);
+            if (SURBAL013db['FREQUENCY'] === 'time/6M') {
+              let resp = await axios.post('http://127.0.0.1:16070/FINAL/REFLOTSET', {
+                "PO": SURBAL013db['PO'],
+                "MATCP": SURBAL013db['CP'],
+                "FREQUENCY": SURBAL013db['FREQUENCY'],
+                "ITEMs": SURBAL013db['inspectionItem'],
+                "TPKLOT": SURBAL013db['TPKLOT'],
+                "INS": SURBAL013db['INS']
+              });
+            }
+            let feedbackupdate = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'CHECKlist': feedback[0]['CHECKlist'] } });
+
+
+            break;
+          }
+        }
+
         if (CHECKlistdataFINISH.length === feedback[0]['CHECKlist'].length) {
           // feedback[0]['FINAL_ANS']["ALL_DONE"] = "DONE";
           // feedback[0]['FINAL_ANS']["PO_judgment"] ="pass";
           let feedbackupdateFINISH = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { "ALL_DONE": "DONE", "PO_judgment": "pass", } });
         }
+
+
+        
 
       }
     } else {
