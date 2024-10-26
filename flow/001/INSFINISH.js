@@ -753,6 +753,7 @@ router.post('/FINAL/REFLOT', async (req, res) => {
   //-------------------------------------
   let outputs = '';
   let findpo = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
+  let date =  Date.now()
   if (findpo.length === 0) {
 
 
@@ -767,10 +768,12 @@ router.post('/FINAL/REFLOT', async (req, res) => {
     // output[nameFOR] = Tool;
 
 
-    output['dateG'] = new Date();
+    output['dateG'] =  Date();
     output['dateGSTR'] = day;
 
-    let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": output['MATCP'], "ITEMS": output['inspectionItem'] });
+   
+
+    let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": output['MATCP'], "ITEMS": output['inspectionItem'] ,"EXP":{$gt:date}});
 
     console.log(REFLOT)
 
@@ -920,7 +923,7 @@ router.post('/FINAL/REFLOT', async (req, res) => {
     FOR[nameFOR] = Tool;
     let out_S2_1 = { "PO": input_S2_2.PO };
 
-    let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": output['MATCP'], "ITEMS": output['inspectionItem'] });
+    let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": output['MATCP'], "ITEMS": output['inspectionItem'] ,"EXP":{$gt:date}});
 
     console.log(REFLOT)
 
@@ -972,8 +975,8 @@ router.post('/FINAL/REFLOTSET', async (req, res) => {
   console.log('--SURBAL013-REFLOTSET--');
   console.log(req.body);
   let input = req.body;
-  const d = new Date().toLocaleString('en-US', { timeZone: 'Asia/Jakarta' });;
-  let day = d;
+
+
   //-------------------------------------
   // let input = SURBAL013db;
   // let output = input;
@@ -984,13 +987,25 @@ router.post('/FINAL/REFLOTSET', async (req, res) => {
   if (input['PO'] != undefined && input['FREQUENCY'] != undefined && input['MATCP'] != undefined && input['ITEMs'] != undefined && input['TPKLOT'] != undefined && input['INS'] != undefined) {
     let findpo = await mongodb.find(MAIN_DATA, MAIN, { "PO": input['PO'] });
     if (findpo.length > 0) {
+
+      let date =  Date.now()
       let PO = `${input['PO']}`
       let MATCP = `${input['MATCP']}`
       let FREQUENCY = `${input['FREQUENCY']}`
       let ITEMs = `${input['ITEMs']}`
       let TPKLOT = `${input['TPKLOT']}`
       let INS = `${input['INS']}`
-      let EXP = 1735670491000
+      let EXP = 0
+
+      if(FREQUENCY.includes("time/Year") || FREQUENCY.includes("pcs/Y")){
+         EXP = date + 2629743000*12
+      }
+      if(FREQUENCY.includes("time/6M")){
+         EXP = date + 2629743000*6
+      }
+      if(FREQUENCY.includes("pcs/M")){
+         EXP = date + 2629743000
+      }
 
       try{
 
@@ -1005,9 +1020,11 @@ router.post('/FINAL/REFLOTSET', async (req, res) => {
           }]
         }
 
-        let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": MATCP, "ITEMS": ITEMs });
 
-        if (REFLOT.length === 0) {
+
+        let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": MATCP, "ITEMS": ITEMs ,"EXP":{$gt:date}});
+
+        if (REFLOT.length === 0 ) {
           let UPLOAD = {
             "FREQ":FREQUENCY,
             "MATCP":MATCP,
@@ -1021,9 +1038,6 @@ router.post('/FINAL/REFLOTSET', async (req, res) => {
           let insertdb = await mongodb.insertMany(PATTERN, "referdata", [UPLOAD]);
           outputs = 'OK'
         }
-
-        
-
 
       }
 

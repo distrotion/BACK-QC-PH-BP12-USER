@@ -395,7 +395,8 @@ router.post('/FINAL/CTCSEM001-geteachITEM', async (req, res) => {
           }
 
           // console.log(`>>>>>>${CTCSEM001db["SPEC"]}`);
-          let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": CTCSEM001db['MATCP'], "ITEMS": ITEMSS, });
+          let date =  Date.now()
+          let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": CTCSEM001db['MATCP'], "ITEMS": ITEMSS,"EXP":{$gt:date} });
 
           console.log(REFLOT)
 

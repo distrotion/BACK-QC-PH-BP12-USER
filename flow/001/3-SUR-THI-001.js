@@ -397,7 +397,8 @@ router.post('/FINAL/SURTHI002-geteachITEM', async (req, res) => {
 
           SURTHI002db["ANSCAL2"] = '';
 
-          let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": SURTHI002db['MATCP'], "ITEMS": ITEMSS, });
+          let date =  Date.now()
+          let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": SURTHI002db['MATCP'], "ITEMS": ITEMSS,"EXP":{$gt:date} });
 
           console.log(REFLOT)
 

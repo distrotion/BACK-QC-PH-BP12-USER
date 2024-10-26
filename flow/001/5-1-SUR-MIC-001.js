@@ -144,46 +144,84 @@ router.post('/FINAL/GETINtoSURMIC001', async (req, res) => {
       }
 
       if (dbsap === '') {
+        // try {
+        //   let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', {
+        //     "BAPI_NAME": "ZPPIN011_OUT",
+        //     "IMP_TEXT02": input['PO'],
+        //     "TABLE_NAME": "PPORDER"
+        //   });
+        //   // if (resp.status == 200) {
+        //   let returnDATA = resp;
+        //   // output = returnDATA["Records"] || []
+        //   console.log(returnDATA["Records"])
+        //   if (returnDATA["Records"].length > 0) {
+
+
+        //     dataout = {
+        //       'PO': `${parseInt(returnDATA["Records"][0]['PO'])}`,
+        //       'SEQUENCE': returnDATA["Records"][0]['SEQ'],
+        //       'CP': `${parseInt(returnDATA["Records"][0]['CPMAT'])}`,
+        //       'FG': `${parseInt(returnDATA["Records"][0]['FGMAT'])}`,
+        //       'STATUS': returnDATA["Records"][0]['STA'],
+        //       'QUANTITY': returnDATA["Records"][0]['QTYT'],
+        //       'UNIT': returnDATA["Records"][0]['UNIT'],
+        //       'COSTCENTER': returnDATA["Records"][0]['CUSTNA'],
+
+        //       'PART': returnDATA["Records"][0]['PARTNO'],
+        //       'PARTNAME': returnDATA["Records"][0]['PARTNA'],
+        //       'MATERIAL': returnDATA["Records"][0]['MATNA'],
+        //       'CUSTOMER': returnDATA["Records"][0]['CUSLOTNO'],
+        //       'PROCESS': returnDATA["Records"][0]['PROC'],
+        //       'WGT_PC': returnDATA["Records"][0]['WEIGHT_PC'],
+        //       'WGT_JIG': returnDATA["Records"][0]['WEIGHT_JIG'],
+        //       'ACTQTY': returnDATA["Records"][0]['ACT_QTY'],
+        //       'CUSLOTNO': returnDATA["Records"][0]['CUSLOTNO'],
+        //       'FG_CHARG': returnDATA["Records"][0]['FG_CHARG'],
+        //       'CUSTNAME': returnDATA["Records"][0]['CUST_FULLNM'],
+        //     };
+
+
+        //     dbsap = dataout
+        //   }
+        //   // }
+        // } catch (err) {
+        //   output = [];
+        // }
+
         try {
-          let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', {
-            "BAPI_NAME": "ZPPIN011_OUT",
-            "IMP_TEXT02": input['PO'],
-            "TABLE_NAME": "PPORDER"
+          let resp = await axios.post('http://172.23.10.40:16700/RAWDATA/sapget', {
+            "ORDER": input['PO'],
           });
-          // if (resp.status == 200) {
           let returnDATA = resp;
           // output = returnDATA["Records"] || []
-          console.log(returnDATA["Records"])
-          if (returnDATA["Records"].length > 0) {
+          if (returnDATA.length > 0) {
 
 
             dataout = {
-              'PO': `${parseInt(returnDATA["Records"][0]['PO'])}`,
-              'SEQUENCE': returnDATA["Records"][0]['SEQ'],
-              'CP': `${parseInt(returnDATA["Records"][0]['CPMAT'])}`,
-              'FG': `${parseInt(returnDATA["Records"][0]['FGMAT'])}`,
-              'STATUS': returnDATA["Records"][0]['STA'],
-              'QUANTITY': returnDATA["Records"][0]['QTYT'],
-              'UNIT': returnDATA["Records"][0]['UNIT'],
-              'COSTCENTER': returnDATA["Records"][0]['CUSTNA'],
+              'PO': `${parseInt(returnDATA[0]['PO'])}`,
+              'SEQUENCE': returnDATA[0]['SEQ'],
+              'CP': `${parseInt(returnDATA[0]['CPMAT'])}`,
+              'FG': `${parseInt(returnDATA[0]['FGMAT'])}`,
+              'STATUS': returnDATA[0]['STA'],
+              'QUANTITY': returnDATA[0]['QTYT'],
+              'UNIT': returnDATA[0]['UNIT'],
+              'COSTCENTER': returnDATA[0]['CUSTNA'],
 
-              'PART': returnDATA["Records"][0]['PARTNO'],
-              'PARTNAME': returnDATA["Records"][0]['PARTNA'],
-              'MATERIAL': returnDATA["Records"][0]['MATNA'],
-              'CUSTOMER': returnDATA["Records"][0]['CUSLOTNO'],
-              'PROCESS': returnDATA["Records"][0]['PROC'],
-              'WGT_PC': returnDATA["Records"][0]['WEIGHT_PC'],
-              'WGT_JIG': returnDATA["Records"][0]['WEIGHT_JIG'],
-              'ACTQTY': returnDATA["Records"][0]['ACT_QTY'],
-              'CUSLOTNO': returnDATA["Records"][0]['CUSLOTNO'],
-              'FG_CHARG': returnDATA["Records"][0]['FG_CHARG'],
-              'CUSTNAME': returnDATA["Records"][0]['CUST_FULLNM'],
+              'PART': returnDATA[0]['PARTNO'],
+              'PARTNAME': returnDATA[0]['PARTNA'],
+              'MATERIAL': returnDATA[0]['MATNA'],
+              'CUSTOMER': returnDATA[0]['CUSLOTNO'],
+              'PROCESS': returnDATA[0]['PROC'],
+              'WGT_PC': returnDATA[0]['WEIGHT_PC'],
+              'WGT_JIG': returnDATA[0]['WEIGHT_JIG'],
+              'ACTQTY': returnDATA[0]['ACT_QTY'],
+              'CUSLOTNO': returnDATA[0]['CUSLOTNO'],
+              'FG_CHARG': returnDATA[0]['FG_CHARG'],
+              'CUSTNAME': returnDATA[0]['CUST_FULLNM'],
             };
-
 
             dbsap = dataout
           }
-          // }
         } catch (err) {
           output = [];
         }
@@ -394,7 +432,8 @@ router.post('/FINAL/SURMIC001-geteachITEM', async (req, res) => {
             }
           }
 
-          let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": SURMIC001db['MATCP'], "ITEMS": ITEMSS, });
+          let date =  Date.now()
+          let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": SURMIC001db['MATCP'], "ITEMS": ITEMSS,"EXP":{$gt:date} });
 
           console.log(REFLOT)
 
