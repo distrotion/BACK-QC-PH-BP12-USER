@@ -532,6 +532,16 @@ router.post('/FINAL/SURRGH001-confirmdata', async (req, res) => {
       SURRGH001db['confirmdata'].push(pushdata);
       SURRGH001db['preview'] = [];
       output = 'OK';
+    }else if (SURRGH001db['RESULTFORMAT'] === 'CAL2') {
+
+      let pushdata = SURRGH001db['preview'][0]
+
+      pushdata['V5'] = SURRGH001db['confirmdata'].length + 1
+      pushdata['V1'] = `${SURRGH001db['confirmdata'].length + 1}:${pushdata['V1']}`
+
+      SURRGH001db['confirmdata'].push(pushdata);
+      SURRGH001db['preview'] = [];
+      output = 'OK';
     }
   }
   catch (err) {

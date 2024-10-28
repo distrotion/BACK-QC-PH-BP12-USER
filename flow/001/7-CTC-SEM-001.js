@@ -531,6 +531,16 @@ router.post('/FINAL/CTCSEM001-confirmdata', async (req, res) => {
       CTCSEM001db['confirmdata'].push(pushdata);
       CTCSEM001db['preview'] = [];
       output = 'OK';
+    }else if (CTCSEM001db['RESULTFORMAT'] === 'CAL2') {
+
+      let pushdata = CTCSEM001db['preview'][0]
+
+      pushdata['V5'] = CTCSEM001db['confirmdata'].length + 1
+      pushdata['V1'] = `${CTCSEM001db['confirmdata'].length + 1}:${pushdata['V1']}`
+
+      CTCSEM001db['confirmdata'].push(pushdata);
+      CTCSEM001db['preview'] = [];
+      output = 'OK';
     }
   }
   catch (err) {

@@ -126,7 +126,8 @@ router.post('/FINAL/GETINtoSURMCS001', async (req, res) => {
 
     let cuslot = '';
 
-    if (findPO[0][`DATA`] != undefined && findPO[0][`DATA`].length > 0) {
+    //&& findPO[0][`DATA`].length > 0
+    if (findPO[0][`DATA`] != undefined ) {
       let dbsap = ''
       for (i = 0; i < findPO[0][`DATA`].length; i++) {
         if (findPO[0][`DATA`][i][`PO`] === input['PO']) {

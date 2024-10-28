@@ -29,6 +29,9 @@ let METHOD = 'METHOD';
 let MACHINE = 'MACHINE';
 let UNIT = 'UNIT';
 
+let MAININP = "MAIN_INPROCESS";
+
+
 //----------------- dynamic
 
 let finddbbuffer = [{}];
@@ -397,8 +400,8 @@ router.post('/FINAL/SURTHI002-geteachITEM', async (req, res) => {
 
           SURTHI002db["ANSCAL2"] = '';
 
-          let date =  Date.now()
-          let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": SURTHI002db['MATCP'], "ITEMS": ITEMSS,"EXP":{$gt:date} });
+          let date = Date.now()
+          let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": SURTHI002db['MATCP'], "ITEMS": ITEMSS, "EXP": { $gt: date } });
 
           console.log(REFLOT)
 
@@ -531,6 +534,21 @@ router.post('/FINAL/SURTHI002-confirmdata', async (req, res) => {
 
       pushdata['V5'] = SURTHI002db['confirmdata'].length + 1
       pushdata['V1'] = `${SURTHI002db['confirmdata'].length + 1}:${pushdata['V1']}`
+
+      SURTHI002db['confirmdata'].push(pushdata);
+      SURTHI002db['preview'] = [];
+      output = 'OK';
+    } else if (SURTHI002db['RESULTFORMAT'] === 'CAL2') {
+
+      let pushdata = SURTHI002db['preview'][0]
+
+      pushdata['V5'] = SURTHI002db['confirmdata'].length + 1
+      pushdata['V1'] = `${SURTHI002db['confirmdata'].length + 1}:${pushdata['V1']}`
+
+
+     
+      
+
 
       SURTHI002db['confirmdata'].push(pushdata);
       SURTHI002db['preview'] = [];

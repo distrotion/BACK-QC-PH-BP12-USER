@@ -29,6 +29,8 @@ let METHOD = 'METHOD';
 let MACHINE = 'MACHINE';
 let UNIT = 'UNIT';
 
+
+let MAININP = "MAIN_INPROCESS";
 //----------------- dynamic
 
 let finddbbuffer = [{}];
@@ -132,8 +134,8 @@ router.post('/FINAL/GETINtoSURMIC001', async (req, res) => {
     let findPO = await mongodb.findSAP('mongodb://172.23.10.75:27017', "ORDER", "ORDER", {});
 
     let cuslot = '';
-
-    if (findPO[0][`DATA`] != undefined && findPO[0][`DATA`].length > 0) {
+    //&& findPO[0][`DATA`].length > 0
+    if (findPO[0][`DATA`] != undefined) {
       let dbsap = ''
       for (i = 0; i < findPO[0][`DATA`].length; i++) {
         if (findPO[0][`DATA`][i][`PO`] === input['PO']) {
@@ -226,6 +228,7 @@ router.post('/FINAL/GETINtoSURMIC001', async (req, res) => {
           output = [];
         }
       }
+
 
 
       if (dbsap !== '') {
@@ -432,8 +435,8 @@ router.post('/FINAL/SURMIC001-geteachITEM', async (req, res) => {
             }
           }
 
-          let date =  Date.now()
-          let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": SURMIC001db['MATCP'], "ITEMS": ITEMSS,"EXP":{$gt:date} });
+          let date = Date.now()
+          let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": SURMIC001db['MATCP'], "ITEMS": ITEMSS, "EXP": { $gt: date } });
 
           console.log(REFLOT)
 
@@ -511,12 +514,51 @@ router.post('/FINAL/SURMIC001-preview', async (req, res) => {
   if (input.length > 0) {
     if (input[0]['V1'] !== undefined) {
       //-------------------------------------
-      try {
+      if (SURMIC001db['RESULTFORMAT'] === 'CAL2') {
+        try {
+
+          let findcp = await mongodb.find(PATTERN, PATTERN_01, { "CP": SURMIC001db['CP'] });
+          if (findcp.length > 0) {
+            let feedback = await mongodb.find(MAININP, MAIN, { "PO": SURMIC001db['PO'] });
+
+            if (feedback.length > 0) {
+              if (findcp[0]['INPROCESS'] != undefined) {
+                for (let k = 0; k < findcp[0]['INPROCESS'].length; k++) {
+                  //CONIPITEM
+                  if (findcp[0]['INPROCESS'][k]['CONIPITEM'] === SURMIC001db['inspectionItem']) {
+                    console.log("----------+--------------")
+                    // console.log(findcp[0]['INPROCESS'][k]['CONIPITEM'])
+                    // console.log(findcp[0]['INPROCESS'][k]['ITEMs'])
+                    //PCS
+                    // console.log(parseInt(SURMIC001db['PCS'])-parseInt(SURMIC001db['PCSleft']))
+                    // console.log(SURMIC001db['confirmdata'].length)
+                    // console.log(feedback[0][findcp[0]['INPROCESS'][k]['ITEMs']]['DATASET'][parseInt(SURMIC001db['PCS'])-parseInt(SURMIC001db['PCSleft'])][SURMIC001db['confirmdata'].length])
+                    // console.log("----------+--------------")
+                  }
+                  SURMIC001db['preview'] = [{
+                    "V1": `CAL2 ${input[0]['V2']}-${feedback[0][findcp[0]['INPROCESS'][k]['ITEMs']]['DATASET'][parseInt(SURMIC001db['PCS']) - parseInt(SURMIC001db['PCSleft'])][SURMIC001db['confirmdata'].length]}`,
+                    "V2": `${((parseFloat(input[0]['V2']) - parseFloat(feedback[0][findcp[0]['INPROCESS'][k]['ITEMs']]['DATASET'][parseInt(SURMIC001db['PCS']) - parseInt(SURMIC001db['PCSleft'])][SURMIC001db['confirmdata'].length])) * 500).toFixed(2)}`,
+
+                  }]
+
+                  output = 'OK';
+                }
+              } else {
+                SURMIC001db['preview'] = input;
+                output = 'OK';
+              }
+            }
+
+
+          }
+
+        }
+        catch (err) {
+          output = 'NOK';
+        }
+      } else {
         SURMIC001db['preview'] = input;
         output = 'OK';
-      }
-      catch (err) {
-        output = 'NOK';
       }
       //-------------------------------------
     } else {
@@ -564,6 +606,18 @@ router.post('/FINAL/SURMIC001-confirmdata', async (req, res) => {
 
       pushdata['V5'] = SURMIC001db['confirmdata'].length + 1
       pushdata['V1'] = `${SURMIC001db['confirmdata'].length + 1}:${pushdata['V1']}`
+
+      SURMIC001db['confirmdata'].push(pushdata);
+      SURMIC001db['preview'] = [];
+      output = 'OK';
+    } else if (SURMIC001db['RESULTFORMAT'] === 'CAL2') {
+
+      let pushdata = SURMIC001db['preview'][0]
+
+      pushdata['V5'] = SURMIC001db['confirmdata'].length + 1
+      pushdata['V1'] = `${SURMIC001db['confirmdata'].length + 1}:${pushdata['V1']}`
+
+
 
       SURMIC001db['confirmdata'].push(pushdata);
       SURMIC001db['preview'] = [];
@@ -625,7 +679,7 @@ router.post('/FINAL/SURMIC001-feedback', async (req, res) => {
       // output = 'OK';
       if ((parseInt(SURMIC001db["PCS"]) - oblist.length) == 0) {
         //CHECKlist
-        
+
         //input["ITEMs"] 
         let masterITEMs = await mongodb.find(master_FN, ITEMs, { "masterID": input["ITEMs"] });
 
@@ -892,18 +946,18 @@ router.post('/FINAL/SURMIC001-feedback', async (req, res) => {
           if (input["ITEMs"] === feedback[0]['CHECKlist'][i]['key']) {
             feedback[0]['CHECKlist'][i]['FINISH'] = 'OK';
             // console.log(feedback[0]['CHECKlist']);
-            if(SURMIC001db['FREQUENCY']==='time/6M') {
+            if (SURMIC001db['FREQUENCY'] === 'time/6M') {
               let resp = await axios.post('http://127.0.0.1:16070/FINAL/REFLOTSET', {
-                "PO":SURMIC001db['PO'],
-                "MATCP":SURMIC001db['CP'],
-                "FREQUENCY":SURMIC001db['FREQUENCY'],
-                "ITEMs":SURMIC001db['inspectionItem'],
-                "TPKLOT":SURMIC001db['TPKLOT'],
-                "INS":SURMIC001db['INS']
+                "PO": SURMIC001db['PO'],
+                "MATCP": SURMIC001db['CP'],
+                "FREQUENCY": SURMIC001db['FREQUENCY'],
+                "ITEMs": SURMIC001db['inspectionItem'],
+                "TPKLOT": SURMIC001db['TPKLOT'],
+                "INS": SURMIC001db['INS']
               });
             }
             let feedbackupdate = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { 'CHECKlist': feedback[0]['CHECKlist'] } });
-            
+
             break;
           }
         }
@@ -914,7 +968,7 @@ router.post('/FINAL/SURMIC001-feedback', async (req, res) => {
           let feedbackupdateFINISH = await mongodb.update(MAIN_DATA, MAIN, { "PO": input['PO'] }, { "$set": { "ALL_DONE": "DONE", "PO_judgment": "pass", } });
         }
 
-       
+
       }
     } else {
       SURMIC001db["ITEMleftUNIT"] = '';
@@ -1058,7 +1112,7 @@ router.post('/FINAL/SURMIC001-FINISH', async (req, res) => {
   //-------------------------------------
   let output = 'OK';
 
-  if (SURMIC001db['RESULTFORMAT'] === 'Number' || SURMIC001db['RESULTFORMAT'] === 'Text') {
+  if (SURMIC001db['RESULTFORMAT'] === 'Number' || SURMIC001db['RESULTFORMAT'] === 'Text' || SURMIC001db['RESULTFORMAT'] === 'CAL2') {
 
     SURMIC001db["value"] = [];
     for (i = 0; i < SURMIC001db['confirmdata'].length; i++) {
@@ -1139,7 +1193,7 @@ router.post('/FINAL/SURMIC001-FINISH', async (req, res) => {
   if (SURMIC001db['RESULTFORMAT'] === 'Number' ||
     SURMIC001db['RESULTFORMAT'] === 'Text' ||
     SURMIC001db['RESULTFORMAT'] === 'OCR' ||
-    SURMIC001db['RESULTFORMAT'] === 'Picture' || SURMIC001db['RESULTFORMAT'] === 'Graph') {
+    SURMIC001db['RESULTFORMAT'] === 'Picture' || SURMIC001db['RESULTFORMAT'] === 'Graph' || SURMIC001db['RESULTFORMAT'] === 'CAL2') {
     request.post(
       'http://127.0.0.1:16070/FINAL/FINISHtoDB',
       { json: SURMIC001db },
