@@ -534,18 +534,24 @@ router.post('/FINAL/SURMIC001-preview', async (req, res) => {
                     // console.log(SURMIC001db['confirmdata'].length)
                     // console.log(feedback[0][findcp[0]['INPROCESS'][k]['ITEMs']]['DATASET'][parseInt(SURMIC001db['PCS'])-parseInt(SURMIC001db['PCSleft'])][SURMIC001db['confirmdata'].length])
                     // console.log("----------+--------------")
+
+                    SURMIC001db['preview'] = [{
+                      "V1": `CAL2 ${input[0]['V2']}-${feedback[0][findcp[0]['INPROCESS'][k]['ITEMs']]['DATASET'][parseInt(SURMIC001db['PCS']) - parseInt(SURMIC001db['PCSleft'])][SURMIC001db['confirmdata'].length]}`,
+                      "V2": `${((parseFloat(input[0]['V2']) - parseFloat(feedback[0][findcp[0]['INPROCESS'][k]['ITEMs']]['DATASET'][parseInt(SURMIC001db['PCS']) - parseInt(SURMIC001db['PCSleft'])][SURMIC001db['confirmdata'].length])) * 500).toFixed(2)}`,
+
+                    }]
+
+                    output = 'OK';
+                    return res.json(output);
+
                   }
-                  SURMIC001db['preview'] = [{
-                    "V1": `CAL2 ${input[0]['V2']}-${feedback[0][findcp[0]['INPROCESS'][k]['ITEMs']]['DATASET'][parseInt(SURMIC001db['PCS']) - parseInt(SURMIC001db['PCSleft'])][SURMIC001db['confirmdata'].length]}`,
-                    "V2": `${((parseFloat(input[0]['V2']) - parseFloat(feedback[0][findcp[0]['INPROCESS'][k]['ITEMs']]['DATASET'][parseInt(SURMIC001db['PCS']) - parseInt(SURMIC001db['PCSleft'])][SURMIC001db['confirmdata'].length])) * 500).toFixed(2)}`,
-
-                  }]
-
-                  output = 'OK';
                 }
               } else {
+
                 SURMIC001db['preview'] = input;
                 output = 'OK';
+                return res.json(output);
+
               }
             }
 
@@ -562,6 +568,7 @@ router.post('/FINAL/SURMIC001-preview', async (req, res) => {
       }
       //-------------------------------------
     } else {
+      SURMIC001db['preview'] = input;
       output = 'NOK';
     }
   } else {
