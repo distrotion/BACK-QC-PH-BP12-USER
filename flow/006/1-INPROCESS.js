@@ -168,4 +168,50 @@ router.post('/INPROCESS/SETgoodandDATA', async (req, res) => {
 });
 
 
+router.post('/INPROCESS/GETDATATOSEE', async (req, res) => {
+  //-------------------------------------
+  console.log('--INPROCESS/GETDATATOSEE--');
+  console.log(req.body);
+  //-------------------------------------
+
+  let input = req.body;
+  let find1 = [];
+  let find2 = [];
+  let find3 = [];
+  let find4 = [];
+  let find5 = [];
+  let find6 = [];
+  let find7 = [];
+  let find8 = [];
+  let find9 = [];
+
+  let DATA = [];
+  let PATTERNs = [];
+  //-------------------------------------
+  if (input['MATNR'] != undefined && input['PO'] != undefined) {
+
+    find1 = await mongodb.find(masterDB, TYPE, { "activeid": "active_id" });
+    find2 = await mongodb.find(masterDB, ITEMs, { "activeid": "active_id" });
+    find3 = await mongodb.find(masterDB, MACHINE, { "activeid": "active_id" });
+    find4 = await mongodb.find(masterDB, RESULTFORMAT, {});
+    find5 = await mongodb.find(masterDB, GRAPHTYPE, {});
+    find6 = await mongodb.find(masterDB, INSTRUMENTS, {});
+    find7 = await mongodb.find(masterDB, CALCULATE, { "activeid": "active_id" });
+    find8 = await mongodb.find(masterDB, SPECIFICATION, { "activeid": "active_id" });
+    find9 = await mongodb.find(masterDB, UNIT, { "activeid": "active_id" });
+
+    PATTERNs = await mongodb.find(PATTERN, PATTERN_01, { "CP": `${input['MATNR']}` });
+    // console.log(PATTERNs)
+  DATA = await mongodb.find(MAININP, MAIN, { "PO": `${input['PO']}`});
+
+
+  }
+
+
+  return res.json({ "PATTERN": PATTERNs, "TYPE": find1, "ITEMS": find2, "METHOD": find3, "RESULTFORMAT": find4, "GRAPHTYPE": find5, "INSTRUMENTS": find6, "CALCULATE": find7, "SPECIFICATION": find8, "UNIT": find9, "DATA": DATA });
+
+
+});
+
+
 module.exports = router;
