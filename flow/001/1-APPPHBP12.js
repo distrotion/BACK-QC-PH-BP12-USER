@@ -410,6 +410,15 @@ router.post('/FINAL/APPPHBP12-geteachITEM', async (req, res) => {
 
           APPPHBP12db["PCSleft"] = findcp[0]['FINAL'][i]['PCS'];
 
+          // let date =  Date.now()
+          // let REFLOT = await mongodb.find(PATTERN, "referdata", { "MATCP": APPPHBP12db['MATCP'], "ITEMS": ITEMSS,"EXP":{$gt:date} });
+
+          // console.log(REFLOT)
+
+          // if (REFLOT.length > 0) {
+          //   APPPHBP12db["REFLOT"] = REFLOT[0]['TPKLOT'];
+          // }
+
 
 
           APPPHBP12db["INTERSEC"] = "";

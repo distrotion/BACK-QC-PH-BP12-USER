@@ -578,7 +578,7 @@ router.post('/FINAL/SURMCS001-feedback', async (req, res) => {
           if (input["ITEMs"] === feedback[0]['CHECKlist'][i]['key']) {
             feedback[0]['CHECKlist'][i]['FINISH'] = 'OK';
             // console.log(feedback[0]['CHECKlist']);
-            if (SURMCS001db['FREQUENCY'] === 'time/6M') {
+            if (SURMCS001db['FREQUENCY'] === 'time/6M'||SURMCS001db['FREQUENCY'] === 'pcs/M'||SURMCS001db['FREQUENCY'] === 'time/Year'||SURMCS001db['FREQUENCY'] === 'pcs/Y') {
               let resp = await axios.post('http://127.0.0.1:16070/FINAL/REFLOTSET', {
                 "PO": SURMCS001db['PO'],
                 "MATCP": SURMCS001db['CP'],

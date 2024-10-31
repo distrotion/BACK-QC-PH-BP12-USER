@@ -614,7 +614,7 @@ router.post('/FINAL/SURTHI002-feedback', async (req, res) => {
           if (input["ITEMs"] === feedback[0]['CHECKlist'][i]['key']) {
             feedback[0]['CHECKlist'][i]['FINISH'] = 'OK';
             // console.log(feedback[0]['CHECKlist']);
-            if (SURTHI002db['FREQUENCY'] === 'time/6M') {
+            if (SURTHI002db['FREQUENCY'] === 'time/6M'||SURTHI002db['FREQUENCY'] === 'pcs/M'||SURTHI002db['FREQUENCY'] === 'time/Year'||SURTHI002db['FREQUENCY'] === 'pcs/Y') {
               let resp = await axios.post('http://127.0.0.1:16070/FINAL/REFLOTSET', {
                 "PO": SURTHI002db['PO'],
                 "MATCP": SURTHI002db['CP'],
