@@ -364,7 +364,7 @@ router.post('/FINAL/GETINtoSURBAL013', async (req, res) => {
           "PARTNAME_PO": dbsap['PARTNAME_PO'] || '',
           "PART_PO": dbsap['PART_PO'] || '',
           "CUSTNAME_s": dbsap['CUSTNAME'] || '',
-          "CUSTNAME": findcp[0]['CUST_FULLNM'] || '',
+          "CUSTNAME": dbsap['CUST_FULLNM']|| '',
           "UNITSAP": dbsap['UNIT'] || '',
           //----------------------
           "ItemPick": ItemPickoutP2, //---->
