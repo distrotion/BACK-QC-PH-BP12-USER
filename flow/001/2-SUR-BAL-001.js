@@ -1271,6 +1271,7 @@ router.post('/FINAL/SURBAL013-feedback', async (req, res) => {
             feedback[0]['CHECKlist'][i]['FINISH'] = 'OK';
             // console.log(feedback[0]['CHECKlist']);
             if (SURBAL013db['FREQUENCY'] === 'time/6M' ||SURBAL013db['FREQUENCY'] === 'pcs/M'||SURBAL013db['FREQUENCY'] === 'time/Year'||SURBAL013db['FREQUENCY'] === 'pcs/Y') {
+            
               let resp = await axios.post('http://127.0.0.1:16070/FINAL/REFLOTSET', {
                 "PO": SURBAL013db['PO'],
                 "MATCP": SURBAL013db['CP'],
