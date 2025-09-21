@@ -606,6 +606,7 @@ router.post('/FINAL/CTCSEM001-feedback', async (req, res) => {
         for (i = 0; i < feedback[0]['CHECKlist'].length; i++) {
           if (input["ITEMs"] === feedback[0]['CHECKlist'][i]['key']) {
             feedback[0]['CHECKlist'][i]['FINISH'] = 'OK';
+            feedback[0]['CHECKlist'][i]['timestamp'] = `${Date.now()}`;
             // console.log(feedback[0]['CHECKlist']);
             if (CTCSEM001db['FREQUENCY'] === 'time/6M'||CTCSEM001db['FREQUENCY'] === 'pcs/M'||CTCSEM001db['FREQUENCY'] === 'time/Year'||CTCSEM001db['FREQUENCY'] === 'pcs/Y') {
               let resp = await axios.post('http://127.0.0.1:16070/FINAL/REFLOTSET', {

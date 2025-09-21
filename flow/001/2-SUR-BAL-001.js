@@ -1269,6 +1269,7 @@ router.post('/FINAL/SURBAL013-feedback', async (req, res) => {
         for (i = 0; i < feedback[0]['CHECKlist'].length; i++) {
           if (input["ITEMs"] === feedback[0]['CHECKlist'][i]['key']) {
             feedback[0]['CHECKlist'][i]['FINISH'] = 'OK';
+            feedback[0]['CHECKlist'][i]['timestamp'] = `${Date.now()}`;
             // console.log(feedback[0]['CHECKlist']);
             if (SURBAL013db['FREQUENCY'] === 'time/6M' ||SURBAL013db['FREQUENCY'] === 'pcs/M'||SURBAL013db['FREQUENCY'] === 'time/Year'||SURBAL013db['FREQUENCY'] === 'pcs/Y') {
             

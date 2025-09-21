@@ -607,6 +607,7 @@ router.post('/FINAL/SURRGH001-feedback', async (req, res) => {
         for (i = 0; i < feedback[0]['CHECKlist'].length; i++) {
           if (input["ITEMs"] === feedback[0]['CHECKlist'][i]['key']) {
             feedback[0]['CHECKlist'][i]['FINISH'] = 'OK';
+            feedback[0]['CHECKlist'][i]['timestamp'] = `${Date.now()}`;
             // console.log(feedback[0]['CHECKlist']);
             if (SURRGH001db['FREQUENCY'] === 'time/6M'||SURRGH001db['FREQUENCY'] === 'pcs/M'||SURRGH001db['FREQUENCY'] === 'time/Year'||SURRGH001db['FREQUENCY'] === 'pcs/Y') {
               let resp = await axios.post('http://127.0.0.1:16070/FINAL/REFLOTSET', {
